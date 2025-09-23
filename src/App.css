@@ -6,44 +6,56 @@
 }
 
 body {
-  background-color: red;
+  background-image: url(blue_background.avif);
+  background-size: cover;
+}
+
+.login-input-fields {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+  display: flex;
+  flex-direction: column;
+  gap: 70px;
+
+  background-color: white;
+  border-radius: 4px;
+  padding: 100px;
+  padding-top: 300px;
+  width: 200px;
+}
+
+.login-field {
+  border: none;
+  background-color: transparent;
+  border-bottom: 1px solid gray;
+  width: 230px;
+  color: black;
+  outline: none;
+  font-size: 13px;
+  align-self: center;
+}
+
+.login-button {
+  margin-left: -65px;
+  margin-right: -65px;
+  border-radius: 30px;
+  background-color: #3a405b;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+  margin-top: -200px;
+  height: 150px;
+  width: 200px;
 }
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+.forgot-password {
+  margin-bottom: -40px;
+  margin-top: -60px;
+  font-size: small;
+  color: gray;
 }
 
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+.test {
+  color: black
 }
