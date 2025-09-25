@@ -64,7 +64,9 @@ Follow these steps to create a new branch, commit your changes, push to the bran
 ## 1. Create a New Branch and Commit
 
 git checkout -b feature/your-feature
+---
 git commit -am 'Add new feature'
+---
 git push origin feature/your-feature
 
 
