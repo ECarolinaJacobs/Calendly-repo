@@ -1,4 +1,4 @@
-import { use, useState } from "react";
+import { useState } from "react";
 
 export function LoginCredentials () {
     const [username, setUsername] = useState();
@@ -13,9 +13,9 @@ export function LoginCredentials () {
     <div className="login-input-fields">
         <img className="logo" src="./public/download.png" alt="Calendly logo"/>
         <input className="login-field" type="text" placeholder="Email Address" onChange={(e : any) => setUsername(e.target.value)}/>
-        <input className="login-field" type="password" placeholder="Password" onChange={(e : any) => setPassword(e.target.value)}/>
-        <div className="forgot-password">
-            <a href="">Forgot password?</a>
+        <div className="password-and-forgot-password">
+            <input className="login-field" type="password" placeholder="Password" onChange={(e : any) => setPassword(e.target.value)}/>
+            <a href="" className="forgot-password">Forgot password?</a>
         </div>
         <button className="login-button" onClick={HandleLogin}>
             Login
