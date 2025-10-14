@@ -47,3 +47,13 @@ body {
 .read-the-docs {
   color: #888;
 }
+
+.eventBox{
+  background-color: black;
+  height: 80vh;
+  width: 70vw;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
