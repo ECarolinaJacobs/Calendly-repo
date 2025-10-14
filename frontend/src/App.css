@@ -6,71 +6,44 @@
 }
 
 body {
-  background-image: url(blue_background.avif);
-  background-size: cover;
-}
-
-.login-input-fields {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-
-  display: flex;
-  flex-direction: column;
-  gap: 19px;
-
-  background-color: white;
-  border-radius: 4px;
-  padding: 100px;
-  padding-top: 300px;
-  width: 300px;
-  height: 300px;
-}
-
-.login-field {
-  padding: 12px;
-  background-color: transparent;
-  /* border-bottom: 1px solid gray; */
-  width: 250px;
-  border-radius: 6px;
-  border-style: solid;
-  border-color: rgb(236, 235, 235);
-  color: black;
-  outline: none;
-  font-size: 15px;
-  align-self: center;
-}
-
-.login-field::placeholder {
-  color: lightgray;
-}
-
-.login-button {
-  margin-left: -15px;
-  margin-right: -15px;
-  margin-top: 20px;
-  border-radius: 30px;
-  background-color: #3a405b;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+  background-color: red;
 }
 
 .logo {
-  margin-top: -200px;
-  height: 150px;
-  width: 200px;
-  align-self: center;
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
 }
 
-.forgot-password {
-  display: flex;
-  font-size: small;
-  padding-left: 180px;
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
 }
 
-.register-query {
-  color: black;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  font-size: 80%;
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
-.test {
-  color: black
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
 }
