@@ -1,4 +1,5 @@
 import { useState } from "react";
+import './App.css'
 
 export function LoginCredentials () {
     const [username, setUsername] = useState();
@@ -11,7 +12,7 @@ export function LoginCredentials () {
 
     return (
     <div className="login-input-fields">
-        <img className="logo" src="./public/download.png" alt="Calendly logo"/>
+        <img className="logo" src="/download.png" alt="Calendly logo"/>
         <input className="login-field" type="text" placeholder="Email Address" onChange={(e : any) => setUsername(e.target.value)}/>
         <div className="password-and-forgot-password">
             <input className="login-field" type="password" placeholder="Password" onChange={(e : any) => setPassword(e.target.value)}/>
