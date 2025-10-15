@@ -23,6 +23,8 @@ export function LoginCredentials () {
         </button>
         { show && <p className="test">user: {username} pass: {password}</p>}
         <p className="register-query">Don't have an account? <a href="">Register</a></p>
+
+        <h1>Hello</h1>
     </div>
     )
 }
