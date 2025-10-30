@@ -1,6 +1,6 @@
 import { useState } from "react";
 import verifyData from './api/verify-login.tsx';
-import './App.css'
+import './Login.css'
 
 export function LoginCredentials () {
     // Maak een User object, die je in de state bewaard, ipv losse strings
@@ -42,7 +42,7 @@ export function LoginCredentials () {
                 Login
             </button>
             { show && <p className="test">user: {username} pass: {password} logged in: { authenticated ? "yes" : "no" }</p>}
-            <p className="register-query">Don't have an account? <a href="">Register</a></p>
+            <p className="register-query">Don't have an account? <a href="/register">Register</a></p>
         </div>
     </div>
     )

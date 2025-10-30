@@ -1,14 +1,16 @@
 // App.jsx (or your main routing file)
 import { Routes, Route } from "react-router-dom";
 // import EventPage from "./events/EventPage";
-import "./App.css"
+import "./Login.css"
 import { LoginCredentials } from "./Login";
+import { RegisterPage } from "./Register";
 
 function App() {
   return (
       <Routes>
         {/* <Route path="/events/:event" element={<EventPage />} /> */}
-        <Route path="/" element={<LoginCredentials />} />
+        <Route path="/login" element={<LoginCredentials />} />
+        <Route path="/register" element={<RegisterPage />}/>
       </Routes>
   );
 }

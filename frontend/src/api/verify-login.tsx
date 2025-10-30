@@ -3,7 +3,7 @@ export default async function verifyData(username: string, password: string): Pr
     try {
         const response = await fetch(url, {
             method: "POST",
-            body: JSON.stringify({ username, password}),
+            body: JSON.stringify({ Email: username, Password: password}),
             headers: {
                 "Content-Type": "application/json"
             }
