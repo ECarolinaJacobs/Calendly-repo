@@ -1,8 +1,7 @@
 // App.jsx (or your main routing file)
 import { Routes, Route } from "react-router-dom";
-import "./Login.css"
-import { LoginCredentials } from "./Login";
-import { RegisterPage } from "./Register";
+import { LoginCredentials } from "./pages/Login";
+import { RegisterPage } from "./pages/Register";
 import EventPage from "./pages/EventPage";
 import BookingPage from "./pages/BookingPage";
 import "./App.css"
