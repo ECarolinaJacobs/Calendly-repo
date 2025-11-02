@@ -42,6 +42,11 @@ export default function BookingLayout() {
                         ))}
                         </tbody>
                     </table>
+                    <div className='page-switcher'>
+                        <button className="prev-button">Previous</button>
+                        <button className="next-button">Next</button>
+                    </div>
+                    <p className="page-count">2/2</p>
                 </div>
             </div>
         </div>
