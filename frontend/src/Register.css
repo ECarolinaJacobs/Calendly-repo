@@ -6,7 +6,7 @@
 }
 
 body {
-  background-image: url(blue_background.avif);
+  background-image: url(/blue_background.avif);
   background-size: cover;
 }
 
