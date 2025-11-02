@@ -2,8 +2,20 @@ using Microsoft.EntityFrameworkCore;
 using YourApp.Models;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Cors;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.WithOrigins("http://localhost:5173")
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials();
+    });
+});
 
 // Add services
 builder.Services.AddEndpointsApiExplorer();
@@ -14,6 +26,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=app.db"));
 
 var app = builder.Build();
+
+app.UseCors("CorsPolicy");
 
 // In-memory session storage (for production, use Redis or database)
 var activeSessions = new Dictionary<string, SessionData>();
