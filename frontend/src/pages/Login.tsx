@@ -1,5 +1,5 @@
 import { useState } from "react";
-import verifyData from './api/verify-login.tsx';
+import verifyData from '../api/verify-login.tsx';
 import './Login.css'
 
 export function LoginCredentials () {

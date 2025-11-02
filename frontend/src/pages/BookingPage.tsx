@@ -1,4 +1,4 @@
-import '../BookingPage.css';
+import './BookingPage.css';
 
 export default function BookingLayout() {
     const rooms = [
@@ -9,7 +9,7 @@ export default function BookingLayout() {
     return (
         <div className="booking-page">
             <div className="booking-box">
-                <h1 className="title">Book a meeting room</h1>
+                <h1 className="title">Book a room</h1>
                 <div className="filters">
                     <select className="floor-select" name="floor" id="floor-id">
                         <option value="">Select floor</option>
