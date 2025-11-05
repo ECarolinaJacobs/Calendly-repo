@@ -1,9 +1,9 @@
-export default async function verifyData(username: string, password: string): Promise<JSON | undefined> {
-    const url = "http://localhost:5252/auth/login"
+export default async function authRegister(name: string, email: string, password: string) {
+    const url = "http://localhost:5252/auth/register"
     try {
         const response = await fetch(url, {
             method: "POST",
-            body: JSON.stringify({ Email: username, Password: password}),
+            body: JSON.stringify({Name: name, Email: email, Password: password}),
             headers: {
                 "Content-Type": "application/json"
             }
