@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import authRegister from "../api/auth-register.tsx"
 import './Register.css'
 
@@ -6,9 +7,16 @@ export function RegisterPage() {
     const [email, setEmail] = useState<string>("");
     const [name, setName] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const navigate = useNavigate();
 
-    const handleSubmit = (e : any) => {
-        authRegister(name, email, password)
+    const handleSubmit = async (e : any) => {
+        let authorization = await authRegister(name, email, password)
+        if (authorization) {
+            navigate("/login");
+        }
+        else {
+            console.log("Login unsuccessful")
+        }
     }
 
     return (
@@ -19,7 +27,7 @@ export function RegisterPage() {
             <input className="login-field" type="text" placeholder="Name" onChange={(e : any) => setName(e.target.value)}/>
             <input className="login-field" type="password" placeholder="Password" onChange={(e : any) => setPassword(e.target.value)}/>
             <input className="login-field" type="password" placeholder="Confirm password"/>
-            <button className="register-button">
+            <button className="register-button" onClick={handleSubmit}>
                 Register
             </button>
             <p className="login-query">Already have an account? <a href="/login">Log in</a></p>

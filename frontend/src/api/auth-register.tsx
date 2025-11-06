@@ -14,7 +14,7 @@ export default async function authRegister(name: string, email: string, password
 
         const result = await response.json();
         console.log(result);
-        return await response.json();
+        return result;
     }
     catch (error : any){
         console.error(error.message);
