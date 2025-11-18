@@ -11,4 +11,6 @@ public class AuthContext : DbContext
     }
 
     public DbSet<Employee> Employees { get; set; } = null!;
+    public DbSet<RoomBooking> RoomBookings { get; set; } = null!;
+    public DbSet<Room> Rooms { get; set; } = null!;
 }

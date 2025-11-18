@@ -1,5 +1,5 @@
 export default async function verifyData(username: string, password: string): Promise<JSON | undefined> {
-    const url = "http://localhost:5252/auth/login"
+    const url = "http://localhost:5167/api/auth/login"
     try {
         const response = await fetch(url, {
             method: "POST",
