@@ -6,10 +6,10 @@ export interface Attendee {
 export interface Event {
   title: string;
   description: string;
-  image: string;
-  startDate: string;
-  endDate: string;
-  attendees: Attendee[];
+  image?: string;
+  startDate?: string;
+  endDate?: string;
+  attendees?: Attendee[];
 }
 
 export interface DrawerHeaderProps {

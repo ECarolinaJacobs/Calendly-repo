@@ -16,7 +16,7 @@ export const EventDates: React.FC<EventDatesProps> = ({
   endDate,
 }) => {
   return (
-    <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
+    <div className="bg-linear-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
       <div className="flex items-center gap-3">
         <div className="p-2 bg-white rounded-lg shadow-sm">
           <Calendar className="w-5 h-5 text-purple-600" />
