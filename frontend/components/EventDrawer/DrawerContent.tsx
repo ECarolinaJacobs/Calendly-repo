@@ -24,10 +24,16 @@ export const DrawerContent: React.FC<DrawerContentProps> = ({
         <DrawerHeader onClose={onClose} onCopyUrl={onCopyUrl} copied={copied} />
 
         <div className="p-6 space-y-6">
-          <EventImage src={event.image} alt={event.title} />
-          <EventInfo title={event.title} description={event.description} />
-          <EventDates startDate={event.startDate} endDate={event.endDate} />
-          <AttendeesList attendees={event.attendees} />
+          <EventImage src={event.image ?? ""} alt={event.title ?? ""} />
+          <EventInfo
+            title={event.title ?? ""}
+            description={event.description ?? ""}
+          />
+          <EventDates
+            startDate={event.startDate ?? ""}
+            endDate={event.endDate ?? ""}
+          />
+          <AttendeesList attendees={event.attendees ?? []} />
           <JoinButton callToAction="Doe Mee aan Evenement" />
         </div>
       </div>
