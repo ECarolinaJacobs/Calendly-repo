@@ -17,11 +17,14 @@ public class BookingsController : ControllerBase
     {
         _context = context;
     }
-}
 
-[HttpPost("start")]
-public async Task<ActionResult<RoomBooking>> BookRoom(Room room)
-{
-    RoomBooking new_booking = new(room.Id, );
-    _context.Add()
+    [HttpPost("start")]
+    public async Task<ActionResult<RoomBooking>> BookRoom(Room room)
+    {
+        Date bookingDate = DateTime.Now;
+        DateTime startTime = DateTime.Now;
+        DateTime endTime = DateTime.Now.AddHours(3);
+        RoomBooking new_booking = new(room.Id, bookingDate, startTime, endTime);
+        _context.Add();
+    }
 }
