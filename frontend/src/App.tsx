@@ -7,6 +7,7 @@ import BookingPage from "./pages/BookingPage";
 import "./App.css"
 import ProtectedRoutes from "./ProtectedFileUtil/ProtectedPages.tsx";
 import DashboardPage from "./pages/DashboardPage";
+import ProfilePage from  "./pages/ProfilePage";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/dashboard" element={<DashboardPage/>} />
           <Route path="/booking" element={<BookingPage />} />
         </Route>
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/login" element={<LoginCredentials />} />
         <Route path="/register" element={<RegisterPage />}/>
       </Routes>
