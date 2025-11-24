@@ -1,5 +1,5 @@
 export default async function authRegister(name: string, email: string, password: string) {
-    const url = "http://localhost:5167/api/auth/register"
+    const url = "http://localhost:5167/api/bookings"
     try {
         const response = await fetch(url, {
             method: "POST",
