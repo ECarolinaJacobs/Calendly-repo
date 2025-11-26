@@ -11,9 +11,9 @@ namespace TodoApi.Controllers;
 [ApiController]
 public class BookingsController : ControllerBase
 {
-    private readonly RoomBookingContext _context;
+    private readonly ProjectContext _context;
 
-    public BookingsController(RoomBookingContext context)
+    public BookingsController(ProjectContext context)
     {
         _context = context;
     }
@@ -21,10 +21,6 @@ public class BookingsController : ControllerBase
     [HttpPost("start")]
     public async Task<ActionResult<RoomBooking>> BookRoom(Room room)
     {
-        Date bookingDate = DateTime.Now;
-        DateTime startTime = DateTime.Now;
-        DateTime endTime = DateTime.Now.AddHours(3);
-        RoomBooking new_booking = new(room.Id, bookingDate, startTime, endTime);
-        _context.Add();
+        
     }
 }

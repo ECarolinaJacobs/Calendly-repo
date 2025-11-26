@@ -18,11 +18,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
-builder.Services.AddDbContext<TodoContext>(opt =>
-    opt.UseInMemoryDatabase("TodoList"));
-
-builder.Services.AddDbContext<AuthContext>(opt =>
-    opt.UseInMemoryDatabase("AuthDB"));
+builder.Services.AddDbContext<ProjectContext>(opt =>
+    opt.UseInMemoryDatabase("ProjectDB"));
 
 var app = builder.Build();
 
