@@ -12,6 +12,7 @@ namespace TodoApi.Controllers;
 public class BookingsController : ControllerBase
 {
     private readonly ProjectContext _context;
+    private readonly RoomBookingService _roomBookingService;
 
     public BookingsController(ProjectContext context)
     {
@@ -19,8 +20,9 @@ public class BookingsController : ControllerBase
     }
 
     [HttpPost("start")]
-    public async Task<ActionResult<RoomBooking>> BookRoom(Room room)
+    public async Task<ActionResult<RoomBooking>> BookRoom(RoomBooking newBooking)
     {
-        
+        var createdBooking = _roomBookingService.CreateBooking(newBooking);
+        return Ok(createdBooking);
     }
 }
