@@ -8,10 +8,10 @@ public class RoomBooking
 
     public long RoomId { get; set; }
     public long EmployeeId { get; set; }
-    public Room Room { get; set; }
-    public Employee Employee { get; set; }
+    public Room? Room { get; set; }
+    public Employee? Employee { get; set; }
 
-    public DateOnly BookingDate { get; set; }
-    public TimeOnly StartTime { get; set; }
-    public TimeOnly EndTime { get; set; }
+    public string BookingDate { get; set; }
+    public string StartTime { get; set; }
+    public string EndTime { get; set; }
 }

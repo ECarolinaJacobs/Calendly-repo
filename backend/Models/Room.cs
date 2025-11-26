@@ -5,7 +5,7 @@ public class Room
     public long Id { get; set; }
     public string Name { get; set; }
     public int Capacity { get; set; }
-    public string IsBooked { get; set; }
+    public bool IsBooked { get; set; }
 
     public List<RoomBooking> RoomBookings { get; set; }
 }
