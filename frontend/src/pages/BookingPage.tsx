@@ -9,6 +9,7 @@ type Room = {
 }
 
 export default function BookingLayout() {
+    // Connected this variable to rooms table
     const rooms = [
         { name: "Meeting room 1", capacity: 12, availability: "12:00" },
         { name: "Meeting room 2", capacity: 8, availability: "11:00" }
@@ -19,6 +20,8 @@ export default function BookingLayout() {
     const handleRoomClick = (room: Room) => {
         setSelectedRoom(room);
         console.log("Selected room:", room);
+        
+        // Change this to match selected room
         BookRoom({
             RoomId: 1, 
             EmployeeId: 1, 

@@ -9,21 +9,20 @@ namespace TodoApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class BookingsController : ControllerBase
+public class RoomsController : ControllerBase
 {
     private readonly ProjectContext _context;
     private readonly RoomBookingService _roomBookingService;
 
-    public BookingsController(ProjectContext context, RoomBookingService roomBookingService)
+    public RoomsController(ProjectContext context)
     {
         _context = context;
-        _roomBookingService = roomBookingService;
     }
 
-    [HttpPost("start")]
-    public async Task<ActionResult<RoomBooking>> BookRoom(RoomBooking newBooking)
+    [HttpGet]
+    public async Task<ActionResult<RoomBooking>> GetRooms()
     {
-        var createdBooking = _roomBookingService.CreateBooking(newBooking);
-        return Ok(createdBooking);
+        var rooms = _context.Rooms.ToListAsync();
+        return Ok(rooms);
     }
 }
