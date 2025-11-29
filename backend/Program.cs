@@ -4,6 +4,17 @@ using TodoApi.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.WithOrigins("http://localhost:5173")
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials();
+    });
+});
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
@@ -13,7 +24,12 @@ builder.Services.AddDbContext<TodoContext>(opt =>
 builder.Services.AddDbContext<AuthContext>(opt =>
     opt.UseInMemoryDatabase("AuthDB"));
 
+builder.Services.AddDbContext<EventContext>(opt =>
+    opt.UseInMemoryDatabase("EventDB"));
+
 var app = builder.Build();
+
+app.UseCors("CorsPolicy");
 
 if (app.Environment.IsDevelopment())
 {

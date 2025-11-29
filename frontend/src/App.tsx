@@ -4,8 +4,8 @@ import { LoginCredentials } from "./pages/Login";
 import { RegisterPage } from "./pages/Register";
 import EventPage from "./pages/EventPage";
 import BookingPage from "./pages/BookingPage";
-import "./App.css"
-import ProtectedRoutes from "./ProtectedFileUtil/ProtectedPages.tsx";
+import "./App.css";
+// import ProtectedRoutes from "./ProtectedFileUtil/ProtectedPages.tsx";
 import DashboardPage from "./pages/DashboardPage";
 
 function App() {
