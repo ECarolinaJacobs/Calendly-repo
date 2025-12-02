@@ -1,6 +1,7 @@
 import { useState } from "react";
+import FilterRooms from "../src/api/filter-rooms";
 
-const RoomFiltering = () => {
+const RoomFiltering = ({setRooms} : any) => {
     const [selectedFloor, setSelectedFloor] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
 
@@ -19,7 +20,12 @@ const RoomFiltering = () => {
                 min="2025-01-01"
                 max="2026-01-01" 
                 onChange={(e : any) => setSelectedDate(e.target.value)}/>
-            <button className="filter-button">Filter</button>
+            <button className="filter-button"
+            onClick={async () => 
+            {
+                const filteredRooms = await FilterRooms(selectedFloor);
+                setRooms(filteredRooms);
+            }}>Filter</button>
         </div>
     )
 }

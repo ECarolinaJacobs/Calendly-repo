@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './BookingPage.css';
 import Pagination from '../../components/Pagination.tsx';
 import RoomFiltering from '../../components/RoomFiltering.tsx';
@@ -25,7 +25,9 @@ export default function BookingLayout() {
             <div className="booking-box">
                 <h1 className="title">Book a room</h1>
 
-                <RoomFiltering/>
+                <RoomFiltering
+                setRooms={setRooms}/>
+                
                 <RoomLayout
                 currentRooms={currentRooms}
                 setRooms={setRooms}/>
