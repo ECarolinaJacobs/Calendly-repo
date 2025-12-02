@@ -31,6 +31,15 @@ using (var scope = app.Services.CreateScope())
 
     context.Employees.Add(new Employee { Id = 1, Name = "Alice", Email = "test", Password = "test" });
     context.Rooms.Add(new Room { Id = 1, Name = "Meeting room 1", Capacity = 12, IsBooked = false });
+    context.Rooms.Add(new Room { Id = 2, Name = "Meeting room 2", Capacity = 9, IsBooked = false });
+    context.Rooms.Add(new Room { Id = 3, Name = "Meeting room 3", Capacity = 6,  IsBooked = false });
+    context.Rooms.Add(new Room { Id = 4, Name = "Conference room A", Capacity = 20, IsBooked = false });
+    context.Rooms.Add(new Room { Id = 5, Name = "Conference room B", Capacity = 18, IsBooked = false });
+    context.Rooms.Add(new Room { Id = 6, Name = "Training room 1", Capacity = 25, IsBooked = false });
+    context.Rooms.Add(new Room { Id = 7, Name = "Training room 2", Capacity = 22, IsBooked = false });
+    context.Rooms.Add(new Room { Id = 8, Name = "Huddle room 1", Capacity = 4, IsBooked = false });
+    context.Rooms.Add(new Room { Id = 9, Name = "Huddle room 2", Capacity = 4, IsBooked = false });
+    context.Rooms.Add(new Room { Id = 10, Name = "Executive meeting room", Capacity = 14, IsBooked = false });
     context.SaveChanges();
 }
 

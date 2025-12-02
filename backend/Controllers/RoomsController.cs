@@ -20,9 +20,9 @@ public class RoomsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<RoomBooking>> GetRooms()
+    public async Task<ActionResult<List<Room>>> GetRooms()
     {
-        var rooms = _context.Rooms.ToListAsync();
+        var rooms = await _context.Rooms.ToListAsync();
         return Ok(rooms);
     }
 }
