@@ -17,10 +17,10 @@ function App() {
         <Route element={<ProtectedRoutes/>}>
           <Route path="/events/:event" element={<EventPage />} />
           <Route path="/dashboard" element={<DashboardPage/>} />
+          <Route path="/booking" element={<BookingPage />} />
         </Route>
         <Route path="/login" element={<LoginCredentials />} />
         <Route path="/register" element={<RegisterPage />}/>
-        <Route path="/booking" element={<BookingPage />} />
       </Routes>
   );
 }
