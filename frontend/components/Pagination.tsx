@@ -16,4 +16,4 @@ const Pagination = ({totalRooms, roomsPerPage, currentPage, setCurrentPage} : an
     ) 
 }
 
-export default Pagination
+export default Pagination;
