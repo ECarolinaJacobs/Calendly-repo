@@ -29,27 +29,45 @@ body {
 }
 
 .filters {
+    display: flex;
+    align-items: center;
     padding: 20px;
+    height: 40px;
+    gap: 2px;
 }
 
 .floor-select,
-.date-select,
-.filter-button {
-    height: 40px;
-    width: 170px;
+.date-select {
     border: 2px solid rgb(236, 235, 235);
     border-radius: 6px;
     font-size: large;
     text-align: center;
     font-weight: 300;
     color: rgb(65, 63, 63);
+    height: 35px;
+    width: 170px;
     cursor: pointer;
 }
 
-.filter-button {
+.filter-button, .reset-filters-button {
     background-color: #4689d0;
     color: #fff;
     border: none;
+    border-radius: 6px;
+    height: 35px;
+    width: 120px;
+    cursor: pointer;
+}
+
+.reset-filters-button {
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.refresh-icon {
+    width: 18px;;
 }
 
 .available-room-layout {

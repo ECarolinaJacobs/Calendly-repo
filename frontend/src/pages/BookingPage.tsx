@@ -15,6 +15,7 @@ type Room = {
 export default function BookingLayout() {
     const [rooms, setRooms] = useState<Room[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
+
     const roomsPerPage = 8;
     const indexOfLastRoom = currentPage * roomsPerPage;
     const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;

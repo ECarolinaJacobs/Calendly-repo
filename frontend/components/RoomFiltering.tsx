@@ -1,5 +1,6 @@
 import { useState } from "react";
 import FilterRooms from "../src/api/filter-rooms";
+import ResetFiltersButton from "./ResetFiltersButton.tsx";
 
 const RoomFiltering = ({setRooms} : any) => {
     const [selectedFloor, setSelectedFloor] = useState("");
@@ -9,7 +10,7 @@ const RoomFiltering = ({setRooms} : any) => {
 
     return (
         <div className="filters">
-            <select className="floor-select" onChange={(e : any) => setSelectedFloor(e.target.value)}>
+            <select className="floor-select" value={selectedFloor} onChange={(e : any) => setSelectedFloor(e.target.value)}>
                 <option value="">Select floor</option>
                 {floors.map((floor : any) => (
                     <option>{floor}</option>
@@ -17,6 +18,7 @@ const RoomFiltering = ({setRooms} : any) => {
             </select>
             <input type="date"
                 className="date-select"
+                value={selectedDate}
                 min="2025-01-01"
                 max="2026-01-01" 
                 onChange={(e : any) => setSelectedDate(e.target.value)}/>
@@ -26,6 +28,10 @@ const RoomFiltering = ({setRooms} : any) => {
                 const filteredRooms = await FilterRooms(selectedFloor);
                 setRooms(filteredRooms);
             }}>Filter</button>
+            <ResetFiltersButton
+            setRooms={setRooms}
+            setSelectedFloor={setSelectedFloor}
+            setSelectedDate={setSelectedDate}/>
         </div>
     )
 }
