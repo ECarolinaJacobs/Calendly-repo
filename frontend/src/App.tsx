@@ -4,7 +4,7 @@ import { LoginCredentials } from "./pages/Login";
 import { RegisterPage } from "./pages/Register";
 import EventPage from "./pages/EventPage";
 import BookingPage from "./pages/BookingPage";
-import RoomDesign from "../components/RoomDesign.tsx";
+import RoomCard from "../components/RoomCard.tsx";
 import "./App.css"
 import ProtectedRoutes from "./ProtectedFileUtil/ProtectedPages.tsx";
 import DashboardPage from "./pages/DashboardPage";
@@ -21,7 +21,7 @@ function App() {
         </Route>
         <Route path="/login" element={<LoginCredentials />} />
         <Route path="/register" element={<RegisterPage />}/>
-        <Route path="/booking" element={<RoomDesign />} />
+        <Route path="/booking" element={<RoomCard />} />
       </Routes>
   );
 }
