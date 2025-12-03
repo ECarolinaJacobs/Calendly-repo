@@ -60,7 +60,7 @@ const RoomLayout = ({ currentRooms, setRooms } : any) => {
                 ))}
             </tbody>
         </table>
-    );
+    )
 }
 
 export default RoomLayout;
