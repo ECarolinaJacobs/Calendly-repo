@@ -1,5 +1,5 @@
 import '../src/pages/NewBookingPage.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import BookRoom from '../src/api/book-room';
 
 type Room = {
@@ -12,10 +12,10 @@ type Room = {
 
 type RoomProp = {
     room: Room
-    setRooms: any
+    currentRooms: any
 }
 
-const RoomCard = ({room} : RoomProp) => {
+const RoomCard = ({room, currentRooms} : RoomProp) => {
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
 
 
