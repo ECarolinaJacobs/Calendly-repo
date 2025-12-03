@@ -1,6 +1,18 @@
 import '../src/pages/NewBookingPage.css';
 
-const RoomCard = () => {
+type Room = {
+    id: number,
+    name: string,
+    floor: string,
+    capacity: number,
+    availability: string
+}
+
+type RoomProp = {
+    room: Room
+}
+
+const RoomCard = ({room} : RoomProp) => {
 
     return (
         <div className='card-wrapper'>
@@ -9,7 +21,7 @@ const RoomCard = () => {
                     <img src="public/room.jpg" alt="room picture" />
                 </div>
                 <div className='room-title'>
-                    Placeholder
+                    {room.name}
                     <div className='room-location'>
                         <p>Placeholder location 📍</p>
                     </div>
