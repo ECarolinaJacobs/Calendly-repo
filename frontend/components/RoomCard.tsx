@@ -1,4 +1,6 @@
 import '../src/pages/NewBookingPage.css';
+import { useState, useEffect } from 'react';
+import BookRoom from '../src/api/book-room';
 
 type Room = {
     id: number,
@@ -10,9 +12,27 @@ type Room = {
 
 type RoomProp = {
     room: Room
+    setRooms: any
 }
 
 const RoomCard = ({room} : RoomProp) => {
+    const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+
+
+    const handleRoomClick = (room: Room) => {
+        setSelectedRoom(room);
+        console.log("Selected room:", room);
+
+        const currentDate = new Date().toISOString();
+
+        BookRoom({
+            RoomId: room.id,
+            EmployeeId: 1,
+            BookingDate: currentDate,
+            StartTime: "09:00:00",
+            EndTime: "12:00:00"
+        })
+    }
 
     return (
         <div className='card-wrapper'>
@@ -31,7 +51,7 @@ const RoomCard = ({room} : RoomProp) => {
                     <div className='timeslot'>
                         9:00-12:00
                     </div>
-                    <button className='book-button'>
+                    <button className='book-button' onClick={() => handleRoomClick(room)}>
                         Book this room
                     </button>
                 </div>
