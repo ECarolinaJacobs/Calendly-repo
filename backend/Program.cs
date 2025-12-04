@@ -24,6 +24,9 @@ builder.Services.AddDbContext<ProjectContext>(opt =>
 builder.Services.AddScoped<RoomBookingService>();
 builder.Services.AddScoped<RoomService>();
 
+builder.Services.AddDbContext<EventContext>(opt =>
+    opt.UseInMemoryDatabase("EventDB"));
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
