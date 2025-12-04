@@ -1,9 +1,9 @@
-export default async function verifyData(username: string, password: string): Promise<JSON | undefined> {
-    const url = "http://localhost:5167/api/auth/login"
+export default async function FilterRooms(floor : string): Promise<JSON | undefined> {
+    const url = "http://localhost:5167/api/rooms/filtered"
     try {
         const response = await fetch(url, {
             method: "POST",
-            body: JSON.stringify({ Email: username, Password: password}),
+            body: JSON.stringify({ Floor: floor}),
             headers: {
                 "Content-Type": "application/json"
             }
@@ -14,7 +14,7 @@ export default async function verifyData(username: string, password: string): Pr
 
         const result = await response.json();
         console.log(result);
-        return await response.json();
+        return result;
     }
     catch (error : any){
         console.error(error.message);
