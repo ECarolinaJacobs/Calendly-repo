@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router-dom";
 import { LoginCredentials } from "./pages/Login";
 import { RegisterPage } from "./pages/Register";
 import EventPage from "./pages/EventPage";
-import BookingPage from "./pages/BookingPage";
 import RoomCard from "../components/RoomCard.tsx";
 import RoomLayout from "../src/pages/NewBookingPage.tsx";
 import "./App.css"

@@ -6,6 +6,7 @@
 
 body {
     background-color: white;
+    min-height: 100dvh;
 }
 
 .room-view {
@@ -75,5 +76,14 @@ body {
     gap: 23px;
 
     position: absolute;
-    right: 75px;
+    right: 340px;
+}
+
+.filter-box {
+    position: fixed;
+    background-color: rgb(70, 137, 208);
+    width: 400px;
+    height: 100vh;
+    top: 0px;
+    left: 340px;
 }
