@@ -7,6 +7,7 @@ import BookingPage from "./pages/BookingPage";
 import "./App.css";
 // import ProtectedRoutes from "./ProtectedFileUtil/ProtectedPages.tsx";
 import DashboardPage from "./pages/DashboardPage";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
       </Route>
       <Route path="/login" element={<LoginCredentials />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
