@@ -12,6 +12,7 @@ import {
   IoMenu,
   IoClose,
   IoPersonOutline,
+  IoBookmarksOutline,
 } from "react-icons/io5";
 
 /*helper function*/
@@ -161,6 +162,18 @@ export default function DashboardPage() {
           >
             <span className="icon"><IoBusinessOutline /></span>
             {sidebarOpen && <span className="label">Rooms</span>}
+          </li>
+          <li
+            className={`sidebar-item ${activeItem === "my-bookings" ? "active" : ""}`}
+            onClick={() => {
+              setActiveItem("my-bookings");
+              navigate("/my-bookings");
+            }}
+          >
+            <span className="icon">
+              <IoBookmarksOutline />
+            </span>
+            {sidebarOpen && <span className="label">My Bookings</span>}
           </li>
           <li
             className={`sidebar-item ${activeItem === "events" ? "active" : ""}`}
