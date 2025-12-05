@@ -10,7 +10,7 @@ export default function NotFound()
     return(
       <div className="dashboard-redirect-container">
         <div className="not-found-title">404</div>
-        <p>The page with this path is not found: {pathname}</p>
+        <p>The page with this path was not found: {pathname}</p>
         <p>Please return to the dashboard page <button onClick={() => navigate("/dashboard")}> <img src="dist/white_arrow.png" alt="white-arrow"></img></button></p>
       </div>
     )
