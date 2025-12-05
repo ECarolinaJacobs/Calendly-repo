@@ -1,8 +1,13 @@
 .profile-page{
-    padding: 15px;
+    padding: 40px;
+    background-color: rgba(234, 239, 245, 0.5);
+}
+
+.main-container{
+    margin-top: 60px;
 }
 .topbar{
-    background-color:#5E5DF0;
+    background-color: #6366f1;
     color: white;
     padding: 15px;
     border-radius: 10px 10px 0px 0px;
@@ -13,7 +18,8 @@
 .banner-container{
     display: flex;
     flex-direction: row;
-    background-color:rgb(211, 208, 208);
+    border-bottom-color: rgb(189, 46, 46);
+    background-color:rgb(255, 255, 255);
     /*border-radius: 4px;*/
     padding: 6px;
     border-bottom: 1.2;
@@ -28,14 +34,21 @@
 }
 .username-display{
     display: flex;
-    margin-top: 100px;
+    margin-top: 110px;
     margin-left: 40px;
     font-size: 25px;
-    color: white;
+    color: rgb(75, 74, 74);
 }
 
+.personal-info-text-container p
+{   margin-top: 10px;
+    margin-left: 22px;
+    color:rgb(75, 74, 74);
+    border-bottom: 1px solid rgb(75, 74, 74);
+
+}
 .info-section{
-    background-color:rgb(211, 208, 208);
+    background-color:white;
     padding: 25px;
 
     border-radius: 0px 0px 10px 10px;
@@ -43,18 +56,17 @@
 }
 .edit-button-container{
     display: flex;
-    justify-content: flex-start ;
+    justify-content: flex-end ;
     padding: 10px;
     border-radius: 4px;
     min-height: 60px;
 }
 
 .edit-button{
-    background-color: #5E5DF0;
+    background-color: #6366f1;
     border-radius: 800px;
     color: white;
     padding: 8px 18px;
-
 }
 
 
@@ -87,23 +99,12 @@
 
 
 .save-changes-button{
-    background-color: #5E5DF0;
+    background-color: #6366f1;
     border-radius: 800px;
     color: white;
     padding: 8px 18px;
 }
 
-
-.edit-button-container,
-.save-changes-button-container {
-    display: flex;
-    justify-content: flex-end;
-    padding: 10px;
-
-    /* THE IMPORTANT PART */
-    height: 60px;         /* fixed instead of min-height */
-    align-items: center;  /* keeps buttons aligned */
-}
 .save-changes-button-container{
     border-radius: 4px;
     display: flex;

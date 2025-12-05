@@ -13,16 +13,9 @@ export default function ProfilePage()
    
     const [IsEditing, setEditButton] = useState(false)
 
-    //username 
-    //email
-    //password change
-    //profile picture
+    //password change option
     //delete account button 
-
     //upload function can be added later
-
-  
-    
 
     return(
         <div className = "profile-page">
@@ -30,18 +23,21 @@ export default function ProfilePage()
                 <div className = "topbar">
                     <a href="/dashboard"> Dashboard</a>
                     <a href= "/events"> Events</a>
+                    <a href="/booking"> Booking</a>
                     <a href = "/logout"> LogOut</a>
                 </div>
-
                 <div className = "banner-container">
                         <img className = "profilePicture" src = "/ProfilePicture.png" alt="profile picture"/>  
                         <p className="username-display"> username </p> 
                 </div> 
-                
+            
                 <div className = "info-section">
                     <div className="edit-button-container">
                         {!IsEditing &&(<button className="edit-button" onClick={() =>{setEditButton(true)}}>edit</button>) }
-                    </div>                    
+                    </div>          
+                    <div className="personal-info-text-container">
+                        <p> Personal Information</p>
+                    </div>            
                     <form className= "info-form" onSubmit={(e)=> {e.preventDefault();}}>
                         <div className ="form-group">
                             <label htmlFor="firstname-form"> First Name</label>
@@ -74,9 +70,10 @@ export default function ProfilePage()
                     </form>
                     <div className="save-changes-button-container">
                             {IsEditing && (<button type="submit" className="save-changes-button" onClick={() =>{setEditButton(false)}}>save changes</button>)}
-                        </div>
+                    </div>
                 </div>
-            </div>    
+
+            </div>   
         </div>
         )
     
