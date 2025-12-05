@@ -7,6 +7,7 @@ import BookingPage from "./pages/BookingPage";
 import "./App.css";
 import ProtectedRoutes from "./ProtectedFileUtil/ProtectedPages.tsx";
 import DashboardPage from "./pages/DashboardPage";
+import NotFound from "./pages/NotFound";
 import AdminPage from "./pages/AdminPage";
 
 
@@ -18,14 +19,13 @@ function App() {
         Routes that need authentication need to go inside the ProtectedRoutes component*/}
       <Route element={<ProtectedRoutes />}>
         <Route path="/events/:event" element={<EventPage />} />
-        {/* <Route path="/dashboard" element={<DashboardPage/>} /> */}
+        <Route path="/dashboard" element={<DashboardPage/>} />
         <Route path="/booking" element={<BookingPage />} />
-        {/* <Route path="/admin" element={<AdminPage />} />  */}
+        <Route path="/admin" element={<AdminPage />} />
       </Route>
       <Route path="/login" element={<LoginCredentials />} />
       <Route path="/register" element={<RegisterPage />} />
-      <Route path="/dashboard" element={<DashboardPage />} />
-      <Route path="/admin" element={<AdminPage />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
