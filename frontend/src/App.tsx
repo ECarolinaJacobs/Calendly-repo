@@ -19,23 +19,17 @@ function App() {
         Routes that need authentication need to go inside the ProtectedRoutes component*/}
       <Route element={<ProtectedRoutes />}>
         <Route path="/events/:event" element={<EventPage />} />
-        <Route path="/dashboard" element={<DashboardPage/>} />
+        {/* <Route path="/dashboard" element={<DashboardPage/>} /> */}
         <Route path="/booking" element={<BookingPage />} />
         <Route path="/admin" element={<AdminPage />} />
       </Route>
       <Route path="/my-bookings" element={<MyBookingsPage />} />
       <Route path="/login" element={<LoginCredentials />} />
       <Route path="/register" element={<RegisterPage />} />
-<<<<<<< ours
       <Route path="/dashboard" element={<DashboardPage />} />
-      <Route path="/admin" element={<AdminPage />} />
       <Route path="/" element={<LoginCredentials />} />
-||||||| ancestor
-      <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/admin" element={<AdminPage />} />
-=======
       <Route path="*" element={<NotFound />} />
->>>>>>> theirs
     </Routes>
   );
 }
