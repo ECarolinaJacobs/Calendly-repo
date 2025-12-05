@@ -10,10 +10,10 @@ namespace TodoApi.Controllers;
 
 public class AdminController : ControllerBase
 {
-    private readonly AuthContext _context;
+    private readonly ProjectContext _context;
     private readonly ILogger<AdminController> _logger;
     //dependency injection
-    public AdminController(AuthContext context, ILogger<AdminController> logger)
+    public AdminController(ProjectContext context, ILogger<AdminController> logger)
     {
         _context = context;
         _logger = logger;
