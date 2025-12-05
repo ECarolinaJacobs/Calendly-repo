@@ -13,11 +13,11 @@ namespace TodoApi.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly AuthContext _context;
+    private readonly ProjectContext _context;
     public record RegisterRequest(string Name, string Email, string Password);
     public record LoginRequest(string Email, string Password);
 
-    public AuthController(AuthContext context)
+    public AuthController(ProjectContext context)
     {
         _context = context;
     }
