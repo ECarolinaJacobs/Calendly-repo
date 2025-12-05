@@ -9,7 +9,7 @@ import ProtectedRoutes from "./ProtectedFileUtil/ProtectedPages.tsx";
 import DashboardPage from "./pages/DashboardPage";
 import NotFound from "./pages/NotFound";
 import AdminPage from "./pages/AdminPage";
-
+import MyBookingsPage from "./pages/MyBookingsPage";
 
 function App() {
   return (
@@ -23,9 +23,19 @@ function App() {
         <Route path="/booking" element={<BookingPage />} />
         <Route path="/admin" element={<AdminPage />} />
       </Route>
+      <Route path="/my-bookings" element={<MyBookingsPage />} />
       <Route path="/login" element={<LoginCredentials />} />
       <Route path="/register" element={<RegisterPage />} />
+<<<<<<< ours
+      <Route path="/dashboard" element={<DashboardPage />} />
+      <Route path="/admin" element={<AdminPage />} />
+      <Route path="/" element={<LoginCredentials />} />
+||||||| ancestor
+      <Route path="/dashboard" element={<DashboardPage />} />
+      <Route path="/admin" element={<AdminPage />} />
+=======
       <Route path="*" element={<NotFound />} />
+>>>>>>> theirs
     </Routes>
   );
 }

@@ -1,0 +1,49 @@
+
+.my-bookings-container {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 2rem auto;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.my-bookings-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 2rem;
+}
+
+.bookings-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.booking-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.booking-item:hover {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.booking-room {
+    font-size: 1.2rem;
+    color: #0056b3;
+    margin-bottom: 0.5rem;
+}
+
+.booking-time {
+    font-size: 1rem;
+    color: #555;
+}
+
+.error-message {
+    color: #d9534f;
+    text-align: center;
+}

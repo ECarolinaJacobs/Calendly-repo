@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Cors;
 using BCrypt.Net;
-
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 using TodoApi.Models;
 using TodoApi.Context;
-using Microsoft.AspNetCore.Identity;
+
 namespace TodoApi.Controllers;
 
 [Route("api/[controller]")]
@@ -14,12 +16,14 @@ namespace TodoApi.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly ProjectContext _context;
+    private readonly IConfiguration _configuration;
     public record RegisterRequest(string Name, string Email, string Password);
     public record LoginRequest(string Email, string Password);
 
-    public AuthController(ProjectContext context)
+    public AuthController(ProjectContext context, IConfiguration configuration)
     {
         _context = context;
+        _configuration = configuration;
     }
 
     [HttpPost("register")]
@@ -49,13 +53,14 @@ public class AuthController : ControllerBase
 
         await _context.SaveChangesAsync();
 
+        // Avoid returning the full employee object which includes the password hash
         return CreatedAtAction(
-            "register",
-            employee);
+            "Register",
+            new { id = employee.Id, name = employee.Name, email = employee.Email });
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<Employee>> Login(LoginRequest request)
+    public async Task<ActionResult> Login(LoginRequest request)
     {
         Employee? employee = await _context.Employees
             .FirstOrDefaultAsync(e => e.Email == request.Email);
@@ -65,11 +70,25 @@ public class AuthController : ControllerBase
             return Unauthorized("Invalid email or password.");
         }
 
-        Guid authToken = Guid.CreateVersion7();
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, employee.Id.ToString()),
+                new Claim(ClaimTypes.Name, employee.Name),
+                new Claim(ClaimTypes.Email, employee.Email),
+                new Claim("isAdmin", employee.IsAdmin.ToString())
+            }),
+            Expires = DateTime.UtcNow.AddHours(1),
+            Issuer = _configuration["Jwt:Issuer"],
+            Audience = _configuration["Jwt:Audience"],
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var tokenString = tokenHandler.WriteToken(token);
 
-
-        return Ok(authToken);
+        return Ok(new { Token = tokenString });
     }
-
-
 }

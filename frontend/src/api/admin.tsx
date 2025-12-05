@@ -1,43 +1,28 @@
-export async function getAllEmployees(token: string) {
-    const url = "http://localhost:5167/api/admin/employees";
-    try {
-        const response = await fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}` // pass the auth token
-            }
-        });
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
-        const employees = await response.json();
-        console.log(employees);
-        return employees;
-    }
-    catch (error: any) {
-        console.error(error.message);
-    }
+import apiClient from "./apiClient";
+import type { Employee } from "../models/Employee";
+
+export async function getAllEmployees(): Promise<Employee[]> {
+  try {
+    const response = await apiClient.get<Employee[]>("/admin/employees");
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      "Failed to get employees:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
 }
 
-export async function deleteEmployee(id: number, token: string) {
-    const url = `http://localhost:5167/api/admin/employees/${id}`;
-    try {
-        const response = await fetch(url, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            }
-        });
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
-        console.log(`Employee ${id} deleted`);
-        return true;
-    }
-    catch (error: any) {
-        console.error(error.message);
-        return false;
-    }
+export async function deleteEmployee(id: number): Promise<boolean> {
+  try {
+    await apiClient.delete(`/admin/employees/${id}`);
+    return true;
+  } catch (error: any) {
+    console.error(
+      `Failed to delete employee ${id}:`,
+      error.response?.data || error.message
+    );
+    return false;
+  }
 }
