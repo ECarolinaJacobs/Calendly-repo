@@ -1,22 +1,18 @@
-export default async function authRegister(name: string, email: string, password: string) {
-    const url = "http://localhost:5252/auth/register"
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            body: JSON.stringify({Name: name, Email: email, Password: password}),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
+import apiClient from './apiClient';
 
-        const result = await response.json();
-        console.log(result);
-        return result;
+export interface RegisterResponse {
+    id: string;
+    name: string;
+    email: string;
+}
+
+export default async function authRegister(name: string, email: string, password: string): Promise<RegisterResponse> {
+    try {
+        const response = await apiClient.post<RegisterResponse>('/auth/register', { Name: name, Email: email, Password: password });
+        return response.data;
     }
-    catch (error : any){
-        console.error(error.message);
+    catch (error: any){
+        console.error('Registration failed:', error.response?.data || error.message);
+        throw error;
     }
 }
