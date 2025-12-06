@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
 using TodoApi.Context;
+using TodoApi.DTOs;
 
 namespace TodoApi.Controllers;
 //controller for admin operations
@@ -97,16 +98,71 @@ public class AdminController : ControllerBase
         }
     }
     public record UpdateAdminRequest(bool IsAdmin);
-}
-
-// data transfer object (DTO) for employee information
-public record EmployeeDto
-{
-    public long Id { get; init; }
-    public string Name { get; init; } = string.Empty;
-    public string Email { get; init; } = string.Empty;
-    public bool IsAdmin { get; init; }
-    public int Coins { get; init; }
-    // no password field for security purposes
+    // filter / search function for employees by name or email
+    [HttpGet("employees/search")]
+    public async Task<ActionResult<IEnumerable<EmployeeDto>>> SearchEmployees([FromQuery] string searchTerm)
+    {
+        /// <summary> 
+        /// Used input search term to filter and returns list of employees who satisfy the requirement
+        /// <summary>
+        /// <param name="searchTerm"> Search term to filter by </param>
+        /// <returns>Filtered list of employees </returns> 
+        try
+        {
+            _logger.LogInformation("Searching employees containing: {SearchTerm}", searchTerm);
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return BadRequest(new { message = "Search term is required" });
+            }
+            var employees = await _context.Employees
+                .Where(e => e.Name.ToLower().Contains(searchTerm.ToLower()) ||
+                    e.Email.ToLower().Contains(searchTerm.ToLower()))
+                .Select(e => new EmployeeDto
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    Email = e.Email,
+                    IsAdmin = e.IsAdmin,
+                    Coins = e.Coins
+                })
+                .ToListAsync();
+            _logger.LogInformation("Found {Count} employees matching '{SearchTerm}'", employees.Count, searchTerm);
+            return Ok(employees);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error searching employees");
+            return StatusCode(500, new { message = "internal server error" });
+        }
+    }
+    ///<summary>
+    /// gets stat overview of employees like the average amount of coins or how many employees there are
+    /// </summary>
+    /// <returns>Statistics about employees in the system </returns>
+    [HttpGet("statistics")]
+    public async Task<ActionResult<AdminStatsDto>> GetStatistics()
+    {
+        try
+        {
+            _logger.LogInformation("Admin requesting statistics");
+            var employees = await _context.Employees.ToListAsync();
+            var stats = new AdminStatsDto
+            {
+                TotalEmployees = employees.Count,
+                TotalAdmins = employees.Count(e => e.IsAdmin),
+                TotalRegularUsers = employees.Count(e => !e.IsAdmin),
+                TotalCoins = employees.Sum(e => e.Coins),
+                AverageCoinsPerUser = employees.Any() ? employees.Average(e => e.Coins) : 0
+            };
+            _logger.LogInformation("Statistics: {TotalEmployees} total employees, {TotalAdmins} admins",
+                stats.TotalEmployees, stats.TotalAdmins);
+            return Ok(stats);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving statistics");
+            return StatusCode(500, new { message = "Internal server error" });
+        }
+    }
 }
 

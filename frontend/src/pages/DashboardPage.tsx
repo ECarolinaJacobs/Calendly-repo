@@ -39,8 +39,7 @@ function hasEventsOnDate(events: Event[], year: number, month: number, day: numb
 
 
 
-
-/*embedded calendar hook temporarily embedded, move to seperate hook file*/
+//TODO: embedded calendar hook needs to be moved to /hooks
 function useCalendar(initialDate = new Date()) {
   const [date, setDate] = useState(initialDate);
   const year = date.getFullYear();
@@ -187,14 +186,17 @@ export default function DashboardPage() {
             </span>
             {sidebarOpen && <span className="label">Events</span>}
           </li>
+          <li 
+            className={`sidebar-item ${activeItem === "profile" ? "active" : ""}`}
+            onClick={() => {
+              setActiveItem("profile");
+              navigate("/profile");
+            }}
+          >
+            <span className="icon"><IoPersonOutline /></span>
+            {sidebarOpen && <span className="label">Profile</span>}
+          </li>
         </ul>
-        <div
-          className={`sidebar-item ${activeItem === "profile" ? "active" : ""}`}
-          onClick={() => setActiveItem("profile")}
-        >
-          <span className="icon"><IoPersonOutline /></span>
-          {sidebarOpen && <span className="label">Profile</span>}
-        </div>
       </aside>
       {/*main content */}
       <div className={`main-content-area ${sidebarOpen ? "shift" : ""}`}>

@@ -26,3 +26,40 @@ export async function deleteEmployee(id: number): Promise<boolean> {
     return false;
   }
 }
+
+export async function searchEmployees(searchTerm: string): Promise<Employee[]> {
+  try {
+    const response = await apiClient.get<Employee[]>("/admin/employees/search", {
+      params: { searchTerm } // query param
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      "Failed to find employees",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+}
+
+// interface to get statistics 
+export interface AdminStats {
+  totalEmployees: number;
+  totalAdmins: number;
+  totalRegularUsers: number;
+  totalCoins: number;
+  averageCoinsPerUser: number;
+}
+
+export async function getStatistics(): Promise<AdminStats> {
+  try {
+    const response = await apiClient.get<AdminStats>("/admin/statistics");
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      "Failed to get statistics:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+}
