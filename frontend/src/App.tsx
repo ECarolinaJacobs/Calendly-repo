@@ -19,16 +19,14 @@ function App() {
         Routes that need authentication need to go inside the ProtectedRoutes component*/}
       <Route element={<ProtectedRoutes />}>
         <Route path="/events/:event" element={<EventPage />} />
-        {/* <Route path="/dashboard" element={<DashboardPage/>} /> */}
+        <Route path="/dashboard" element={<DashboardPage/>} />
         <Route path="/booking" element={<BookingPage />} />
-        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/admin" element={<AdminPage />} /> //FIXME: admin can be accesed through url by logged in normal user, assignee: Elena
       </Route>
       <Route path="/my-bookings" element={<MyBookingsPage />} />
       <Route path="/login" element={<LoginCredentials />} />
       <Route path="/register" element={<RegisterPage />} />
-      <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/" element={<LoginCredentials />} />
-      <Route path="/admin" element={<AdminPage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

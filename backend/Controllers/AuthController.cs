@@ -88,7 +88,13 @@ public class AuthController : ControllerBase
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
         var tokenString = tokenHandler.WriteToken(token);
-
-        return Ok(new { Token = tokenString });
+        //added more info to the response, so the frontend can read if user is an admin or not 
+        return Ok(new { 
+            token = tokenString,
+            userId = employee.Id,
+            name = employee.Id,
+            email = employee.Email,
+            isAdmin = employee.IsAdmin  // FIXME: temporary isAdmin, for security reasons this should be changed later, assignee: Elena
+        });
     }
 }
