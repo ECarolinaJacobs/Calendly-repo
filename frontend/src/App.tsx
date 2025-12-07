@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { LoginCredentials } from "./pages/Login";
 import { RegisterPage } from "./pages/Register";
 import EventPage from "./pages/EventPage";
-import RoomLayout from "../src/pages/BookingPage.tsx";
+import BookingPage from "../src/pages/BookingPage.tsx";
 import "./App.css"
 import ProtectedRoutes from "./ProtectedFileUtil/ProtectedPages.tsx";
 import DashboardPage from "./pages/DashboardPage";
@@ -20,7 +20,7 @@ function App() {
         </Route>
         <Route path="/login" element={<LoginCredentials />} />
         <Route path="/register" element={<RegisterPage />}/>
-        <Route path="/booking" element={<RoomLayout />} />
+        <Route path="/booking" element={<BookingPage />} />
       </Routes>
   );
 }

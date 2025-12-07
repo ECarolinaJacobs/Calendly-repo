@@ -12,7 +12,7 @@ type Room = {
     availability: string
 }
 
-const RoomLayout = () => {
+const BookingPage = () => {
     const [rooms, setRooms] = useState<Room[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -54,4 +54,4 @@ const RoomLayout = () => {
     )
 }
 
-export default RoomLayout;
+export default BookingPage;
