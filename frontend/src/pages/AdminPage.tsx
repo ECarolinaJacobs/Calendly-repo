@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
-import { getAllEmployees, deleteEmployee } from '../api/admin';
+import { getAllEmployees, deleteEmployee, searchEmployees, getStatistics } from '../api/admin';
+import type { AdminStats } from '../api/admin';
+import "./AdminPage.css";
+
 // typescript interface to match employeeDto
 interface Employee {
     id: number;
@@ -11,55 +14,128 @@ interface Employee {
 
 export default function AdminPage() {
     const [employees, setEmployees] = useState<Employee[]>([]);
+    const [stats, setStats] = useState<AdminStats | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    // get auth token 
-    const token = localStorage.getItem('authToken') || '';
-    // get employees when component loads
+    const [searchTerm, setSearchTerm] = useState("");
+    // fetch data when component loads
     useEffect(() => {
-        loadEmployees();
+        loadData();
     }, []);
-    const loadEmployees = async () => {
+    const loadData = async () => {
         try {
             setLoading(true);
             setError(null);
-            const data = await getAllEmployees(token);
-            setEmployees(data || []);
+            //load employees and statistics
+            const [employeesData, statsData] = await Promise.all([
+                getAllEmployees(),
+                getStatistics()
+            ]);
+            setEmployees(employeesData || []);
+            setStats(statsData)
         } catch (err) {
-            setError('Failed to load employees');
+            setError("Failed to load data");
             console.error(err);
         } finally {
             setLoading(false);
         }
     };
+    const handleSearch = async () => {
+        if (!searchTerm.trim()) {
+            // if search is empty reload all employees
+            loadData();
+            return;
+        }
+        try {
+            setLoading(true);
+            setError(null);
+            const results = await searchEmployees(searchTerm);
+            setEmployees(results || []);
+        } catch (err) {
+            setError("Search failed");
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+    const handleClearSearch = () => {
+        setSearchTerm("");
+        loadData(); //reload all employees
+    };
+
     const handleDelete = async (id: number, name: string) => {
         if (!window.confirm(`Are you sure you want to delete ${name}?`)) {
             return;
         }
         try {
-            const success = await deleteEmployee(id, token);
+            const success = await deleteEmployee(id);
             if (success) {
-                //remove from local state (optimistic update)
-                setEmployees(employees.filter(emp => emp.id !== id));
-                alert('Employee deleted successfully');
+                //reload data after deleting
+                loadData();
+                alert("Employee deleted successfully");
             } else {
-                alert('Failed to delete employee');
+                alert("Failed to delete employee");
             }
         } catch (err) {
             console.error(err);
             alert('Error deleting employee');
         }
     };
-    if (loading) {
-        return <div className="loading">Loading employees...</div>;
+    if (loading && !stats) {
+        return <div className="loading">Loading...</div>;
     }
-    if (error) {
+    if (error && !stats) {
         return <div className="error">{error}</div>;
     }
     return (
         <div className="admin-page">
             <h1>Admin Dashboard</h1>
-            <p>Total Employees: {employees.length}</p>
+            {/*statistics cards*/}
+            {stats && (
+                <div className="stats-container">
+                    <div className="stat-card">
+                        <h3>Total Employees</h3>
+                        <p className="stat-number">{stats.totalEmployees}</p>
+                    </div>
+                    <div className="stat-card">
+                        <h3>Admins</h3>
+                        <p className="stat-number">{stats.totalAdmins}</p>
+                    </div>
+                    <div className="stat-card">
+                        <h3>Regular users</h3>
+                        <p className="stat-number">{stats.totalRegularUsers}</p>
+                    </div>
+                    <div className="stat-card">
+                        <h3>Total coins</h3>
+                        <p className="stat-number">{stats.totalCoins}</p>
+                    </div>
+                    <div className="stat-card">
+                        <h3>Average Coins per user</h3>
+                        <p className="stat-number">{stats.averageCoinsPerUser.toFixed(1)}</p>
+                    </div>
+                </div>
+            )}
+            {/*search bar */}
+            <div className="search-container">
+                <input
+                    type="text"
+                    placeholder="Search employee by name or email"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                    className="search-input"
+                />
+                <button onClick={handleSearch} className="search-btn">
+                    Search
+                </button>
+                {searchTerm && (
+                    <button onClick={handleClearSearch} className="clear-btn">
+                        Clear
+                    </button>
+                )}
+            </div>
+            { /*employee table*/}
+            <h2>Employees ({employees.length})</h2>
             <table className="employee-table">
                 <thead>
                     <tr>
@@ -72,23 +148,31 @@ export default function AdminPage() {
                     </tr>
                 </thead>
                 <tbody>
-                    {employees.map(employee => (
-                        <tr key={employee.id}>
-                            <td>{employee.id}</td>
-                            <td>{employee.name}</td>
-                            <td>{employee.email}</td>
-                            <td>{employee.isAdmin ? "Yes" : "No"}</td>
-                            <td>{employee.coins}</td>
-                            <td>
-                                <button
-                                    onClick={() => handleDelete(employee.id, employee.name)}
-                                    className="delete-btn"
-                                >
-                                    Delete
-                                </button>
+                    {employees.length === 0 ? (
+                        <tr>
+                            <td colSpan={6} style={{ textAlign: 'center' }}>
+                                {searchTerm ? "No employees found" : "No employees"}
                             </td>
                         </tr>
-                    ))}
+                    ) : (
+                        employees.map(employee => (
+                            <tr key={employee.id}>
+                                <td>{employee.id}</td>
+                                <td>{employee.name}</td>
+                                <td>{employee.email}</td>
+                                <td>{employee.isAdmin ? "Yes" : "No"}</td>
+                                <td>{employee.coins}</td>
+                                <td>
+                                    <button
+                                        onClick={() => handleDelete(employee.id, employee.name)}
+                                        className="delete-btn"
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))
+                    )}
                 </tbody>
             </table>
         </div>
