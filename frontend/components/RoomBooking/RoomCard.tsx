@@ -1,6 +1,6 @@
-import '../src/pages/NewBookingPage.css';
+import '../../src/pages/BookingPage.css';
 import { useState } from 'react';
-import BookRoom from '../src/api/book-room';
+import BookRoom from '../../src/api/book-room';
 
 type Room = {
     id: number,

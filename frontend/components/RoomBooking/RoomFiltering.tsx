@@ -1,5 +1,5 @@
 import { useState } from "react";
-import FilterRooms from "../src/api/filter-rooms";
+import FilterRooms from "../../src/api/filter-rooms";
 import ResetFiltersButton from "./ResetFiltersButton.tsx";
 
 const RoomFiltering = ({setRooms} : any) => {

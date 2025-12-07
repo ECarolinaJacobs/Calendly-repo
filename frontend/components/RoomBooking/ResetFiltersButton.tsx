@@ -1,4 +1,4 @@
-import FetchRooms from '../src/api/fetch-rooms.tsx';
+import FetchRooms from '../../src/api/fetch-rooms.tsx';
 
 const ResetFiltersButton = ({setRooms, setSelectedFloor, setSelectedDate} : any) => {
 

@@ -1,44 +1,57 @@
-// import { useState } from 'react';
-// import './BookingPage.css';
+import { useState, useEffect } from "react";
+import RoomCard from "../../components/RoomBooking/RoomCard";
+// import Pagination from "../../components/Pagination";
+import RoomFiltering from "../../components/RoomBooking/RoomFiltering";
+import '../pages/BookingPage.css';
 
-// type Room = {
-//     id: number,
-//     name: string,
-//     floor: string,
-//     capacity: number,
-//     availability: string
-// }
+type Room = {
+    id: number,
+    name: string,
+    floor: string,
+    capacity: number,
+    availability: string
+}
 
-// export default function BookingLayout() {
-//     const [rooms, setRooms] = useState<Room[]>([]);
-//     const [currentPage, setCurrentPage] = useState(1);
+const RoomLayout = () => {
+    const [rooms, setRooms] = useState<Room[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
 
-//     const roomsPerPage = 8;
-//     const indexOfLastRoom = currentPage * roomsPerPage;
-//     const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
-//     const currentRooms = rooms.slice(indexOfFirstRoom, indexOfLastRoom);
+    // const roomsPerPage = 8;
+    // const indexOfLastRoom = currentPage * roomsPerPage;
+    // const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
+    // const currentRooms = rooms.slice(indexOfFirstRoom, indexOfLastRoom);
 
-//     // return (
-//     //     <div className="booking-page">
-//     //         <div className="booking-box">
-//     //             <h1 className="title">Book a room</h1>
+    useEffect(() => {
+        async function fetchRooms() {
+            const res = await fetch('http://localhost:5167/api/rooms');
+            const data = await res.json();
+            setRooms(data);
+        }
 
-//     //             {/* <RoomFiltering
-//     //             setRooms={setRooms}/> */}
-                
-//     //             {/* <RoomLayout
-//     //             currentRooms={currentRooms}
-//     //             setRooms={setRooms}/> */}
+        fetchRooms();
+    }, [])
 
-//     //             {/* <div className="available-room-layout">
-//     //                 <Pagination
-//     //                     totalRooms={rooms.length}
-//     //                     roomsPerPage={roomsPerPage}
-//     //                     currentPage={currentPage}
-//     //                     setCurrentPage={setCurrentPage}
-//     //                 />
-//     //             </div> */}
-//     //         </div>
-//     //     </div>
-//     // )
-// }
+    return (
+        <div>
+            <RoomFiltering
+            setRooms={setRooms}/>
+            <div className="room-list">
+                {rooms.map((room) => (
+                    <RoomCard
+                    room={room}
+                   />
+                ))}
+            </div>
+            {/* <div>
+                <Pagination
+                    totalRooms={rooms.length}
+                    roomsPerPage={roomsPerPage}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                />
+            </div> */}
+        </div>
+    )
+}
+
+export default RoomLayout;
