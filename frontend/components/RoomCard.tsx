@@ -12,10 +12,9 @@ type Room = {
 
 type RoomProp = {
     room: Room
-    currentRooms: any
 }
 
-const RoomCard = ({room, currentRooms} : RoomProp) => {
+const RoomCard = ({room} : RoomProp) => {
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
 
 

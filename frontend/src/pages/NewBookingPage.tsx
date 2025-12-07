@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import RoomCard from "../../components/RoomCard";
-import Pagination from "../../components/Pagination";
+// import Pagination from "../../components/Pagination";
 import RoomFiltering from "../../components/RoomFiltering";
 import '../pages/NewBookingPage.css';
 
@@ -16,10 +16,10 @@ const RoomLayout = () => {
     const [rooms, setRooms] = useState<Room[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
 
-    const roomsPerPage = 8;
-    const indexOfLastRoom = currentPage * roomsPerPage;
-    const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
-    const currentRooms = rooms.slice(indexOfFirstRoom, indexOfLastRoom);
+    // const roomsPerPage = 8;
+    // const indexOfLastRoom = currentPage * roomsPerPage;
+    // const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
+    // const currentRooms = rooms.slice(indexOfFirstRoom, indexOfLastRoom);
 
     useEffect(() => {
         async function fetchRooms() {
@@ -36,21 +36,20 @@ const RoomLayout = () => {
             <RoomFiltering
             setRooms={setRooms}/>
             <div className="room-list">
-                {currentRooms.map((room) => (
+                {rooms.map((room) => (
                     <RoomCard
                     room={room}
-                    currentRooms={currentRooms}
                    />
                 ))}
             </div>
-            <div>
+            {/* <div>
                 <Pagination
                     totalRooms={rooms.length}
                     roomsPerPage={roomsPerPage}
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
                 />
-            </div>
+            </div> */}
         </div>
     )
 }

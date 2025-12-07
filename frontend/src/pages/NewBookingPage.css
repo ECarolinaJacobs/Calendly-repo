@@ -1,13 +1,7 @@
-/* .card-wrapper {
-    position: absolute;
-    right: 110px;
-    top: 30px;
-} */
-
-body {
+/* body {
     background-color: white;
     min-height: 100dvh;
-}
+} */
 
 .room-view {
     position: relative;
@@ -68,6 +62,7 @@ body {
     padding: 20px 20px;
     border-radius: 40px;
     height: 40px;
+    cursor: pointer;
 }
 
 .room-list {
@@ -86,4 +81,54 @@ body {
     height: 100vh;
     top: 0px;
     left: 340px;
+
+    display: flex;
+    justify-content: center;
+}
+
+.filters {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding-top: 180px;
+    gap: 50px;
+}
+
+.floor-select,
+.date-select,
+.filter-button {
+    border: 2px solid rgb(236, 235, 235);
+    border-radius: 40px;
+    font-size: large;
+    text-align: center;
+    font-weight: 300;
+    color: rgb(65, 63, 63);
+    background-color: rgb(255, 245, 245);
+    height: 50px;
+    width: 290px;
+    cursor: pointer;
+}
+
+.confirm-filter-wrapper {
+    display: flex;
+    flex-direction: row;
+    padding-top: 410px;
+    gap: 5px;
+}
+
+.reset-filters-button {
+    background-color: blue;
+    border-radius: 40px;
+    height: 50px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.reset-filters-button img {
+    height: 30px;
+    width: 30px;
 }

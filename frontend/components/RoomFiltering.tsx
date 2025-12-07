@@ -23,16 +23,19 @@ const RoomFiltering = ({setRooms} : any) => {
                     min="2025-01-01"
                     max="2026-01-01" 
                     onChange={(e : any) => setSelectedDate(e.target.value)}/>
-                <button className="filter-button"
-                onClick={async () => 
-                {
-                    const filteredRooms = await FilterRooms(selectedFloor);
-                    setRooms(filteredRooms);
-                }}>Filter</button>
-                <ResetFiltersButton
-                setRooms={setRooms}
-                setSelectedFloor={setSelectedFloor}
-                setSelectedDate={setSelectedDate}/>
+
+                <div className="confirm-filter-wrapper">
+                    <ResetFiltersButton className="reset-filters-button"
+                    setRooms={setRooms}
+                    setSelectedFloor={setSelectedFloor}
+                    setSelectedDate={setSelectedDate}/>
+                    <button className="filter-button"
+                    onClick={async () => 
+                    {
+                        const filteredRooms = await FilterRooms(selectedFloor);
+                        setRooms(filteredRooms);
+                    }}>Filter</button>
+                </div>
             </div>
         </div>
     )
