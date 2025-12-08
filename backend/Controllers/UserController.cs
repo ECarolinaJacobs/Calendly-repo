@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Context;
+using TodoApi.Services;
 
 namespace backend.Controllers
 {
@@ -13,10 +14,12 @@ namespace backend.Controllers
     public class UserController : ControllerBase
     {
         private readonly ProjectContext _context;
+        private readonly PointsService _pointsService;
 
-        public UserController(ProjectContext context)
+        public UserController(ProjectContext context, PointsService pointsService)
         {
             _context = context;
+            _pointsService = pointsService;
         }
 
         [HttpGet("bookings")]
@@ -48,6 +51,19 @@ namespace backend.Controllers
             }).ToList();
 
             return Ok(bookingResults);
+        }
+
+        [HttpGet("points")]
+        public async Task<IActionResult> GetUserPoints()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            var points = await _pointsService.GetEmployeePointsAsync(long.Parse(userId));
+            return Ok(new { points = points });
         }
     }
 }

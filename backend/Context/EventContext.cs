@@ -12,4 +12,14 @@ public class EventContext : DbContext
 
     public DbSet<Event> Events { get; set; } = null!;
     public DbSet<Attendee> Attendees { get; set; } = null!;
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Attendee>()
+            .HasOne(a => a.Event)
+            .WithMany(e => e.Attendees)
+            .HasForeignKey(a => a.EventId);
+    }
 }
