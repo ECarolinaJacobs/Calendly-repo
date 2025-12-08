@@ -27,7 +27,6 @@ const RoomCard = ({room} : RoomProp) => {
         try {
             const result = await BookRoom({
             RoomId: room.id,
-            BookingDate: currentDate,
             StartTime: "2025-12-12T09:00:00.000Z",
             EndTime: "2025-12-12T17:00:00.000Z"
         })

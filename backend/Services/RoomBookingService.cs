@@ -42,12 +42,12 @@ public class RoomBookingService
 
         foreach (RoomBooking booking in _context.RoomBookings)
         {
-            if (booking.Room == newBooking.Room)
+            if (booking.RoomId == newBooking.RoomId)
             {
                 DateTime startExistingBooking = DateTime.ParseExact(
-                booking.StartTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+                    booking.StartTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
                 DateTime endExistingBooking = DateTime.ParseExact(
-                booking.EndTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+                    booking.EndTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
 
                 if (startNewBooking < endExistingBooking && endNewBooking > startExistingBooking) return false;
             }

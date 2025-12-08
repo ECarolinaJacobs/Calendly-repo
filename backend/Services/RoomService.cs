@@ -19,43 +19,59 @@ public class RoomService
         List<Room> filteredRooms = new();
         var rooms = await _context.Rooms.ToListAsync();
 
-        if (roomFilter.Floor != null)
+        foreach (var room in rooms)
         {
-            DateTime startFilter = DateTime.ParseExact(
-            roomFilter.StartTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
-            DateTime endFilter = DateTime.ParseExact(
-            roomFilter.EndTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
-
-            foreach (RoomBooking booking in _context.RoomBookings)
+            if (!(CheckRoomAlreadyBooked(room, roomFilter)))
             {
-                DateTime startTime = DateTime.ParseExact(
-                    booking.StartTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
-                DateTime endTime = DateTime.ParseExact(
-                    booking.EndTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
-                
-                if (!(startFilter < endTime && endFilter > startTime))
-                {
-                    Room room = FindRoomById(booking.RoomId);
-                    filteredRooms.Add(room);
-                }
+                filteredRooms.Add(room);
             }
         }
 
-        foreach (var room in filteredRooms)
+        if (roomFilter.Floor != null)
         {
-            if (room.Floor != roomFilter.Floor) filteredRooms.Remove(room);
+            filteredRooms = filteredRooms
+            .Where(r => r.Floor == roomFilter.Floor)
+            .ToList();
         }
 
         return filteredRooms;
     }
 
-    public Room FindRoomById(long id)
+    public bool CheckRoomAlreadyBooked(Room room, RoomFilterDTO roomFilter)
     {
-        var rooms = _context.Rooms.ToList();
-        foreach (var room in rooms)
+        var bookings = _context.RoomBookings.ToList();
+
+        if (roomFilter.StartTime != null && roomFilter.EndTime != null)
         {
-            if (room.Id == id) return room;
+            DateTime startFilter = DateTime.ParseExact(
+                roomFilter.StartTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+            DateTime endFilter = DateTime.ParseExact(
+                roomFilter.EndTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+
+            foreach (var booking in bookings)
+            {
+                if (booking.RoomId == room.Id)
+                {
+                    DateTime startTime = DateTime.ParseExact(
+                        booking.StartTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+                    DateTime endTime = DateTime.ParseExact(
+                        booking.EndTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+
+                    if (startFilter < endTime && endFilter > startTime) return true;
+                }
+            }
+            return false;
         }
-        return null;
+        return false;
     }
+
+    // public Room FindRoomById(long id)
+    // {
+    //     var rooms = _context.Rooms.ToList();
+    //     foreach (var room in rooms)
+    //     {
+    //         if (room.Id == id) return room;
+    //     }
+    //     return null;
+    // }
 }
