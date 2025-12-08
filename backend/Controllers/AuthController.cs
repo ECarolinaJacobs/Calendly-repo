@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 using TodoApi.Models;
 using TodoApi.Context;
+using TodoApi.Services;
 
 namespace TodoApi.Controllers;
 
@@ -17,13 +18,15 @@ public class AuthController : ControllerBase
 {
     private readonly ProjectContext _context;
     private readonly IConfiguration _configuration;
+    private readonly PointsService _pointsService;
     public record RegisterRequest(string Name, string Email, string Password);
     public record LoginRequest(string Email, string Password);
 
-    public AuthController(ProjectContext context, IConfiguration configuration)
+    public AuthController(ProjectContext context, IConfiguration configuration, PointsService pointsService)
     {
         _context = context;
         _configuration = configuration;
+        _pointsService = pointsService;
     }
 
     [HttpPost("register")]
@@ -53,10 +56,13 @@ public class AuthController : ControllerBase
 
         await _context.SaveChangesAsync();
 
+        // Award registration points
+        await _pointsService.AwardRegistrationPointsAsync(employee.Id);
+
         // Avoid returning the full employee object which includes the password hash
         return CreatedAtAction(
             "Register",
-            new { id = employee.Id, name = employee.Name, email = employee.Email });
+            new { id = employee.Id, name = employee.Name, email = employee.Email, coins = employee.Coins });
     }
 
     [HttpPost("login")]
