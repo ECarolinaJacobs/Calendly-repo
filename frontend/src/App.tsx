@@ -7,21 +7,33 @@ import BookingPage from "../src/pages/BookingPage.tsx";
 import "./App.css"
 import ProtectedRoutes from "./ProtectedFileUtil/ProtectedPages.tsx";
 import DashboardPage from "./pages/DashboardPage";
+import ProfilePage from  "./pages/ProfilePage";
+import NotFound from "./pages/NotFound";
+import AdminPage from "./pages/AdminPage";
+import MyBookingsPage from "./pages/MyBookingsPage";
+
 
 function App() {
   return (
-      <Routes>
+    <Routes>
       {/*Routes that do not need authentication can go here for example the login and sign in routes
         Only logged in users can acces the routes below.
         Routes that need authentication need to go inside the ProtectedRoutes component*/}
-        <Route element={<ProtectedRoutes/>}>
-          <Route path="/events/:event" element={<EventPage />} />
-          <Route path="/dashboard" element={<DashboardPage/>} />
-        </Route>
-        <Route path="/login" element={<LoginCredentials />} />
-        <Route path="/register" element={<RegisterPage />}/>
+
+      <Route element={<ProtectedRoutes />}>
+        <Route path="/events/:event" element={<EventPage />} />
+        <Route path="/dashboard" element={<DashboardPage/>} />
         <Route path="/booking" element={<BookingPage />} />
-      </Routes>
+        <Route path="/admin" element={<AdminPage />} /> //FIXME: admin can be accesed through url by logged in normal user, assignee: Elena
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/admin" element={<AdminPage />} />
+      </Route>
+      <Route path="/my-bookings" element={<MyBookingsPage />} />
+      <Route path="/login" element={<LoginCredentials />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/" element={<LoginCredentials />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 

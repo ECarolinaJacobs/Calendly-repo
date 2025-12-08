@@ -68,5 +68,11 @@ Follow these steps to create a new branch, commit your changes, push to the bran
 - git push origin feature/your-feature
 
 
+Test admin login credentials:
+        Name = "Admin",
+        Email = "admin@test.com",
+        Password = "admin123",
+
+
 
 

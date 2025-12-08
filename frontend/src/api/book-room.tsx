@@ -1,3 +1,5 @@
+import apiClient from './apiClient';
+
 type BookingParams = {
     RoomId: number;
     EmployeeId: number;
@@ -6,35 +8,12 @@ type BookingParams = {
     EndTime: string;
 };
 
-export default async function BookRoom({
-    RoomId,
-    EmployeeId,
-    BookingDate,
-    StartTime,
-    EndTime
-}: BookingParams) {
-    const url = "http://localhost:5167/api/bookings/start";
+export default async function BookRoom(params: BookingParams) {
     try {
-        const response = await fetch(url, {
-            method: "POST",
-            body: JSON.stringify({
-                RoomId,
-                EmployeeId,
-                BookingDate,
-                StartTime,
-                EndTime
-            }),
-            headers: { "Content-Type": "application/json" }
-        });
-
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
-
-        const result = await response.json();
-        console.log(result);
-        return result;
+        const response = await apiClient.post('/bookings/start', params);
+        return response.data;
     } catch (error: any) {
-        console.error(error.message);
+        console.error('Booking failed:', error.response?.data || error.message);
+        throw error;
     }
 }

@@ -1,22 +1,17 @@
-export default async function FilterRooms(floor : string): Promise<JSON | undefined> {
-    const url = "http://localhost:5167/api/rooms/filtered"
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            body: JSON.stringify({ Floor: floor}),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
+import apiClient from "./apiClient";
+import type { Room } from "../models/Room";
 
-        const result = await response.json();
-        console.log(result);
-        return result;
-    }
-    catch (error : any){
-        console.error(error.message);
-    }
+export default async function FilterRooms(floor: string): Promise<Room[]> {
+  try {
+    const response = await apiClient.post<Room[]>("/rooms/filtered", {
+      Floor: floor,
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      "Filtering rooms failed:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
 }

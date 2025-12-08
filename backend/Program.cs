@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
 using TodoApi.Context;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,13 +27,42 @@ builder.Services.AddDbContext<ProjectContext>(opt =>
 builder.Services.AddScoped<RoomBookingService>();
 builder.Services.AddScoped<RoomService>();
 
+builder.Services.AddDbContext<EventContext>(opt =>
+    opt.UseInMemoryDatabase("EventDB"));
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ProjectContext>();
+    //adding admin
+    context.Employees.Add(new Employee
+    {
+        Id = 2,
+        Name = "Admin",
+        Email = "admin@test.com",
+        Password = BCrypt.Net.BCrypt.HashPassword("admin123"),
+        IsAdmin = true,
+        Coins = 0
+    });
 
-   context.Employees.Add(new Employee { Id = 1, Name = "Alice", Email = "test", Password = "test" });
+    context.Employees.Add(new Employee { Id = 1, Name = "Alice", Email = "test", Password = "test" });
+    context.Employees.Add(new Employee { Id = 3, Name="Bob", Email="bob@bob.com", Password=BCrypt.Net.BCrypt.HashPassword("test"), IsAdmin=false, Coins=0});
 
     context.Rooms.Add(new Room { Id = 1, Name = "Meeting room 1", Floor = "Floor 1", Capacity = 12, IsBooked = false });
     context.Rooms.Add(new Room { Id = 2, Name = "Meeting room 2", Floor = "Floor 1", Capacity = 9, IsBooked = false });
@@ -58,6 +90,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
