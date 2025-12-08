@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using TodoApi.DTOs;
 using TodoApi.Models;
 
@@ -18,11 +19,43 @@ public class RoomService
         List<Room> filteredRooms = new();
         var rooms = await _context.Rooms.ToListAsync();
 
-        foreach (var room in rooms)
+        if (roomFilter.Floor != null)
         {
-            if (room.Floor == roomFilter.Floor) filteredRooms.Add(room);
+            DateTime startFilter = DateTime.ParseExact(
+            roomFilter.StartTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+            DateTime endFilter = DateTime.ParseExact(
+            roomFilter.EndTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+
+            foreach (RoomBooking booking in _context.RoomBookings)
+            {
+                DateTime startTime = DateTime.ParseExact(
+                    booking.StartTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+                DateTime endTime = DateTime.ParseExact(
+                    booking.EndTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+                
+                if (!(startFilter < endTime && endFilter > startTime))
+                {
+                    Room room = FindRoomById(booking.RoomId);
+                    filteredRooms.Add(room);
+                }
+            }
+        }
+
+        foreach (var room in filteredRooms)
+        {
+            if (room.Floor != roomFilter.Floor) filteredRooms.Remove(room);
         }
 
         return filteredRooms;
+    }
+
+    public Room FindRoomById(long id)
+    {
+        var rooms = _context.Rooms.ToList();
+        foreach (var room in rooms)
+        {
+            if (room.Id == id) return room;
+        }
+        return null;
     }
 }

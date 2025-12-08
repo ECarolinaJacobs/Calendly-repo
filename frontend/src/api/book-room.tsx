@@ -2,7 +2,6 @@ import apiClient from './apiClient';
 
 type BookingParams = {
     RoomId: number;
-    EmployeeId: number;
     BookingDate: string;
     StartTime: string;
     EndTime: string;

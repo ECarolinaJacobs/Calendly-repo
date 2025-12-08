@@ -1,3 +1,6 @@
+using System.Globalization;
+using TodoApi.Models;
+
 namespace TodoApi.Context;
 
 public class RoomBookingService
@@ -19,10 +22,36 @@ public class RoomBookingService
         {
             throw new Exception("Invalid Room ID");
         }
+        if (!CheckRoomAvailability(newBooking))
+        {
+            throw new Exception("Room already booked for this time");
+        }
 
         _context.RoomBookings.Add(newBooking);
         _context.SaveChanges();
 
         return newBooking;
+    }
+
+    public bool CheckRoomAvailability(RoomBooking newBooking)
+    {
+        DateTime startNewBooking = DateTime.ParseExact(
+            newBooking.StartTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+        DateTime endNewBooking = DateTime.ParseExact(
+            newBooking.EndTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+
+        foreach (RoomBooking booking in _context.RoomBookings)
+        {
+            if (booking.Room == newBooking.Room)
+            {
+                DateTime startExistingBooking = DateTime.ParseExact(
+                booking.StartTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+                DateTime endExistingBooking = DateTime.ParseExact(
+                booking.EndTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+
+                if (startNewBooking < endExistingBooking && endNewBooking > startExistingBooking) return false;
+            }
+        }
+        return true;
     }
 }

@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Cors;
+using System.Security.Claims;
 
 using TodoApi.Models;
 using TodoApi.Context;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 namespace TodoApi.Controllers;
 
 [Route("api/[controller]")]
@@ -20,9 +22,16 @@ public class BookingsController : ControllerBase
         _roomBookingService = roomBookingService;
     }
 
+    [Authorize]
     [HttpPost("start")]
     public async Task<ActionResult<RoomBooking>> BookRoom(RoomBooking newBooking)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+        newBooking.EmployeeId = long.Parse(userId);
         var createdBooking = _roomBookingService.CreateBooking(newBooking);
         return Ok(createdBooking);
     }
