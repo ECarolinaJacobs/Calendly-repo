@@ -33,8 +33,10 @@ const BookingPage = () => {
 
     return (
         <div>
-            <RoomFiltering
-            setRooms={setRooms}/>
+            <div>
+                <RoomFiltering
+                setRooms={setRooms}/>
+            </div>
             <div className="room-list">
                 {rooms.map((room) => (
                     <RoomCard

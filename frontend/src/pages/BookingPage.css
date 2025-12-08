@@ -71,7 +71,7 @@
     gap: 23px;
 
     position: absolute;
-    right: 340px;
+    right: 100px;
 }
 
 .filter-box {
@@ -80,7 +80,7 @@
     width: 400px;
     height: 100vh;
     top: 0px;
-    left: 340px;
+    left: 100px;
 
     display: flex;
     justify-content: center;
@@ -113,7 +113,7 @@
 .confirm-filter-wrapper {
     display: flex;
     flex-direction: row;
-    padding-top: 410px;
+    padding-top: 200px;
     gap: 5px;
 }
 
