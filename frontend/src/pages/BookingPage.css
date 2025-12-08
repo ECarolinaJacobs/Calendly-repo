@@ -1,102 +1,134 @@
-body {
-    background-color: rgb(223, 223, 223);
+/* body {
+    background-color: white;
+    min-height: 100dvh;
+} */
+
+.room-view {
+    position: relative;
+    display: flex;
+
+    width: 800px;
+    height: 200px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 20px;
+    box-shadow: 2px 3px rgb(255, 245, 245);
+}
+
+.room-image {
+    width: 300px;
+    height: auto;
+    border-radius: 20px;
+    mask-image: linear-gradient(90deg, rgb(221, 235, 235) 90%, transparent);
+}
+
+.room-title {
+    padding-left: 20px;
+    padding-top: 10px;
+
+    font-size: x-large;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-.booking-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 40px;
+.room-location,
+.room-info {
+    font-size: 15px;
+    color: rgb(122, 120, 120);
 }
 
-.booking-box {
-    width: 600px;
-    height: 1000px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: white;
-    border-radius: 4px;
+.room-info {
+    padding-top: 50px;
+    color: black;
 }
 
-.title {
-    font-size: 50px;
-    font-weight: 300;
-    color: rgb(65, 63, 63);
-    padding-top: 20px;
-    padding-bottom: 40px;
+.timeslot {
+    position: absolute;
+    left: 640px;
+    top: 100px;
+
+    font-size: 25px;
+}
+
+.book-button {
+    position: absolute;
+    left: 597px;
+    top: 144px;
+    
+    display: flex;
+    align-items: center;
+
+    background-color: rgb(70, 137, 208);
+    color: white;
+    font-size: 20px;
+    padding: 20px 20px;
+    border-radius: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.room-list {
+    display: flex;
+    flex-direction: column;
+    gap: 23px;
+
+    position: absolute;
+    right: 100px;
+}
+
+.filter-box {
+    position: fixed;
+    background-color: rgb(70, 137, 208);
+    width: 400px;
+    height: 100vh;
+    top: 0px;
+    left: 100px;
+
+    display: flex;
+    justify-content: center;
 }
 
 .filters {
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding-top: 180px;
+    gap: 50px;
 }
 
 .floor-select,
 .date-select,
 .filter-button {
-    height: 40px;
-    width: 170px;
     border: 2px solid rgb(236, 235, 235);
-    border-radius: 6px;
+    border-radius: 40px;
     font-size: large;
     text-align: center;
     font-weight: 300;
     color: rgb(65, 63, 63);
+    background-color: rgb(255, 245, 245);
+    height: 50px;
+    width: 290px;
     cursor: pointer;
 }
 
-.filter-button {
-    background-color: #4689d0;
-    color: #fff;
-    border: none;
-}
-
-.available-room-layout {
-    font-size: 30px;
-    padding-top: 50px;
-}
-
-.booking-table th,
-.booking-table td {
-    padding: 10px 16px;
-    font-size: 26px;
-    font-weight: 300;
-    color: rgb(65, 63, 63);
-}
-
-.booking-table {
-    text-align: center;
-    border: 2px solid rgb(236, 235, 235);
-}
-
-.booking-table th {
-    background-color: #4689d0;
-    color: white;
-}
-
-.page-switcher {
+.confirm-filter-wrapper {
     display: flex;
-    justify-content: center;
+    flex-direction: row;
+    padding-top: 200px;
     gap: 5px;
 }
 
-.prev-button,
-.next-button {
-    cursor: pointer;
-    font-size: 20px;
-    margin-top: 20px;
-    width: 85px;
-    border: 2px solid rgb(236, 235, 235);
-    border-radius: 6px;
-    font-weight: 300;
-    color: rgb(65, 63, 63);
-}
-
-.page-count {
+.reset-filters-button {
+    background-color: white;
+    border-radius: 40px;
+    height: 50px;
+    width: 50px;
     display: flex;
     justify-content: center;
-    font-size: 20px;
-    font-weight: 300;
-    color: rgb(65, 63, 63);
+    align-items: center;
+    cursor: pointer;
+}
+
+.reset-filters-button img {
+    height: 30px;
+    width: 30px;
 }
