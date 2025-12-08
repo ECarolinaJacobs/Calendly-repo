@@ -32,9 +32,9 @@ const RoomFiltering = ({setRooms} : any) => {
                     <button className="filter-button"
                     onClick={async () => 
                     {
-                        const filteredRooms = await FilterRooms(selectedFloor);
+                        const filteredRooms = await FilterRooms(selectedFloor, "2025-12-12T09:00:00.000Z", "2025-12-12T17:00:00.000Z");
                         setRooms(filteredRooms);
-                    }}>Filter</button>
+                    }}>View Rooms</button>
                 </div>
             </div>
         </div>
