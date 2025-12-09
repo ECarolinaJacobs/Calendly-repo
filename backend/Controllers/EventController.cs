@@ -94,7 +94,7 @@ public class EventController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Event>>> Get() // FIX: The return type for multiple items should be IEnumerable<Event>
+    public async Task<ActionResult<IEnumerable<Event>>> Get()
     {
         var events = await _context.Events.Include(e => e.Attendees).ToListAsync();
         return Ok(events);
@@ -120,7 +120,7 @@ public class EventController : ControllerBase
         // Check if employee is already attending this event
         var existingAttendee = await _context.Attendees
             .FirstOrDefaultAsync(a => a.EventId == eventId && a.EmployeeId == request.EmployeeId);
-        
+
         if (existingAttendee != null)
         {
             return Conflict("Employee is already attending this event.");
