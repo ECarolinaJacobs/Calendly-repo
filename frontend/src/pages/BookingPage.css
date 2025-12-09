@@ -132,3 +132,61 @@
     height: 30px;
     width: 30px;
 }
+
+.modal-wrapper {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    backdrop-filter: blur(100px);
+    z-index: 1;
+}
+
+.modal-content {
+    background-color: rgb(255, 245, 245);
+    height: 400px;
+    width: 600px;
+}
+
+.modal-booking-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 30px;
+    font-size: 20px;
+}
+
+.query,
+.query-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 70px;
+    padding-top: 120px;
+}
+
+.query {
+    font-size: 30px;
+    padding-top: 50px;
+    color: gray;
+}
+
+.query-confirm,
+.query-deny {
+    display: flex;
+    align-items: center;
+
+    padding-top: 220px;
+    background-color: rgb(70, 137, 208);
+    color: white;
+    font-size: 20px;
+    padding: 20px 50px;
+    border-radius: 40px;
+    height: 40px;
+    cursor: pointer;
+}

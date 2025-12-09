@@ -28,6 +28,7 @@ public class RoomsController : ControllerBase
         return Ok(rooms);
     }
 
+    // change to Get (maybe?)
     [HttpPost("filtered")]
     public async Task<ActionResult<List<Room>>> GetFilteredRooms([FromBody] RoomFilterDTO roomFilter)
     {

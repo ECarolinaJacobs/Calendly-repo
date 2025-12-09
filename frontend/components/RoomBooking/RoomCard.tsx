@@ -1,6 +1,6 @@
 import '../../src/pages/BookingPage.css';
 import { useState } from 'react';
-import BookRoom from '../../src/api/book-room';
+import BookingModal from '../RoomBooking/BookingModal';
 
 type Room = {
     id: number,
@@ -15,27 +15,7 @@ type RoomProp = {
 }
 
 const RoomCard = ({room} : RoomProp) => {
-    const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
-
-
-    const handleRoomClick = async (room: Room) => {
-        setSelectedRoom(room);
-        console.log("Selected room:", room);
-
-        const currentDate = new Date().toISOString();
-
-        try {
-            const result = await BookRoom({
-            RoomId: room.id,
-            StartTime: "2025-12-12T09:00:00.000Z",
-            EndTime: "2025-12-12T17:00:00.000Z"
-        })
-        console.log("Booking added:", result)
-        }
-        catch (error) {
-            console.log("Booking failed", error);
-        }
-    }
+    const [openModal, setOpenModal] = useState(false);
 
     return (
         <div className='card-wrapper'>
@@ -54,11 +34,12 @@ const RoomCard = ({room} : RoomProp) => {
                     <div className='timeslot'>
                         9:00-12:00
                     </div>
-                    <button className='book-button' onClick={() => handleRoomClick(room)}>
+                    <button className='book-button' onClick={() => setOpenModal(true)}>
                         Book this room
                     </button>
                 </div>
             </div>
+            { openModal && <BookingModal setOpenModal={setOpenModal} room={room}/>}
         </div>
     )
 }
