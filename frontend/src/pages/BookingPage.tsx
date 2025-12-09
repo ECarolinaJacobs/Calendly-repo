@@ -21,16 +21,6 @@ const BookingPage = () => {
     // const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
     // const currentRooms = rooms.slice(indexOfFirstRoom, indexOfLastRoom);
 
-    useEffect(() => {
-        async function fetchRooms() {
-            const res = await fetch('http://localhost:5167/api/rooms');
-            const data = await res.json();
-            setRooms(data);
-        }
-
-        fetchRooms();
-    }, [])
-
     return (
         <div>
             <div>

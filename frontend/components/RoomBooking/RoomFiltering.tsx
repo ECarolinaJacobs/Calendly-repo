@@ -8,6 +8,8 @@ const RoomFiltering = ({setRooms} : any) => {
 
     const [selectedStarttime, setSelectedStarttime] = useState("");
     const [selectedEndtime, setSelectedEndtime] = useState("");
+    const [startIso, setStartIso] = useState("");
+    const [endIso, setEndIso] = useState("");
 
 
     const floors = ["Floor 1", "Floor 2", "Floor 3"];
@@ -34,13 +36,21 @@ const RoomFiltering = ({setRooms} : any) => {
     "17:00"
     ];
 
-    const handleClick = () => {
-        if ()
-        {
-            
+    const handleClick = async () => {
+        if (selectedStarttime){
+            setStartIso(new Date(`${selectedDate}T${selectedStarttime}:00Z`).toISOString());
         }
-        const startIso = new Date(`${selectedDate}T${selectedStarttime}:00Z`).toISOString();
-        const endIso = new Date(`${selectedDate}T${selectedEndtime}:00Z`).toISOString();
+        if (selectedEndtime){
+            setEndIso(new Date(`${selectedDate}T${selectedEndtime}:00Z`).toISOString());
+        }
+
+        try {
+            const result = await FilterRooms(selectedFloor, startIso, endIso);
+            setRooms(result);
+        }
+        catch (error) {
+            console.error(error);
+        }
     }
 
     return (
@@ -85,11 +95,8 @@ const RoomFiltering = ({setRooms} : any) => {
                     setSelectedFloor={setSelectedFloor}
                     setSelectedDate={setSelectedDate}/>
                     <button className="filter-button"
-                    onClick={async () => 
-                    {
-                        const filteredRooms = await FilterRooms(selectedFloor, startIso, endIso);
-                        setRooms(filteredRooms);
-                    }}>View Rooms</button>
+                    onClick={() => handleClick()}
+                    >View Rooms</button>
                 </div>
             </div>
         </div>

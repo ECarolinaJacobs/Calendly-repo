@@ -4,6 +4,7 @@ using TodoApi.Context;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using TodoApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -74,6 +75,10 @@ using (var scope = app.Services.CreateScope())
     context.Rooms.Add(new Room { Id = 8, Name = "Huddle room 1", Floor = "Floor 3", Capacity = 4});
     context.Rooms.Add(new Room { Id = 9, Name = "Huddle room 2", Floor = "Floor 2", Capacity = 4});
     context.Rooms.Add(new Room { Id = 10, Name = "Executive meeting room", Floor = "Floor 1", Capacity = 14});
+
+    context.RoomBookings.Add(new RoomBooking {Id = 1, RoomId = 1, EmployeeId = 1, StartTime = "2025-12-12T09:00:00.000Z", EndTime = "2025-12-12T17:00:00.000Z"});
+    context.RoomBookings.Add(new RoomBooking {Id = 2, RoomId = 2, EmployeeId = 1, StartTime = "2025-12-12T09:00:00.000Z", EndTime = "2025-12-12T17:00:00.000Z"});
+
     context.SaveChanges();
 }
 
