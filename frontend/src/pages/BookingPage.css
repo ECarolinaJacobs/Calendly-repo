@@ -97,6 +97,8 @@
 
 .floor-select,
 .date-select,
+.starttime-select,
+.endtime-select,
 .filter-button {
     border: 2px solid rgb(236, 235, 235);
     border-radius: 40px;
