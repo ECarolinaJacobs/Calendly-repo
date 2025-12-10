@@ -15,7 +15,7 @@ type BookingModalProp = {
     room: Room
 }
 
-const BookingModal = ({ setOpenModal, room } : BookingModalProp) => {
+const BookingModal = ({ setOpenModal, room, startIso, endIso } : any) => {
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
 
     const handleRoomClick = async (room: Room) => {
@@ -25,8 +25,8 @@ const BookingModal = ({ setOpenModal, room } : BookingModalProp) => {
         try {
             const result = await BookRoom({
             RoomId: room.id,
-            StartTime: "2025-12-12T09:00:00.000Z",
-            EndTime: "2025-12-12T17:00:00.000Z"
+            StartTime: startIso,
+            EndTime: endIso
         })
         console.log("Booking added:", result)
         }

@@ -12,9 +12,11 @@ type Room = {
 
 type RoomProp = {
     room: Room
+    startIso: string,
+    endIso: string
 }
 
-const RoomCard = ({room} : RoomProp) => {
+const RoomCard = ({room, startIso, endIso} : RoomProp) => {
     const [openModal, setOpenModal] = useState(false);
 
     return (
@@ -39,7 +41,12 @@ const RoomCard = ({room} : RoomProp) => {
                     </button>
                 </div>
             </div>
-            { openModal && <BookingModal setOpenModal={setOpenModal} room={room}/>}
+            { openModal &&
+            <BookingModal
+            setOpenModal={setOpenModal}
+            room={room}
+            startIso={startIso}
+            endIso={endIso}/>}
         </div>
     )
 }

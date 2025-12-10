@@ -2,14 +2,12 @@ import { useState } from "react";
 import FilterRooms from "../../src/api/filter-rooms";
 import ResetFiltersButton from "./ResetFiltersButton.tsx";
 
-const RoomFiltering = ({setRooms} : any) => {
+const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso} : any) => {
     const [selectedFloor, setSelectedFloor] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
 
     const [selectedStarttime, setSelectedStarttime] = useState("");
     const [selectedEndtime, setSelectedEndtime] = useState("");
-    const [startIso, setStartIso] = useState("");
-    const [endIso, setEndIso] = useState("");
 
 
     const floors = ["Floor 1", "Floor 2", "Floor 3"];
@@ -37,15 +35,19 @@ const RoomFiltering = ({setRooms} : any) => {
     ];
 
     const handleClick = async () => {
+        let newStartIso = undefined;
+        let newEndIso = undefined;
         if (selectedStarttime){
-            setStartIso(new Date(`${selectedDate}T${selectedStarttime}:00Z`).toISOString());
+            newStartIso = new Date(`${selectedDate}T${selectedStarttime}:00Z`).toISOString()
+            setStartIso(newStartIso);
         }
         if (selectedEndtime){
-            setEndIso(new Date(`${selectedDate}T${selectedEndtime}:00Z`).toISOString());
+            newEndIso = new Date(`${selectedDate}T${selectedEndtime}:00Z`).toISOString()
+            setEndIso(newEndIso);
         }
 
         try {
-            const result = await FilterRooms(selectedFloor, startIso, endIso);
+            const result = await FilterRooms(selectedFloor, newStartIso, newEndIso);
             setRooms(result);
         }
         catch (error) {

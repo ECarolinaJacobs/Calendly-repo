@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import RoomCard from "../../components/RoomBooking/RoomCard";
 // import Pagination from "../../components/Pagination";
 import RoomFiltering from "../../components/RoomBooking/RoomFiltering";
@@ -14,6 +14,8 @@ type Room = {
 
 const BookingPage = () => {
     const [rooms, setRooms] = useState<Room[]>([]);
+    const [startIso, setStartIso] = useState("");
+    const [endIso, setEndIso] = useState("");
     // const [currentPage, setCurrentPage] = useState(1);
 
     // const roomsPerPage = 8;
@@ -25,12 +27,18 @@ const BookingPage = () => {
         <div>
             <div>
                 <RoomFiltering
-                setRooms={setRooms}/>
+                setRooms={setRooms}
+                startIso={startIso}
+                setStartIso={setStartIso}
+                endIso={endIso}
+                setEndIso={setEndIso}/>
             </div>
             <div className="room-list">
                 {rooms.map((room) => (
                     <RoomCard
                     room={room}
+                    startIso={startIso}
+                    endIso={endIso}
                    />
                 ))}
             </div>
