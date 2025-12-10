@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import '../../src/pages/BookingPage.css';
 import BookRoom from '../../src/api/book-room';
 
@@ -13,10 +13,13 @@ type Room = {
 type BookingModalProp = {
     setOpenModal: (open: boolean) => void,
     room: Room
+    startIso: string,
+    endIso: string
 }
 
-const BookingModal = ({ setOpenModal, room, startIso, endIso } : any) => {
+const BookingModal = ({ setOpenModal, room, startIso, endIso } : BookingModalProp) => {
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+    const [success, setSuccess] = useState(false);
 
     const handleRoomClick = async (room: Room) => {
         setSelectedRoom(room);
@@ -35,8 +38,19 @@ const BookingModal = ({ setOpenModal, room, startIso, endIso } : any) => {
         }
     }
 
+    useEffect(() => {
+        if (success) {
+            {setTimeout(() => {
+                setOpenModal(false)
+                clearTimeout
+            }, 2000)}
+        }
+    })
+
+
     return (
         <div className="modal-wrapper">
+            {!success ?
             <div className="modal-content">
                 <div className="query">
                     Would you like to book this room?
@@ -49,17 +63,27 @@ const BookingModal = ({ setOpenModal, room, startIso, endIso } : any) => {
                 <div className="query-options">
                     <button className="query-confirm"
                     onClick={() => {
-                        setOpenModal(false);
                         handleRoomClick(room);
+                        setSuccess(true);
                     }}>
                         Yes
                     </button>
                     <button className="query-deny"
-                    onClick={() => setOpenModal(false)}>
+                    onClick={() =>
+                        setOpenModal(false)}>
                         No
                     </button>
                 </div>
             </div>
+            : (
+                <div className="booking-confirmation-wrapper">
+                    <div className="booking-confirmation-content">
+                        <div className="booking-confirmation-text">
+                            Room booking confirmed
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

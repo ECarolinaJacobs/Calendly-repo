@@ -135,7 +135,8 @@
     width: 30px;
 }
 
-.modal-wrapper {
+.modal-wrapper,
+.booking-confirmation-wrapper {
     position: fixed;
     left: 0px;
     top: 0px;
@@ -148,19 +149,25 @@
     z-index: 1;
 }
 
-.modal-content {
+.modal-content,
+.booking-confirmation-content {
     background-color: rgb(255, 245, 245);
     height: 400px;
     width: 600px;
 }
 
-.modal-booking-details {
+.modal-booking-details,
+.booking-confirmation-text {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding-top: 30px;
     font-size: 20px;
+}
+
+.booking-confirmation-text {
+    padding-top: 120px;
 }
 
 .query,

@@ -2,7 +2,15 @@ import { useState } from "react";
 import FilterRooms from "../../src/api/filter-rooms";
 import ResetFiltersButton from "./ResetFiltersButton.tsx";
 
-const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso} : any) => {
+type RoomFilteringProp = {
+    setRooms: any,
+    startIso: string,
+    endIso: string,
+    setStartIso: any,
+    setEndIso: any
+}
+
+const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso} : RoomFilteringProp) => {
     const [selectedFloor, setSelectedFloor] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
 
