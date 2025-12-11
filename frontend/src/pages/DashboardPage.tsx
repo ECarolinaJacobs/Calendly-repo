@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import type { Event } from "../../components/EventDrawer/types";
-import { DrawerOverlay } from "../../components/EventDrawer/DrawerOverlay";
-import { DrawerContent } from "../../components/EventDrawer/DrawerContent";
+import type { Event } from "../../components/Events/EventDrawer/types";
+import { DrawerOverlay } from "../../components/Events/EventDrawer/DrawerOverlay";
+import { DrawerContent } from "../../components/Events/EventDrawer/DrawerContent";
 import "./DashboardPage.css";
 import { useNavigate } from "react-router-dom";
 

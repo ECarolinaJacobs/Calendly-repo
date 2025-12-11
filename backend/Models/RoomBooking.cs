@@ -11,7 +11,7 @@ public class RoomBooking
     public Room? Room { get; set; }
     public Employee? Employee { get; set; }
 
-    public string BookingDate { get; set; }
-    public string StartTime { get; set; }
-    public string EndTime { get; set; }
+    public required string BookingDate { get; set; }
+    public required string StartTime { get; set; }
+    public required string EndTime { get; set; }
 }

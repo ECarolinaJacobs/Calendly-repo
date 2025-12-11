@@ -35,6 +35,7 @@ builder.Services.AddDbContext<EventContext>(opt =>
 builder.Services.AddScoped<RoomBookingService>();
 builder.Services.AddScoped<RoomService>();
 builder.Services.AddScoped<TodoApi.Services.PointsService>();
+builder.Services.AddScoped<TodoApi.Services.EventService>();
 
 // Configure JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -48,7 +49,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? string.Empty))
         };
     });
 
