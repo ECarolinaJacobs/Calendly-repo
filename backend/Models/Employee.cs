@@ -8,5 +8,5 @@ public class Employee
     public required string Password { get; set; }
     public int Coins { get; set; }
     public bool IsAdmin { get; set; }
-    public List<RoomBooking> RoomBookings { get; set; }
+    public List<RoomBooking> RoomBookings { get; set; } = new List<RoomBooking>();
 }

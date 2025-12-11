@@ -1,149 +1,90 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
-using TodoApi.Context;
 using TodoApi.Services;
+using TodoApi.DTOs;
 
-namespace TodoApi.Controllers;
-
-[Route("api/[controller]")]
-[ApiController]
-public class EventController : ControllerBase
+namespace TodoApi.Controllers
 {
-    private readonly EventContext _context;
-    private readonly ProjectContext _projectContext;
-    private readonly PointsService _pointsService;
-
-    public record EventCreateRequest(
-        string Title,
-        string Description,
-        string? Image,
-        DateTime? StartDate,
-        DateTime? EndDate,
-        ICollection<Attendee>? Attendees
-    );
-
-    public record JoinEventRequest(
-        long EmployeeId,
-        string? Avatar
-    );
-
-    public EventController(EventContext context, ProjectContext projectContext, PointsService pointsService)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class EventController : ControllerBase
     {
-        _context = context;
-        _projectContext = projectContext;
-        _pointsService = pointsService;
-    }
+        private readonly EventService _eventService;
 
-    [HttpPost]
-    public async Task<ActionResult<Event>> Post(EventCreateRequest request)
-    {
-        if (string.IsNullOrWhiteSpace(request.Title) ||
-            string.IsNullOrWhiteSpace(request.Description))
+        public EventController(EventService eventService)
         {
-            return BadRequest("Title and Description required.");
+            _eventService = eventService;
         }
 
-        Event newEvent = new()
+        [HttpPost]
+        public async Task<ActionResult<Event>> Post(EventCreateRequest request)
         {
-            Title = request.Title,
-            Description = request.Description,
-            Image = request.Image,
-            StartDate = request.StartDate,
-            EndDate = request.EndDate,
-            Attendees = (ICollection<Attendee>?)request.Attendees
-        };
+            if (string.IsNullOrWhiteSpace(request.Title) ||
+                string.IsNullOrWhiteSpace(request.Description))
+            {
+                return BadRequest("Title and Description required.");
+            }
 
-        _context.Events.Add(newEvent);
-        await _context.SaveChangesAsync();
+            var newEvent = await _eventService.CreateEventAsync(request);
 
-        return CreatedAtAction(
-            nameof(Get),
-            new { id = newEvent.Id },
-            newEvent);
-    }
-
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Event>> GetById(int id)
-    {
-        var eventItem = await _context.Events.Include(x => x.Attendees).FirstOrDefaultAsync(e => e.Id == id);
-
-        if (eventItem == null)
-        {
-            return NotFound($"Event with ID {id} not found.");
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = newEvent.Id },
+                newEvent);
         }
 
-        return eventItem;
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(int id)
-    {
-        Event? eventToDelete = await _context.Events
-            .FirstOrDefaultAsync(e => e.Id == id);
-
-        if (eventToDelete == null)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<EventDto>> GetById(long id)
         {
-            return NotFound($"Event with ID {id} not found.");
+            var eventDto = await _eventService.GetEventByIdAsync(id);
+
+            if (eventDto == null)
+            {
+                return NotFound($"Event with ID {id} not found.");
+            }
+
+            return eventDto;
         }
 
-        _context.Events.Remove(eventToDelete);
-        await _context.SaveChangesAsync();
-
-        return NoContent();
-    }
-
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Event>>> Get()
-    {
-        var events = await _context.Events.Include(e => e.Attendees).ToListAsync();
-        return Ok(events);
-    }
-
-    [HttpPost("{eventId}/join")]
-    public async Task<ActionResult<Attendee>> JoinEvent(int eventId, JoinEventRequest request)
-    {
-        // Check if event exists
-        var eventItem = await _context.Events.FindAsync(eventId);
-        if (eventItem == null)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(long id)
         {
-            return NotFound($"Event with ID {eventId} not found.");
+            var result = await _eventService.DeleteEventAsync(id);
+
+            if (!result)
+            {
+                return NotFound($"Event with ID {id} not found.");
+            }
+
+            return NoContent();
         }
 
-        // Check if employee exists
-        var employee = await _projectContext.Employees.FindAsync(request.EmployeeId);
-        if (employee == null)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<EventDto>>> Get()
         {
-            return BadRequest("Invalid employee ID.");
+            var eventDtos = await _eventService.GetAllEventsAsync();
+            return Ok(eventDtos);
         }
 
-        // Check if employee is already attending this event
-        var existingAttendee = await _context.Attendees
-            .FirstOrDefaultAsync(a => a.EventId == eventId && a.EmployeeId == request.EmployeeId);
-
-        if (existingAttendee != null)
+        [HttpPost("{eventId}/join")]
+        public async Task<ActionResult<AttendeeDto>> JoinEvent(long eventId, JoinEventRequest request)
         {
-            return Conflict("Employee is already attending this event.");
+            var (attendeeDto, error) = await _eventService.JoinEventAsync(eventId, request);
+
+            if (error != null)
+            {
+                if (error.Contains("not found"))
+                    return NotFound(error);
+                if (error.Contains("Invalid"))
+                    return BadRequest(error);
+                if (error.Contains("already attending"))
+                    return Conflict(error);
+            }
+
+            return CreatedAtAction(
+                nameof(JoinEvent),
+                new { eventId = eventId, attendeeId = attendeeDto!.Id },
+                attendeeDto);
         }
-
-        // Create new attendee
-        var attendee = new Attendee
-        {
-            Name = employee.Name,
-            Avatar = request.Avatar,
-            EmployeeId = request.EmployeeId,
-            EventId = eventId
-        };
-
-        _context.Attendees.Add(attendee);
-        await _context.SaveChangesAsync();
-
-        // Award points for joining event
-        await _pointsService.AwardEventJoinPointsAsync(request.EmployeeId);
-
-        return CreatedAtAction(
-            nameof(JoinEvent),
-            new { eventId = eventId, attendeeId = attendee.Id },
-            attendee);
     }
 }

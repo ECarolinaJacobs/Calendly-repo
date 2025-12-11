@@ -7,6 +7,6 @@ public class Attendee
     public string? Avatar { get; set; }
     public long? EmployeeId { get; set; }
     public Employee? Employee { get; set; }
-    public int EventId { get; set; }
+    public long EventId { get; set; }
     public Event? Event { get; set; }
 }

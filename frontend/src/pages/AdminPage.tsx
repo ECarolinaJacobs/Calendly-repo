@@ -5,9 +5,9 @@ import {
 	searchEmployees,
 	getStatistics,
 } from "../api/admin";
-import { createEvent } from "../api/eventService";
-import type { AdminStats } from "../api/admin";
 import "./AdminPage.css";
+import type { AdminStats } from "../api/admin";
+import { AdminCreateEvent } from "../../components/Events/form-creation";
 
 // typescript interface to match employeeDto
 interface Employee {
@@ -26,13 +26,6 @@ export default function AdminPage() {
 	const [searchTerm, setSearchTerm] = useState("");
 
 	// State for the new event creation form
-	const [eventForm, setEventForm] = useState({
-		title: "",
-		description: "",
-		image: "",
-		startDate: "",
-		endDate: "",
-	});
 
 	// fetch data when component loads
 	useEffect(() => {
@@ -101,34 +94,6 @@ export default function AdminPage() {
 		}
 	};
 
-	const handleCreateEvent = async (e: React.FormEvent) => {
-		e.preventDefault();
-		try {
-			await createEvent({
-				Title: eventForm.title,
-				Description: eventForm.description,
-				Image: eventForm.image,
-				StartDate: eventForm.startDate
-					? new Date(eventForm.startDate).toISOString()
-					: undefined,
-				EndDate: eventForm.endDate
-					? new Date(eventForm.endDate).toISOString()
-					: undefined,
-			});
-			alert("Event created successfully!");
-			setEventForm({
-				title: "",
-				description: "",
-				image: "",
-				startDate: "",
-				endDate: "",
-			});
-		} catch (err) {
-			console.error(err);
-			alert("Failed to create event");
-		}
-	};
-
 	if (loading && !stats) {
 		return <div className="loading">Loading...</div>;
 	}
@@ -169,106 +134,7 @@ export default function AdminPage() {
 			)}
 
 			{/* Event Creation Section */}
-			<div
-				className="event-creation-section"
-				style={{
-					margin: "2rem 0",
-					padding: "1rem",
-					border: "1px solid #ddd",
-					borderRadius: "8px",
-				}}
-			>
-				<h2>Create New Event</h2>
-				<form
-					onSubmit={handleCreateEvent}
-					style={{ display: "grid", gap: "1rem", maxWidth: "500px" }}
-				>
-					<div>
-						<label>Title:</label>
-						<input
-							type="text"
-							value={eventForm.title}
-							onChange={(e) =>
-								setEventForm({
-									...eventForm,
-									title: e.target.value,
-								})
-							}
-							required
-							style={{ width: "100%", padding: "0.5rem" }}
-						/>
-					</div>
-					<div>
-						<label>Description:</label>
-						<textarea
-							value={eventForm.description}
-							onChange={(e) =>
-								setEventForm({
-									...eventForm,
-									description: e.target.value,
-								})
-							}
-							required
-							style={{ width: "100%", padding: "0.5rem" }}
-						/>
-					</div>
-					<div>
-						<label>Image URL:</label>
-						<input
-							type="text"
-							value={eventForm.image}
-							onChange={(e) =>
-								setEventForm({
-									...eventForm,
-									image: e.target.value,
-								})
-							}
-							style={{ width: "100%", padding: "0.5rem" }}
-						/>
-					</div>
-					<div>
-						<label>Start Date:</label>
-						<input
-							type="datetime-local"
-							value={eventForm.startDate}
-							onChange={(e) =>
-								setEventForm({
-									...eventForm,
-									startDate: e.target.value,
-								})
-							}
-							style={{ width: "100%", padding: "0.5rem" }}
-						/>
-					</div>
-					<div>
-						<label>End Date:</label>
-						<input
-							type="datetime-local"
-							value={eventForm.endDate}
-							onChange={(e) =>
-								setEventForm({
-									...eventForm,
-									endDate: e.target.value,
-								})
-							}
-							style={{ width: "100%", padding: "0.5rem" }}
-						/>
-					</div>
-					<button
-						type="submit"
-						style={{
-							padding: "0.5rem",
-							backgroundColor: "#007bff",
-							color: "white",
-							border: "none",
-							borderRadius: "4px",
-							cursor: "pointer",
-						}}
-					>
-						Create Event
-					</button>
-				</form>
-			</div>
+			<AdminCreateEvent />
 
 			{/*search bar */}
 			<div className="search-container">
