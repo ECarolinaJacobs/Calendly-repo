@@ -42,6 +42,12 @@ const BookingPage = () => {
                    />
                 ))}
             </div>
+            <div>
+                {rooms.length === 0 ? (
+                    <p className="empty-filters">Please set all filters</p>
+                )
+                 : undefined}
+            </div>
             {/* <div>
                 <Pagination
                     totalRooms={rooms.length}

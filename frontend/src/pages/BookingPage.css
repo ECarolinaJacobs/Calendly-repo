@@ -135,6 +135,16 @@
     width: 30px;
 }
 
+.empty-filters {
+    position: absolute;
+    width: 500px;
+    height: 100px;
+    right: 330px;
+    bottom: 400px;
+    font-size: 50px;
+    color: rgb(173, 173, 173);
+}
+
 .modal-wrapper,
 .booking-confirmation-wrapper {
     position: fixed;

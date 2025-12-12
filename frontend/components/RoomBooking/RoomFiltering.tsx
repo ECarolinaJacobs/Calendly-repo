@@ -39,6 +39,10 @@ const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso} : Ro
     }
 
     const handleClick = async () => {
+        if (!selectedFloor || !selectedDate || !selectedStarttime || !selectedEndtime) {
+            return;
+        }
+
         let newStartIso = undefined;
         let newEndIso = undefined;
         if (selectedStarttime){
@@ -102,6 +106,7 @@ const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso} : Ro
                     setSelectedDate={setSelectedDate}
                     setSelectedStarttime={setSelectedStarttime}
                     setSelectedEndtime={setSelectedEndtime}/>
+
                     <button className="filter-button"
                     onClick={() => handleClick()}
                     >View Rooms</button>
