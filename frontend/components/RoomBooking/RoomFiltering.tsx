@@ -19,7 +19,7 @@ const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso} : Ro
 
 
     const floors = ["Floor 1", "Floor 2", "Floor 3"];
-    
+
     const startTimes = [
     "09:00",
     "10:00",
@@ -31,16 +31,12 @@ const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso} : Ro
     "16:00"
     ];
 
-    const endTimes = [
-    "10:00",
-    "11:00",
-    "12:00",
-    "13:00",
-    "14:00",
-    "15:00",
-    "16:00",
-    "17:00"
-    ];
+    const EndTimeLimiter = () => {
+        const startTimeIndex = startTimes.indexOf(selectedStarttime);
+        startTimes.shift();
+        let endTimes = startTimes;
+        return endTimes.splice(startTimeIndex);
+    }
 
     const handleClick = async () => {
         let newStartIso = undefined;
@@ -94,7 +90,7 @@ const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso} : Ro
                     value={selectedEndtime}
                     onChange={(e : any) => setSelectedEndtime(e.target.value)}>
                     <option value="">Select end time</option>
-                    {endTimes.map((time) => (
+                    {EndTimeLimiter().map((time) => (
                         <option>{time}</option>
                     ))}
                 </select>
