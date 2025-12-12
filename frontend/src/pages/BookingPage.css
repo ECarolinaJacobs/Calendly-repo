@@ -147,7 +147,8 @@
 }
 
 .modal-wrapper,
-.booking-confirmation-wrapper {
+.booking-confirmation-wrapper,
+.booking-failed-wrapper {
     position: fixed;
     left: 0px;
     top: 0px;
@@ -161,14 +162,16 @@
 }
 
 .modal-content,
-.booking-confirmation-content {
+.booking-confirmation-content,
+.booking-failed-content {
     background-color: rgb(255, 245, 245);
     height: 400px;
     width: 600px;
 }
 
 .modal-booking-details,
-.booking-confirmation-text {
+.booking-confirmation-text,
+.booking-failed-text {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -177,7 +180,8 @@
     font-size: 20px;
 }
 
-.booking-confirmation-text {
+.booking-confirmation-text,
+.booking-failed-text {
     padding-top: 120px;
 }
 

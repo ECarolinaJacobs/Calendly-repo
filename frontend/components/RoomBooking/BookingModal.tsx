@@ -20,6 +20,7 @@ type BookingModalProp = {
 const BookingModal = ({ setOpenModal, room, startIso, endIso } : BookingModalProp) => {
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
     const [success, setSuccess] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleRoomClick = async (room: Room) => {
         setSelectedRoom(room);
@@ -31,15 +32,17 @@ const BookingModal = ({ setOpenModal, room, startIso, endIso } : BookingModalPro
             StartTime: startIso,
             EndTime: endIso
         })
+        setSuccess(true);
         console.log("Booking added:", result)
         }
         catch (error) {
+            setErrorMessage("Room is already booked");
             console.log("Booking failed", error);
         }
     }
 
     useEffect(() => {
-        if (success) {
+        if (success || errorMessage === "Room is already booked") {
             {setTimeout(() => {
                 setOpenModal(false)
                 clearTimeout
@@ -52,6 +55,14 @@ const BookingModal = ({ setOpenModal, room, startIso, endIso } : BookingModalPro
         <div className="modal-wrapper">
             {!success ?
             <div className="modal-content">
+                {errorMessage && 
+                (<div className="booking-failed-wrapper">
+                    <div className="booking-failed-content">
+                        <div className="booking-failed-text">
+                            {errorMessage}
+                        </div>
+                    </div>
+                </div>)}
                 <div className="query">
                     Would you like to book this room?
                 </div>
@@ -64,7 +75,6 @@ const BookingModal = ({ setOpenModal, room, startIso, endIso } : BookingModalPro
                     <button className="query-confirm"
                     onClick={() => {
                         handleRoomClick(room);
-                        setSuccess(true);
                     }}>
                         Yes
                     </button>
