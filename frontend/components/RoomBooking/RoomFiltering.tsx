@@ -103,7 +103,9 @@ const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso} : Ro
                     <ResetFiltersButton className="reset-filters-button"
                     setRooms={setRooms}
                     setSelectedFloor={setSelectedFloor}
-                    setSelectedDate={setSelectedDate}/>
+                    setSelectedDate={setSelectedDate}
+                    setSelectedStarttime={setSelectedStarttime}
+                    setSelectedEndtime={setSelectedEndtime}/>
                     <button className="filter-button"
                     onClick={() => handleClick()}
                     >View Rooms</button>
