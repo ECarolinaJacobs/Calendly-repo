@@ -16,6 +16,8 @@ const BookingPage = () => {
     const [rooms, setRooms] = useState<Room[]>([]);
     const [startIso, setStartIso] = useState("");
     const [endIso, setEndIso] = useState("");
+
+    const [errorMessage, setErrorMessage] = useState("Please set all filters");
     // const [currentPage, setCurrentPage] = useState(1);
 
     // const roomsPerPage = 8;
@@ -31,7 +33,8 @@ const BookingPage = () => {
                 startIso={startIso}
                 setStartIso={setStartIso}
                 endIso={endIso}
-                setEndIso={setEndIso}/>
+                setEndIso={setEndIso}
+                setErrorMessage={setErrorMessage}/>
             </div>
             <div className="room-list">
                 {rooms.map((room) => (
@@ -43,10 +46,14 @@ const BookingPage = () => {
                 ))}
             </div>
             <div>
-                {rooms.length === 0 ? (
-                    <p className="empty-filters">Please set all filters</p>
-                )
-                 : undefined}
+                {errorMessage && (
+                    <p className="no-filters-notice">Please set all filters</p>
+                )}
+            </div>
+            <div>
+                {rooms.length === 0 && !errorMessage && (
+                    <p className="no-rooms-notice">No rooms available</p>
+                )}
             </div>
             {/* <div>
                 <Pagination

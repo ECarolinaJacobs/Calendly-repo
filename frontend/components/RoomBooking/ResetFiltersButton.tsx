@@ -6,7 +6,7 @@ type Room = {
     availability: string
 }
 
-const ResetFiltersButton = ({setRooms, setSelectedFloor, setSelectedDate, setSelectedStarttime, setSelectedEndtime} : any) => {
+const ResetFiltersButton = ({setRooms, setSelectedFloor, setSelectedDate, setSelectedStarttime, setSelectedEndtime, setErrorMessage} : any) => {
 
     return (
         <button className="reset-filters-button"
@@ -18,6 +18,7 @@ const ResetFiltersButton = ({setRooms, setSelectedFloor, setSelectedDate, setSel
             setSelectedFloor("Select floor");
             setSelectedStarttime("Set start time")
             setSelectedEndtime("Set end time")
+            setErrorMessage("Please set all filters")
         }}>
             <img className='refresh-icon' src="public/refresh-icon.png" alt="refresh icon" />
         </button>

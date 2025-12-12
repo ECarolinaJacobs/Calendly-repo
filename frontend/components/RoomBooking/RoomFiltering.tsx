@@ -7,16 +7,16 @@ type RoomFilteringProp = {
     startIso: string,
     endIso: string,
     setStartIso: any,
-    setEndIso: any
+    setEndIso: any,
+    setErrorMessage: any
 }
 
-const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso} : RoomFilteringProp) => {
+const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso, setErrorMessage} : RoomFilteringProp) => {
     const [selectedFloor, setSelectedFloor] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
 
     const [selectedStarttime, setSelectedStarttime] = useState("");
     const [selectedEndtime, setSelectedEndtime] = useState("");
-
 
     const floors = ["Floor 1", "Floor 2", "Floor 3"];
 
@@ -28,7 +28,8 @@ const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso} : Ro
     "13:00",
     "14:00",
     "15:00",
-    "16:00"
+    "16:00",
+    "17:00"
     ];
 
     const EndTimeLimiter = () => {
@@ -57,6 +58,7 @@ const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso} : Ro
         try {
             const result = await FilterRooms(selectedFloor, newStartIso, newEndIso);
             setRooms(result);
+            setErrorMessage("");
         }
         catch (error) {
             console.error(error);
@@ -115,7 +117,8 @@ const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso} : Ro
                     setSelectedFloor={setSelectedFloor}
                     setSelectedDate={setSelectedDate}
                     setSelectedStarttime={setSelectedStarttime}
-                    setSelectedEndtime={setSelectedEndtime}/>
+                    setSelectedEndtime={setSelectedEndtime}
+                    setErrorMessage={setErrorMessage}/>
 
                     <button className="filter-button"
                     onClick={() => handleClick()}
