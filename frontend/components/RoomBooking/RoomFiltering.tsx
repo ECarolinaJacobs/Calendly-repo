@@ -75,9 +75,19 @@ const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso} : Ro
                 <input type="date"
                     className="date-select"
                     value={selectedDate}
-                    min="2025-01-01"
+                    min= {new Date().toISOString().split("T")[0]}
                     max="2026-01-01" 
-                    onChange={(e : any) => setSelectedDate(e.target.value)}/>
+                    onChange={(e : any) => {
+                        const dateInput = e.target.value;
+                        const minDate = new Date().toISOString().split("T")[0]
+
+                        if (dateInput >= minDate) {
+                            setSelectedDate(dateInput);
+                        }
+                        else {
+                            setSelectedDate(minDate);
+                        }
+                    }}/>
 
                 <select
                     className="starttime-select"
