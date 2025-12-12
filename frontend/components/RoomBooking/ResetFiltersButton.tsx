@@ -2,8 +2,8 @@ type Room = {
     id: number,
     name: string,
     floor: string,
-    capacity: number,
-    availability: string
+    location: string,
+    description: string
 }
 
 const ResetFiltersButton = ({setRooms, setSelectedFloor, setSelectedDate, setSelectedStarttime, setSelectedEndtime, setErrorMessage} : any) => {

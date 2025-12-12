@@ -6,8 +6,8 @@ type Room = {
     id: number,
     name: string,
     floor: string,
-    capacity: number,
-    availability: string
+    location: string,
+    description: string
 }
 
 type RoomProp = {
@@ -28,13 +28,10 @@ const RoomCard = ({room, startIso, endIso} : RoomProp) => {
                 <div className='room-title'>
                     {room.name}
                     <div className='room-location'>
-                        <p>Placeholder location 📍</p>
+                        <p>📍{room.location}</p>
                     </div>
                     <div className='room-info'>
-                        <p>Placeholder info</p>
-                    </div>
-                    <div className='timeslot'>
-                        9:00-12:00
+                        <p>{room.description}</p>
                     </div>
                     <button className='book-button' onClick={() => setOpenModal(true)}>
                         Book this room

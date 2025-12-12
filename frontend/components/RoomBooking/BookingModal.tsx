@@ -6,8 +6,8 @@ type Room = {
     id: number,
     name: string,
     floor: string,
-    capacity: number,
-    availability: string
+    location: string,
+    description: string
 }
 
 type BookingModalProp = {
@@ -68,8 +68,8 @@ const BookingModal = ({ setOpenModal, room, startIso, endIso } : BookingModalPro
                 </div>
                 <div className="modal-booking-details">
                     <p>- {room.name}</p>
-                    <p>Location: {room.floor}</p>
-                    <p>Facilities: </p>
+                    <p>Location: {room.floor}, {room.location}</p>
+                    <p>Facilities: {room.description}</p>
                 </div>
                 <div className="query-options">
                     <button className="query-confirm"

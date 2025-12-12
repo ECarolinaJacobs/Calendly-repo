@@ -40,14 +40,6 @@
     color: black;
 }
 
-.timeslot {
-    position: absolute;
-    left: 640px;
-    top: 100px;
-
-    font-size: 25px;
-}
-
 .book-button {
     position: absolute;
     left: 597px;

@@ -21,7 +21,7 @@ public class RoomService
 
         foreach (var room in rooms)
         {
-            if (!(CheckRoomAlreadyBooked(room, roomFilter)))
+            if (!CheckRoomAlreadyBooked(room, roomFilter))
             {
                 filteredRooms.Add(room);
             }
