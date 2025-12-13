@@ -7,6 +7,9 @@ using TodoApi.Models;
 using TodoApi.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System.Net;
 namespace TodoApi.Controllers;
 
 [Route("api/[controller]")]
@@ -32,7 +35,18 @@ public class BookingsController : ControllerBase
             return Unauthorized();
         }
         newBooking.EmployeeId = long.Parse(userId);
-        var createdBooking = _roomBookingService.CreateBooking(newBooking);
-        return Ok(createdBooking);
+        try
+        {
+            var createdBooking = _roomBookingService.CreateBooking(newBooking);
+            return CreatedAtAction("Room booked", createdBooking);
+        }
+        catch (RoomAlreadyBookedException ex)
+        {
+            return Conflict(ex.Message);
+        }
+        catch (ResourceDoesNotExistException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 }

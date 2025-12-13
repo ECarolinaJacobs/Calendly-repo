@@ -16,15 +16,15 @@ public class RoomBookingService
     {
         if (!_context.Employees.Any(e => e.Id == newBooking.EmployeeId))
         {
-            throw new Exception("Invalid employee ID");
+            throw new ResourceDoesNotExistException("User");
         }
         if (!_context.Rooms.Any(r => r.Id == newBooking.RoomId))
         {
-            throw new Exception("Invalid Room ID");
+            throw new ResourceDoesNotExistException("Room");
         }
         if (!CheckRoomAvailability(newBooking))
         {
-            throw new Exception("Room already booked for this time");
+            throw new RoomAlreadyBookedException();
         }
 
         _context.RoomBookings.Add(newBooking);
