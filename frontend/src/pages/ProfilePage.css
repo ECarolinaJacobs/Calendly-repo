@@ -117,6 +117,12 @@
     font-size: 20px;
     border-bottom: 1px solid rgb(75, 74, 74);
 }
+.password-change-section p{
+    margin-top: 10px;
+    margin-left: 22px;
+    color:rgb(54, 54, 54);
+    font-size: 16px;
+}
 .change-password-button-container{
     border-radius: 4px;
     display: flex;

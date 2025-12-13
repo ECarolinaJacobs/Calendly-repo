@@ -167,7 +167,9 @@ export default function ProfilePage()
                     <div className="password-info-text-container">
                         <p> Security</p>
                     </div>
-
+                    <div className="password-change-section">
+                        <p>Input the current password to change to new password</p>
+                    </div>
                     <form className= "password-form" onSubmit={(e)=> {e.preventDefault();}}>
                         <div className ="form-group">
                             <label htmlFor="current-password-form"> Current Password</label>
