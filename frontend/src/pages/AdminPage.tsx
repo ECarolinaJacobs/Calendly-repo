@@ -90,6 +90,11 @@ export default function AdminPage() {
     return (
         <div className="admin-page">
             <h1>Admin Dashboard</h1>
+            {error && (
+                <div className="error" role="alert" aria-live="polite">
+                    {error}
+                </div>
+            )}
             {/*statistics cards*/}
             {stats && (
                 <div className="stats-container">
@@ -116,7 +121,7 @@ export default function AdminPage() {
                 </div>
             )}
             {/*search bar */}
-            <div className="search-container">
+            <div className="search-container" role="search" aria-label="Search employees">
                 <input
                     type="text"
                     placeholder="Search employee by name or email"
@@ -124,27 +129,29 @@ export default function AdminPage() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                     className="search-input"
+                    aria-label="Search input for employee name or email"
                 />
-                <button onClick={handleSearch} className="search-btn">
+                <button onClick={handleSearch} className="search-btn" aria-label="Search for employees">
                     Search
+
                 </button>
                 {searchTerm && (
-                    <button onClick={handleClearSearch} className="clear-btn">
+                    <button onClick={handleClearSearch} className="clear-btn" aria-label="Clear search and show all employees">
                         Clear
                     </button>
                 )}
             </div>
             { /*employee table*/}
             <h2>Employees ({employees.length})</h2>
-            <table className="employee-table">
+            <table className="employee-table" aria-label="Employee list">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Admin</th>
-                        <th>Coins</th>
-                        <th>Actions</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Admin</th>
+                        <th scope="col">Coins</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -165,7 +172,7 @@ export default function AdminPage() {
                                 <td>
                                     <button
                                         onClick={() => handleDelete(employee.id, employee.name)}
-                                        className="delete-btn"
+                                        className="delete-btn" aria-label={`Delete employee ${employee.name}`}
                                     >
                                         Delete
                                     </button>

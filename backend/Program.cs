@@ -4,6 +4,7 @@ using TodoApi.Context;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using TodoApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,8 @@ builder.Services.AddDbContext<ProjectContext>(opt =>
 
 builder.Services.AddScoped<RoomBookingService>();
 builder.Services.AddScoped<RoomService>();
+builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<OfficeAttendanceService>();
 
 builder.Services.AddDbContext<EventContext>(opt =>
     opt.UseInMemoryDatabase("EventDB"));
