@@ -4,16 +4,16 @@ import { DrawerOverlay } from "../../components/Events/EventDrawer/DrawerOverlay
 import { DrawerContent } from "../../components/Events/EventDrawer/DrawerContent";
 import "./DashboardPage.css";
 import { useNavigate } from "react-router-dom";
-
-import {
-  IoHomeOutline,
-  IoBusinessOutline,
-  IoCalendarClearOutline,
-  IoMenu,
-  IoClose,
-  IoPersonOutline,
-  IoBookmarksOutline,
-} from "react-icons/io5";
+import type { Attendance } from "../api/OfficeAttendance";
+import { createAttendance, deleteAttendance, getMyAttendance, updateAttendance } from "../api/OfficeAttendance";
+import { useCalendar } from "../../hooks/useCalendarHook";
+import { Sidebar } from "../../components/Dashboard/Sidebar";
+import { DashboardBanner } from "../../components/Dashboard/Dashboard-banner";
+import { Timetable } from "../../components/Dashboard/Timetable";
+import { OfficeAttendance } from "../../components/Dashboard/Office-attendance";
+import { MonthCalendar } from "../../components/Dashboard/Month-calendar";
+import { AttendanceModal } from "../../components/Dashboard/AttendanceModal";
+import { AddEventModal } from "../../components/Dashboard/AddEventsModal";
 
 /*helper function*/
 function isSameDay(d1: Date, d2: Date) {
@@ -37,35 +37,71 @@ function hasEventsOnDate(events: Event[], year: number, month: number, day: numb
   });
 }
 
-
-
-//TODO: embedded calendar hook needs to be moved to /hooks
-function useCalendar(initialDate = new Date()) {
-  const [date, setDate] = useState(initialDate);
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const startDay = new Date(year, month, 1).getDay();
-  const calendarDays = [
-    ...Array(startDay).fill(null),
-    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
-  ];
-  const nextMonth = () => setDate(new Date(year, month + 1, 1));
-  const prevMonth = () => setDate(new Date(year, month - 1, 1));
-  const monthName = date.toLocaleDateString("default", { month: "long" });
-  return {
-    date,
-    year,
-    month,
-    monthName,
-    calendarDays,
-    nextMonth,
-    prevMonth,
-  };
-}
-/*hook ends here*/
-
 export default function DashboardPage() {
+  /*handle office attendance booking */
+  const [attendances, setAttendances] = useState<Attendance[]>([]);
+  const [showAttendanceModal, setShowAttendanceModal] = useState(false);
+  const [newAttendanceDate, setNewAttendanceDate] = useState("");
+  const [editingAttendance, setEditingAttendance] = useState<Attendance | null>(null);
+
+  useEffect(() => {
+    loadAttendances();
+  }, []);
+
+  const loadAttendances = async () => {
+    try {
+      const data = await getMyAttendance();
+      setAttendances(data);
+    } catch (error) {
+      console.error("Failed to load attendances: ", error);
+    }
+  };
+
+  const handleAddAttendance = async () => {
+    if (!newAttendanceDate) return;
+    try {
+      await createAttendance({ date: newAttendanceDate });
+      setNewAttendanceDate("");
+      setShowAttendanceModal(false);
+      loadAttendances();
+    } catch (error: any) {
+      alert(error.response?.data?.message || "Failed to create attendance");
+    }
+  };
+
+  const handleUpdateAttendance = async () => {
+    if (!newAttendanceDate || !editingAttendance) return;
+    try {
+      await updateAttendance(editingAttendance.id, { date: newAttendanceDate });
+      setNewAttendanceDate("");
+      setEditingAttendance(null);
+      setShowAttendanceModal(false);
+      loadAttendances();
+    } catch (error: any) {
+      alert(error.response?.data?.message || "Failed to update attendance");
+    }
+  };
+
+  const handleDeleteAttendance = async (id: number) => {
+    if (
+      !confirm("Delete this attendance booking?")
+    ) return;
+    const success = await deleteAttendance(id);
+    if (success) loadAttendances();
+  };
+
+  const openEditModal = (attendance: Attendance) => {
+    setEditingAttendance(attendance);
+    setNewAttendanceDate(attendance.date.split('T')[0]); //only get date not time
+    setShowAttendanceModal(true);
+  };
+
+  const closeAttendanceModal = () => {
+    setShowAttendanceModal(false);
+    setEditingAttendance(null);
+    setNewAttendanceDate("");
+  };
+
   /*handle item event */
   const handleAddEvent = () => {
     if (!newEventTitle || !newEventTime) return;
@@ -106,11 +142,6 @@ export default function DashboardPage() {
   });
   const hours = Array.from({ length: 11 }, (_, i) => i + 8);
   const dayName = selectedDate.toLocaleDateString("en-US", { weekday: "long" });
-  const formattedDate = selectedDate.toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
   const userName = "Elena";
   /*add event to timetable*/
   const [showAddEventModal, setShowAddEventModal] = useState(false);
@@ -137,254 +168,73 @@ export default function DashboardPage() {
   /*render*/
   return (
     <div className="dashboard-layout">
-      {/*sidebar*/}
-      <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
-        <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
-          {sidebarOpen ? <IoClose /> : <IoMenu />}
-        </button>
-        <ul className="sidebar-menu">
-          <li
-            className={`sidebar-item ${activeItem === "dashboard" ? "active" : ""}`}
-            onClick={() => setActiveItem("dashboard")}
-          >
-            <span className="icon">
-              <IoHomeOutline />
-            </span>
-            {sidebarOpen && <span className="label">Dashboard</span>}
-          </li>
-          <li
-            className={`sidebar-item ${activeItem === "rooms" ? "active" : ""}`}
-            onClick={() => {
-              setActiveItem("rooms");
-              navigate("/booking");
-            }}
-          >
-            <span className="icon"><IoBusinessOutline /></span>
-            {sidebarOpen && <span className="label">Rooms</span>}
-          </li>
-          <li
-            className={`sidebar-item ${activeItem === "my-bookings" ? "active" : ""}`}
-            onClick={() => {
-              setActiveItem("my-bookings");
-              navigate("/my-bookings");
-            }}
-          >
-            <span className="icon">
-              <IoBookmarksOutline />
-            </span>
-            {sidebarOpen && <span className="label">My Bookings</span>}
-          </li>
-          <li
-            className={`sidebar-item ${activeItem === "events" ? "active" : ""}`}
-            onClick={() => {
-              setActiveItem("events");
-              navigate("/events/:event");
-            }}
-          >
-            <span className="icon">
-              <IoCalendarClearOutline />
-            </span>
-            {sidebarOpen && <span className="label">Events</span>}
-          </li>
-          <li 
-            className={`sidebar-item ${activeItem === "profile" ? "active" : ""}`}
-            onClick={() => {
-              setActiveItem("profile");
-              navigate("/profile");
-            }}
-          >
-            <span className="icon"><IoPersonOutline /></span>
-            {sidebarOpen && <span className="label">Profile</span>}
-          </li>
-        </ul>
-      </aside>
+      <Sidebar
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+        activeItem={activeItem}
+        setActiveItem={setActiveItem}
+        navigate={navigate}
+      />
       {/*main content */}
       <div className={`main-content-area ${sidebarOpen ? "shift" : ""}`}>
-        {/*top banner*/}
-        <div className="dashboard-banner">
-          <header className="user-greeting">
-            <h1>
-              Hello, <span className="username">{userName}!</span>
-            </h1>
-          </header>
-        </div>
+        <DashboardBanner userName={userName} />
         <div className="dashboard-grid">
           <div className="main-content">
-            {/*timetable*/}
-            <section className="timetable-box">
-              <div className="timetable-header">
-                <div className="timetable-header-left">
-                  <h2>Timetable</h2>
-                  <p>
-                    {dayName}
-                  </p>
-                </div>
-                <button
-                  className="timetable-date-button"
-                  onClick={() => setIsTimetableCalendarOpen(!isTimetableCalendarOpen)}
-                >
-                  {selectedDate.toLocaleDateString("en-GB")} 📅
-                </button>
-                <button className="add-event-button" onClick={() => setShowAddEventModal(true)}>+</button>
-                {isTimetableCalendarOpen && (
-                  <div className="timetable-calendar-dropdown">
-                    <div className="calendar-title-wrapper">
-                      <h2 className="calendar-title">
-                        {dropdownCal.monthName} {dropdownCal.year}
-                      </h2>
-                      <div className="calendar-nav">
-                        <button onClick={dropdownCal.prevMonth} className="calendar-nav-button">
-                          ‹
-                        </button>
-                        <button onClick={dropdownCal.nextMonth} className="calendar-nav-button">
-                          ›
-                        </button>
-                      </div>
-                    </div>
-                    <div className="calendar-box">
-                      <div className="calendar">
-                        <div className="calendar-header">
-                          {daysOfWeek.map((day) => (
-                            <div key={day} className="calendar-header-day">
-                              {day}
-                            </div>
-                          ))}
-                        </div>
-                        <div className="calendar-grid">
-                          {dropdownCal.calendarDays.map((day, index) => {
-                            if (day === null) {
-                              return <div key={index} className="calendar-day empty"></div>;
-                            }
-                            const dateObj = new Date(dropdownCal.year, dropdownCal.month, day);
-                            const isToday = isSameDay(dateObj, today);
-                            const isSelected = isSameDay(dateObj, selectedDate);
-
-                            return (
-                              <div
-                                key={index}
-                                className={`calendar-day ${isToday ? "today" : ""} ${isSelected ? "selected" : ""}`}
-                                onClick={() => {
-                                  setSelectedDate(dateObj);
-                                  setIsTimetableCalendarOpen(false);
-                                }}
-                              >
-                                {day}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-              {/*timetable hours*/}
-              <div className="timetable-hours">
-                {hours.map((hour) => {
-                  const timeStr = `${hour}:00`;
-                  const hourEvents = events.filter((event) => {
-                    const startTime = new Date(event.startDate);
-                    return (
-                      startTime.toDateString() === selectedDate.toDateString() &&
-                      startTime.getHours() === hour
-                    );
-                  });
-                  return (
-                    <div key={hour} className="timetable-hour-row">
-                      <div className="hour-label">{timeStr}</div>
-                      <div className="hour-content">
-                        {hourEvents.map((event, idx) => (
-                          <div
-                            key={idx}
-                            className="hour-event"
-                            onClick={() => handleEventClick(event)}
-                          >
-                            {event.title}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
+            <Timetable
+              dayName={dayName}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+              isTimetableCalendarOpen={isTimetableCalendarOpen}
+              setIsTimetableCalendarOpen={setIsTimetableCalendarOpen}
+              setShowAddEventModal={setShowAddEventModal}
+              dropdownCal={dropdownCal}
+              today={today}
+              daysOfWeek={daysOfWeek}
+              isSameDay={isSameDay}
+              hours={hours}
+              events={events}
+              handleEventClick={handleEventClick}
+            />
             {/*full month calendar*/}
             <div className="calendar-column">
-              <section className="events-box">
-                <h3>Upcoming Events!</h3>
-              </section>
-              <main className="calendar-container-month">
-                <div className="calendar-title-wrapper">
-                  <h2 className="calendar-title">
-                    {fullCal.monthName} {fullCal.year}
-                  </h2>
-                  <div className="calendar-nav">
-                    <button onClick={fullCal.prevMonth} className="calendar-nav-button">
-                      ‹
-                    </button>
-                    <button onClick={fullCal.nextMonth} className="calendar-nav-button">
-                      ›
-                    </button>
-                  </div>
-                </div>
-                <div className="calendar-box">
-                  <div className="calendar">
-                    <div className="calendar-header">
-                      {daysOfWeek.map((day) => (
-                        <div key={day} className="calendar-header-day">
-                          {day}
-                        </div>
-                      ))}
-                    </div>
-                    <div className="calendar-grid">
-                      {fullCal.calendarDays.map((day, index) => {
-                        if (day === null) {
-                          return <div key={index} className="calendar-day empty"></div>;
-                        }
-                        const isToday =
-                          day === today.getDate() &&
-                          fullCal.month === today.getMonth() &&
-                          fullCal.year === today.getFullYear();
-                        const hasEvent = hasEventsOnDate(events, fullCal.year, fullCal.month, day);
-                        return (
-                          <div
-                            key={index}
-                            className={`calendar-day ${isToday ? "today" : ""} ${hasEvent ? "has-event" : ""
-                              }`}
-                          >
-                            {day}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </main>
+              <OfficeAttendance
+                attendances={attendances}
+                setShowAttendanceModal={setShowAttendanceModal}
+                openEditModal={openEditModal}
+                handleDeleteAttendance={handleDeleteAttendance}
+              />
+              <MonthCalendar
+                fullCal={fullCal}
+                daysOfWeek={daysOfWeek}
+                today={today}
+                events={events}
+                hasEventsOnDate={hasEventsOnDate}
+              />
             </div>
             {showAddEventModal && (
-              <div className="modal-overlay">
-                <div className="modal">
-                  <h3>Add Item for {selectedDate.toLocaleDateString()}</h3>
-                  <input
-                    type="text"
-                    placeholder="Item title"
-                    value={newEventTitle}
-                    onChange={(e) => setNewEventTitle(e.target.value)}
-                  />
-                  <input
-                    type="time"
-                    value={newEventTime}
-                    onChange={(e) => setNewEventTime(e.target.value)}
-                  />
-                  <div className="modal-buttons">
-                    <button onClick={handleAddEvent}>Add</button>
-                    <button onClick={() => setShowAddEventModal(false)}>Cancel</button>
-                  </div>
-                </div>
-              </div>
+              <AddEventModal
+                selectedDate={selectedDate}
+                newEventTitle={newEventTitle}
+                setNewEventTitle={setNewEventTitle}
+                newEventTime={newEventTime}
+                setNewEventTime={setNewEventTime}
+                handleAddEvent={handleAddEvent}
+                setShowAddEventModal={setShowAddEventModal}
+              />
             )}
           </div>
         </div>
+        {/*attendance model needs to be rewritten*/}
+        {showAttendanceModal && (
+          <AttendanceModal
+            editingAttendance={editingAttendance}
+            newAttendanceDate={newAttendanceDate}
+            setNewAttendanceDate={setNewAttendanceDate}
+            handleUpdateAttendance={handleUpdateAttendance}
+            handleAddAttendance={handleAddAttendance}
+            closeAttendanceModal={closeAttendanceModal}
+          />
+        )}
         {/*event drawer*/}
         {selectedEvent && (
           <>
@@ -398,7 +248,8 @@ export default function DashboardPage() {
             />
           </>
         )}
-      </div>
-    </div>
+      </div >
+    </div >
   );
 }
+

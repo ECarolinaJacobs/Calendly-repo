@@ -1,6 +1,16 @@
 namespace TodoApi.DTOs;
 
-// data transfer object (DTO) for employee information
+/// <summary> 
+/// defines the structure of employee data sent to the frontend 
+/// DTO  (data transfer object) is a safe version of the employee model because the password 
+/// no longer gets directly sent to the frontend
+/// 
+/// dtos are object containers and are usually mutable (hence: init;)
+/// 
+/// relationship: 
+/// - source: employee model (database structure)
+/// - created by: admin controller methods -> converts employee model to employeeDto
+/// - used by: frontend 
 public record EmployeeDto
 {
     public long Id { get; init; }
@@ -8,5 +18,4 @@ public record EmployeeDto
     public string Email { get; init; } = string.Empty;
     public bool IsAdmin { get; init; }
     public int Coins { get; init; }
-    // no password field for security purposes
 }
