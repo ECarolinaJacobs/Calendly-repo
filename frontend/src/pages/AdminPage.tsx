@@ -1,24 +1,30 @@
-import { useEffect, useState } from 'react';
-import { getAllEmployees, deleteEmployee, searchEmployees, getStatistics } from '../api/admin';
-import type { AdminStats } from '../api/admin';
+import { useEffect, useState } from "react";
+import {
+	getAllEmployees,
+	deleteEmployee,
+	searchEmployees,
+	getStatistics,
+} from "../api/admin";
 import "./AdminPage.css";
+import type { AdminStats } from "../api/admin";
+import { AdminCreateEvent } from "../../components/Events/form-creation";
 
 // typescript interface to match employeeDto
 interface Employee {
-    id: number;
-    name: string;
-    email: string;
-    isAdmin: boolean;
-    coins: number;
+	id: number;
+	name: string;
+	email: string;
+	isAdmin: boolean;
+	coins: number;
 }
 
 export default function AdminPage() {
-    const [employees, setEmployees] = useState<Employee[]>([]);
-    const [stats, setStats] = useState<AdminStats | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [searchTerm, setSearchTerm] = useState("");
-    // fetch data when component loads
+	const [employees, setEmployees] = useState<Employee[]>([]);
+	const [stats, setStats] = useState<AdminStats | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+	const [searchTerm, setSearchTerm] = useState("");
+
     useEffect(() => {
         loadData();
     }, []);
@@ -26,13 +32,12 @@ export default function AdminPage() {
         try {
             setLoading(true);
             setError(null);
-            //load employees and statistics
             const [employeesData, statsData] = await Promise.all([
                 getAllEmployees(),
-                getStatistics()
+                getStatistics(),
             ]);
             setEmployees(employeesData || []);
-            setStats(statsData)
+            setStats(statsData);
         } catch (err) {
             setError("Failed to load data");
             console.error(err);
@@ -40,9 +45,9 @@ export default function AdminPage() {
             setLoading(false);
         }
     };
+
     const handleSearch = async () => {
         if (!searchTerm.trim()) {
-            // if search is empty reload all employees
             loadData();
             return;
         }
@@ -58,10 +63,11 @@ export default function AdminPage() {
             setLoading(false);
         }
     };
-    const handleClearSearch = () => {
-        setSearchTerm("");
-        loadData(); //reload all employees
-    };
+
+	const handleClearSearch = () => {
+		setSearchTerm("");
+		loadData(); //reload all employees
+	};
 
     const handleDelete = async (id: number, name: string) => {
         if (!window.confirm(`Are you sure you want to delete ${name}?`)) {
@@ -81,6 +87,8 @@ export default function AdminPage() {
             alert('Error deleting employee');
         }
     };
+
+
     if (loading && !stats) {
         return <div className="loading">Loading...</div>;
     }
@@ -120,6 +128,8 @@ export default function AdminPage() {
                     </div>
                 </div>
             )}
+            {/*event creation section */}
+            <AdminCreateEvent />
             {/*search bar */}
             <div className="search-container" role="search" aria-label="Search employees">
                 <input
@@ -133,7 +143,6 @@ export default function AdminPage() {
                 />
                 <button onClick={handleSearch} className="search-btn" aria-label="Search for employees">
                     Search
-
                 </button>
                 {searchTerm && (
                     <button onClick={handleClearSearch} className="clear-btn" aria-label="Clear search and show all employees">
@@ -184,4 +193,3 @@ export default function AdminPage() {
             </table>
         </div>
     );
-}

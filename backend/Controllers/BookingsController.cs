@@ -23,7 +23,7 @@ public class BookingsController : ControllerBase
     [HttpPost("start")]
     public async Task<ActionResult<RoomBooking>> BookRoom(RoomBooking newBooking)
     {
-        var createdBooking = _roomBookingService.CreateBooking(newBooking);
+        var createdBooking = await _roomBookingService.CreateBookingAsync(newBooking);
         return Ok(createdBooking);
     }
 }
