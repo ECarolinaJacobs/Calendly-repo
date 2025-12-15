@@ -46,6 +46,24 @@ namespace TodoApi.Controllers
             return eventDto;
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<EventDto>> Update(long id, EventCreateRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Title) ||
+                string.IsNullOrWhiteSpace(request.Description))
+            {
+                return BadRequest("Title and Description required.");
+            }
+
+            var updatedEvent = await _eventService.UpdateEventAsync(id, request);
+
+            if (updatedEvent == null)
+                return NotFound($"Event with ID {id} not found.");
+
+            return Ok(updatedEvent);
+        }
+
+
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(long id)
         {
