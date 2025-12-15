@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { Event } from "../../components/Events/EventDrawer/types";
 import { DrawerOverlay } from "../../components/Events/EventDrawer/DrawerOverlay";
 import { DrawerContent } from "../../components/Events/EventDrawer/DrawerContent";
-import "./DashboardPage.css";
+import "../css/DashboardPage.css";
 import { useNavigate } from "react-router-dom";
 import type { Attendance } from "../api/OfficeAttendance";
 import { createAttendance, deleteAttendance, getMyAttendance, updateAttendance } from "../api/OfficeAttendance";

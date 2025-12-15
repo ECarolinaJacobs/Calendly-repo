@@ -36,6 +36,36 @@ namespace TodoApi.Services
             return newEvent;
         }
 
+        public async Task<EventDto?> UpdateEventAsync(long id, EventCreateRequest request)
+        {
+            var ev = await _context.Events.FindAsync(id);
+            if (ev == null) return null;
+
+            ev.Title = request.Title;
+            ev.Description = request.Description;
+            ev.Image = request.Image;
+            ev.StartDate = request.StartDate;
+            ev.EndDate = request.EndDate;
+
+            await _context.SaveChangesAsync();
+
+            return new EventDto(
+                ev.Id,
+                ev.Title,
+                ev.Description,
+                ev.Image,
+                ev.StartDate,
+                ev.EndDate,
+                ev.Attendees?.Select(a => new AttendeeDto(
+                    a.Id,
+                    a.Name,
+                    a.Avatar,
+                    a.EmployeeId
+                )).ToList()
+            );
+        }
+
+
         public async Task<EventDto?> GetEventByIdAsync(long id)
         {
             var eventItem = await _context.Events
