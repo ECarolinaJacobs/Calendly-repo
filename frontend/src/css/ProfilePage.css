@@ -1,0 +1,172 @@
+.loading,
+.error {
+	text-align: center;
+	padding: 3rem;
+	font-size: 1.2rem;
+}
+
+.error {
+	color: #dc3545;
+}
+
+.profile-page {
+	font-family: "Roboto mono";
+	padding: 40px;
+	background-color: rgba(234, 239, 245, 0.5);
+}
+
+.main-container {
+	margin-top: 60px;
+}
+.topbar {
+	background-color: #6366f1;
+	color: white;
+	padding: 15px;
+	border-radius: 10px 10px 0px 0px;
+}
+.topbar a {
+	margin-left: 10px;
+}
+.banner-container {
+	display: flex;
+	flex-direction: row;
+	border-bottom-color: rgb(189, 46, 46);
+	background-color: rgb(255, 255, 255);
+	/*border-radius: 4px;*/
+	padding: 6px;
+	border-bottom: 1.2;
+}
+.profilePicture {
+	width: 150px;
+	height: 150px;
+	border-radius: 100%;
+	margin-top: 15px;
+	margin-bottom: 20px;
+	margin-left: 15px;
+}
+.username-display {
+	display: flex;
+	margin-top: 110px;
+	margin-left: 40px;
+	font-size: 25px;
+	color: rgb(75, 74, 74);
+}
+
+.personal-info-text-container p {
+	margin-top: 10px;
+	margin-left: 22px;
+	color: rgb(75, 74, 74);
+	font-size: 20px;
+	border-bottom: 1px solid rgb(75, 74, 74);
+}
+
+.info-section {
+	background-color: white;
+	padding: 25px;
+	border-radius: 0px 0px 10px 10px;
+	box-shadow: 8px;
+}
+.edit-button-container {
+	display: flex;
+	justify-content: flex-end;
+	padding: 10px;
+	border-radius: 4px;
+	min-height: 60px;
+}
+
+.edit-button {
+	background-color: #6366f1;
+	border-radius: 800px;
+	color: white;
+	padding: 8px 18px;
+}
+
+.info-form,
+.password-form {
+	background-color: white;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 15px;
+	padding: 20px;
+	border-radius: 8px;
+}
+.form-group {
+	display: flex;
+	flex-direction: column;
+}
+.form-group label {
+	background-color: white;
+	margin-bottom: 5px;
+	text-align: left;
+	color: rgb(119, 118, 118);
+}
+.form-group input {
+	background-color: rgb(227, 224, 224);
+	padding: 10px;
+	border-radius: 4px;
+	border: 1px solid rgb(143, 141, 141);
+}
+
+.password-info-text-container p {
+	margin-top: 10px;
+	margin-left: 22px;
+	color: rgb(75, 74, 74);
+	font-size: 20px;
+	border-bottom: 1px solid rgb(75, 74, 74);
+}
+.password-change-section p {
+	margin-top: 10px;
+	margin-left: 22px;
+	color: rgb(54, 54, 54);
+	font-size: 16px;
+}
+.change-password-button-container {
+	border-radius: 4px;
+	display: flex;
+	justify-content: flex-end;
+	padding: 10px;
+	min-height: 60px;
+}
+
+.change-password-button {
+	background-color: #6366f1;
+	border-radius: 800px;
+	color: white;
+	padding: 8px 18px;
+}
+
+.save-password-button-container {
+	border-radius: 4px;
+	display: flex;
+	justify-content: flex-end;
+	padding: 10px;
+	min-height: 60px;
+}
+
+.save-password-button {
+	background-color: #6366f1;
+	border-radius: 800px;
+	color: white;
+	padding: 8px 18px;
+}
+
+.save-changes-button-container {
+	border-radius: 4px;
+	display: flex;
+	justify-content: flex-end;
+	padding: 10px;
+	min-height: 60px;
+}
+
+.save-changes-button {
+	background-color: #6366f1;
+	border-radius: 800px;
+	color: white;
+	padding: 8px 18px;
+}
+.password-section {
+	background-color: white;
+	padding: 25px;
+	border-radius: 0px 0px 10px 10px;
+	box-shadow: 8px;
+}
