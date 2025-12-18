@@ -11,6 +11,17 @@ type RoomFilteringProp = {
     setErrorMessage: any
 }
 
+type Room = {
+    id: number,
+    name: string,
+    floor: string,
+    location: string,
+    description: string
+}
+
+// Modularize filters in own components
+// pass values to select tags
+
 const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso, setErrorMessage} : RoomFilteringProp) => {
     const [selectedFloor, setSelectedFloor] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
@@ -31,6 +42,18 @@ const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso, setE
     "16:00",
     "17:00"
     ];
+    
+    const resetFilters = () => {
+        setSelectedFloor("");
+        setSelectedDate("");
+        setSelectedStarttime("");
+        setSelectedEndtime("");
+
+        const rooms : Room[] = [];
+        setRooms(rooms);
+
+        setErrorMessage("Please set all filters")
+    }
 
     const EndTimeLimiter = () => {
         const startTimeIndex = startTimes.indexOf(selectedStarttime);
@@ -113,12 +136,7 @@ const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso, setE
 
                 <div className="confirm-filter-wrapper">
                     <ResetFiltersButton className="reset-filters-button"
-                    setRooms={setRooms}
-                    setSelectedFloor={setSelectedFloor}
-                    setSelectedDate={setSelectedDate}
-                    setSelectedStarttime={setSelectedStarttime}
-                    setSelectedEndtime={setSelectedEndtime}
-                    setErrorMessage={setErrorMessage}/>
+                    onReset={resetFilters}/>
 
                     <button className="filter-button"
                     onClick={() => handleClick()}

@@ -1,25 +1,9 @@
-type Room = {
-    id: number,
-    name: string,
-    floor: string,
-    location: string,
-    description: string
-}
+// Use one parameter/usestate for filtering
 
-const ResetFiltersButton = ({setRooms, setSelectedFloor, setSelectedDate, setSelectedStarttime, setSelectedEndtime, setErrorMessage} : any) => {
+const ResetFiltersButton = ({onReset} : any) => {
 
     return (
-        <button className="reset-filters-button"
-        onClick={async () => {
-            const rooms : Room[] = [];
-            setRooms(rooms);
-
-            setSelectedDate("");
-            setSelectedFloor("Select floor");
-            setSelectedStarttime("Set start time")
-            setSelectedEndtime("Set end time")
-            setErrorMessage("Please set all filters")
-        }}>
+        <button className="reset-filters-button" onClick={onReset}>
             <img className='refresh-icon' src="public/refresh-icon.png" alt="refresh icon" />
         </button>
     )
