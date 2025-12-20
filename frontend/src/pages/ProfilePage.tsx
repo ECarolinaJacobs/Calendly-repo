@@ -10,6 +10,7 @@ export default function ProfilePage() {
 	const [newPassword, setNewPassword] = useState("");
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [passwordError, setPasswordError] = useState<string | null>(null);
 	const [IsEditing, setEditButton] = useState(false);
 	const [IsEditingPassword, setIsEditingPassword] = useState(false);
 
@@ -79,11 +80,14 @@ export default function ProfilePage() {
 	const saveUserPasswordChanges = async () => {
 		try {
 			setLoading(true);
-			setError(null);
+			setPasswordError(null);
+			setPassword("");
+			setNewPassword("");
+
 
 			const userId = Number(localStorage.getItem("userId"));
 			if (!userId) {
-				setError("User ID not found, please log in.");
+				setPasswordError("User ID not found, please log in.");
 				setLoading(false);
 				return;
 			}
@@ -97,7 +101,7 @@ export default function ProfilePage() {
 			setIsEditingPassword(false);
 			await loadUserData();
 		} catch (err) {
-			setError("Failed to save changes");
+			setPasswordError("Failed to save changes");
 			console.error(err);
 		} finally {
 			setLoading(false);
@@ -236,7 +240,7 @@ export default function ProfilePage() {
 						onChange={(e) => setNewPassword(e.target.value)}
 					/>
 				</div>
-				{error && <div className="error-message-container"> <p>Password does not match current password, please try again.</p></div>}
+				{passwordError && <div className="error-message-container"> <p>Password does not match current password, please try again.</p></div>}
 			</form>
 				
 			
