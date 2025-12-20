@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getUserInformation, updateUserInformation } from "../api/users";
 import "../css/ProfilePage.css";
 
@@ -6,6 +6,7 @@ export default function ProfilePage() {
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [coins, setCoins] = useState(0);
 	const [newPassword, setNewPassword] = useState("");
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
@@ -34,6 +35,7 @@ export default function ProfilePage() {
 
 			setName(userProfile.name);
 			setEmail(userProfile.email);
+			setCoins(userProfile.coins);
 			setNewPassword("");
 		} catch (err) {
 			setError("Failed to load user data");
@@ -102,12 +104,163 @@ export default function ProfilePage() {
 		}
 	};
 
-	//upload profile picture function can be added later
+	const bannerDisplay = () => {
+		return (<div className="banner-container">
+					<img
+						className="profilePicture"
+						src="/ProfilePicture.png"
+						alt="profile picture"
+					/>
+					<p className="username-display"> {name} </p>
+					<p className="coins-display"> Coins: {coins}</p>
+				</div>
+
+		)
+	};
+	const personalInfoDisplay = () => {
+		return (
+		<div className="info-section">
+			<div className="edit-button-container">
+				{!IsEditing && (
+					<button
+						className="edit-button"
+						onClick={() => {
+							setEditButton(true);
+						}}
+					>
+						edit
+					</button>
+				)}
+			</div>
+
+			<div className="personal-info-text-container">
+				<p> Personal Information</p>
+			</div>
+
+			<form
+				className="info-form"
+				onSubmit={(e) => {
+					e.preventDefault();
+				}}
+			>
+				<div className="form-group">
+					<label htmlFor="firstname-form"> Name</label>
+					<input
+						type="text"
+						className="firstname-form"
+						value={name}
+						readOnly={!IsEditing}
+						onChange={(e) => setName(e.target.value)}
+					/>
+				</div>
+				<div className="form-group">
+					<label htmlFor="email-form"> Email</label>
+					<input
+						type="text"
+						className="email-form"
+						placeholder="Email"
+						value={email}
+						readOnly={!IsEditing}
+						onChange={(e) => setEmail(e.target.value)}
+					/>
+				</div>
+			</form>
+			<div className="save-changes-button-container">
+				{IsEditing && (
+					<button
+						className="save-changes-button"
+						onClick={() => {
+							(setEditButton(false), saveUserChanges());
+						}}
+					>
+						Save changes
+					</button>
+				)}
+			</div>
+		</div>)
+		};
+
+	const passwordInfoDisplay = () => {
+		return (					
+		<div className="password-change-section">
+			<div className="change-password-button-container">
+			{!IsEditingPassword && (
+				<button
+					className="change-password-button"
+					onClick={() => {
+						setIsEditingPassword(true);
+					}}
+				>
+					change password
+				</button>
+			)}
+			</div>
+			<div className="password-info-text-container">
+				<p> Security</p>
+			</div>
+			<p>
+				Input the current password to change to new password
+			</p>
+			
+			<form
+				className="password-form"
+				onSubmit={(e) => {
+					e.preventDefault();
+				}}
+			>
+				<div className="form-group">
+					<label htmlFor="current-password-form">
+						{" "}
+						Current Password
+					</label>
+					<input
+						type="password"
+						className="current-password-form"
+						placeholder="Current Password"
+						value={password}
+						readOnly={!IsEditingPassword}
+						onChange={(e) => setPassword(e.target.value)}
+					/>
+				</div>
+				<div className="form-group">
+					<label htmlFor="new-password-form">
+						{" "}
+						New Password
+					</label>
+					<input
+						type="password"
+						className="new-password-form"
+						placeholder="New Password"
+						value={newPassword}
+						readOnly={!IsEditingPassword}
+						onChange={(e) => setNewPassword(e.target.value)}
+					/>
+				</div>
+				{error && <div className="error-message-container"> <p>Password does not match current password, please try again.</p></div>}
+			</form>
+				
+			
+			
+			
+
+			<div className="save-password-button-container">
+				{IsEditingPassword && (
+					<button
+						className="save-password-button"
+						onClick={() => {
+							(setIsEditingPassword(false),
+								saveUserPasswordChanges());
+						}}
+					>
+						save new password
+					</button>
+				)}
+			</div>
+		</div>)
+	};
+
 	if (loading) {
 		return <div className="loading">Loading...</div>;
-	}
-	if (error) {
-		return <div className="error">{error}</div>;
 	}
 	return (
 		<div className="profile-page">
@@ -118,146 +271,12 @@ export default function ProfilePage() {
 					<a href="/booking"> Booking</a>
 					<a href="/logout"> LogOut</a>
 				</div>
-				<div className="banner-container">
-					<img
-						className="profilePicture"
-						src="/ProfilePicture.png"
-						alt="profile picture"
-					/>
-					<p className="username-display"> {name} </p>
-				</div>
+				{bannerDisplay()}
+				{personalInfoDisplay()}
+				{passwordInfoDisplay()}
 
-				<div className="info-section">
-					<div className="edit-button-container">
-						{!IsEditing && (
-							<button
-								className="edit-button"
-								onClick={() => {
-									setEditButton(true);
-								}}
-							>
-								edit
-							</button>
-						)}
-					</div>
-
-					<div className="personal-info-text-container">
-						<p> Personal Information</p>
-					</div>
-
-					<form
-						className="info-form"
-						onSubmit={(e) => {
-							e.preventDefault();
-						}}
-					>
-						<div className="form-group">
-							<label htmlFor="firstname-form"> Name</label>
-							<input
-								type="text"
-								className="firstname-form"
-								value={name}
-								readOnly={!IsEditing}
-								onChange={(e) => setName(e.target.value)}
-							/>
-						</div>
-						<div className="form-group">
-							<label htmlFor="email-form"> Email</label>
-							<input
-								type="text"
-								className="email-form"
-								placeholder="Email"
-								value={email}
-								readOnly={!IsEditing}
-								onChange={(e) => setEmail(e.target.value)}
-							/>
-						</div>
-					</form>
-					<div className="save-changes-button-container">
-						{IsEditing && (
-							<button
-								className="save-changes-button"
-								onClick={() => {
-									(setEditButton(false), saveUserChanges());
-								}}
-							>
-								Save changes
-							</button>
-						)}
-					</div>
-
-					<div className="change-password-button-container">
-						{!IsEditingPassword && (
-							<button
-								className="change-password-button"
-								onClick={() => {
-									setIsEditingPassword(true);
-								}}
-							>
-								change password
-							</button>
-						)}
-					</div>
-
-					<div className="password-info-text-container">
-						<p> Security</p>
-					</div>
-					<div className="password-change-section">
-						<p>
-							Input the current password to change to new password
-						</p>
-					</div>
-					<form
-						className="password-form"
-						onSubmit={(e) => {
-							e.preventDefault();
-						}}
-					>
-						<div className="form-group">
-							<label htmlFor="current-password-form">
-								{" "}
-								Current Password
-							</label>
-							<input
-								type="password"
-								className="current-password-form"
-								placeholder="Current Password"
-								value={password}
-								readOnly={!IsEditingPassword}
-								onChange={(e) => setPassword(e.target.value)}
-							/>
-						</div>
-						<div className="form-group">
-							<label htmlFor="new-password-form">
-								{" "}
-								New Password
-							</label>
-							<input
-								type="password"
-								className="new-password-form"
-								placeholder="New Password"
-								value={newPassword}
-								readOnly={!IsEditingPassword}
-								onChange={(e) => setNewPassword(e.target.value)}
-							/>
-						</div>
-					</form>
-
-					<div className="save-password-button-container">
-						{IsEditingPassword && (
-							<button
-								className="save-password-button"
-								onClick={() => {
-									(setIsEditingPassword(false),
-										saveUserPasswordChanges());
-								}}
-							>
-								save new password
-							</button>
-						)}
-					</div>
 				</div>
 			</div>
-		</div>
+		
 	);
 }
