@@ -1,133 +1,132 @@
-
 /*used for when the display is cropped*/
 @media (max-width: 768px) {
-	/*changes from 2 inputs next to eachother to 1*/
-  .info-form, .password-form {
-    grid-template-columns: 1fr; 
+  /*changes from 2 inputs next to eachother to 1*/
+  .info-form,
+  .password-form {
+    grid-template-columns: 1fr;
   }
-  .banner-container
-  {
-	flex-direction: column;
-	align-items: left;
+  .banner-container {
+    flex-direction: column;
+    align-items: left;
     text-align: left;
   }
 }
 
-
+/*error styling*/
 .loading,
 .error {
-	text-align: center;
-	padding: 3rem;
-	font-size: 1.2rem;
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.2rem;
 }
 
 /*Adds length to the sidebar because the form is taller than the screen */
-.sidebar{
-	height: auto;
+.sidebar {
+  height: auto;
 }
 
 .profile-page {
-	padding: 1.5rem;
-	box-sizing: border-box;
-	max-width: 1600px;
-	margin: 2rem auto;
-	width: 90%; 
-	max-width: 1000px;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  max-width: 1600px;
+  margin: 2rem auto;
+  width: 90%;
+  max-width: 1000px;
 }
 
 /*banner and content inside it styling*/
 .banner-container {
-	display: flex;
-	flex-direction: row;
-	background-color: rgb(255, 255, 255);
-	padding: 35px;
-	color: rgb(75, 74, 74);
-	font-size: 25px;
-	border-radius:  10px 10px 0px 0px;
+  display: flex;
+  flex-direction: row;
+  background-color: rgb(255, 255, 255);
+  padding: 35px;
+  color: rgb(75, 74, 74);
+  font-size: 25px;
+  border-radius: 10px 10px 0px 0px;
 }
 
 /*left side of the banner*/
 .banner-left {
-	display: flex;
-	align-items: flex-end;
-	gap: 40px;
+  display: flex;
+  align-items: flex-end;
+  gap: 40px;
 }
 
 .profilePicture {
-	width: 150px;
-	height: 150px;
-	border-radius: 50%;
-	margin-left: 15px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-left: 15px;
 }
-.username-display{
-	font-weight: 600;
+.username-display {
+  font-weight: 600;
 }
 .coins-display {
-	margin-left: auto;
-	align-self: flex-end;
+  margin-left: auto;
+  align-self: flex-end;
 }
 
-
 /*container for personal info and password info headers*/
-.personal-info-text-container p,  .password-info-text-container p{
-	margin-top: 10px;
-	margin-left: 22px;
-	color: rgb(75, 74, 74);
-	font-size: 20px;
-	border-bottom: 1px solid rgb(75, 74, 74);
+.personal-info-text-container p,
+.password-info-text-container p {
+  margin-top: 10px;
+  margin-left: 22px;
+  color: rgb(75, 74, 74);
+  font-size: 20px;
+  border-bottom: 1px solid rgb(75, 74, 74);
 }
 
 /*information and password sections*/
-.info-section, .password-change-section {
-	background-color: white;
-	padding: 25px;
-	box-shadow: 8px;
+.info-section,
+.password-change-section {
+  background-color: white;
+  padding: 25px;
+  box-shadow: 8px;
 }
 
 .password-change-section {
-	border-radius: 0px 0px 10px 10px;
+  border-radius: 0px 0px 10px 10px;
 }
 .password-change-section p {
-	margin-top: 10px;
-	margin-left: 22px;
-	color: rgb(54, 54, 54);
-	
+  margin-top: 10px;
+  margin-left: 22px;
+  color: rgb(54, 54, 54);
 }
 
 /*forms*/
 .info-form,
 .password-form {
-	background-color: white;
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 15px;
-	padding: 20px;
-	border-radius: 8px;
+  background-color: white;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  padding: 20px;
+  border-radius: 8px;
 }
 
 .form-group {
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 .form-group label {
-	background-color: white;
-	margin-bottom: 5px;
-	text-align: left;
-	color: rgb(119, 118, 118);
+  background-color: white;
+  margin-bottom: 5px;
+  text-align: left;
+  color: rgb(119, 118, 118);
 }
 .form-group input {
-	background-color: rgb(227, 224, 224);
-	padding: 10px;
-	border-radius: 4px;
-	border: 1px solid rgb(143, 141, 141);
+  background-color: rgb(227, 224, 224);
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid rgb(143, 141, 141);
 }
 
 /*display error message for incorrect current password*/
-.error-message-container p{
-	font-weight: bold;
-	color: #dc3545;
-	margin-left: 22px;
-	text-align: left;
+.error-message-container p {
+  font-weight: bold;
+  color: #dc3545;
+  margin-left: 22px;
+  text-align: left;
 }
 
 /*button containers*/
@@ -135,20 +134,20 @@
 .save-changes-button-container,
 .change-password-button-container,
 .save-password-button-container {
-	border-radius: 4px;
-	display: flex;
-	justify-content: flex-end;
-	padding: 10px;
-	min-height: 60px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  min-height: 60px;
 }
 
 /*buttons*/
 .edit-button,
 .save-changes-button,
 .change-password-button,
-.save-password-button  {
-	background-color: #6366f1;
-	border-radius: 20px;
-	color: white;
-	padding: 8px 18px;
+.save-password-button {
+  background-color: #6366f1;
+  border-radius: 20px;
+  color: white;
+  padding: 8px 18px;
 }

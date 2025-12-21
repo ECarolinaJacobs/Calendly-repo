@@ -14,14 +14,15 @@ namespace backend.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
-        private readonly ProjectContext _context;
         private readonly PointsService _pointsService;
+
+        private readonly UserService _userService;
         private readonly ILogger<UserController> _logger;
 
 
-        public UserController(ProjectContext context, PointsService pointsService, ILogger<UserController> logger)
+        public UserController(UserService userService, PointsService pointsService, ILogger<UserController> logger)
         {
-            _context = context;
+            _userService = userService;
             _pointsService = pointsService;
             _logger = logger;
         }
@@ -35,26 +36,14 @@ namespace backend.Controllers
                 return Unauthorized();
             }
 
-            var bookings = await _context.RoomBookings
-                .Where(rb => rb.EmployeeId == int.Parse(userId))
-                .Include(rb => rb.Room)
-                .OrderByDescending(rb => rb.StartTime)
-                .ToListAsync();
+            var bookings = await _userService.GetUserBookings(int.Parse(userId));
 
             if (bookings == null || !bookings.Any())
             {
                 return NotFound("No bookings found for this user.");
             }
 
-            var bookingResults = bookings.Select(b => new
-            {
-                b.Id,
-                RoomName = b.Room?.Name,
-                b.StartTime,
-                b.EndTime
-            }).ToList();
-
-            return Ok(bookingResults);
+            return Ok(bookings);
         }
 
         [HttpGet("points")]
@@ -75,24 +64,17 @@ namespace backend.Controllers
         {
             try
             {
-                _logger.LogInformation("Retrieving user information for Id: {UserId}",id);
-                var employee = await _context.Employees
-                    .Where(e => e.Id == id)
-                    .Select(e => new UserDTO{
-                        Id = e.Id,
-                        Name = e.Name,
-                        Email = e.Email,
-                        Coins = e.Coins,
-                        IsAdmin = e.IsAdmin
-                    }).FirstOrDefaultAsync();
-                _logger.LogInformation("Retrieved {employee} information", employee.Name);
+                _logger.LogInformation("Retrieving user information for Id: {UserId}", id);
+
+                var employee = await _userService.GetUserInformation(id);
+
                 if (employee == null)
                 {
                     _logger.LogWarning("Employee with ID {EmployeeId} not found", id);
-                    return NotFound(new { message = "Employee not found" }); 
+                    return NotFound(new { message = "Employee not found" });
                 }
-                _logger.LogInformation("Successfully retrieved user information for Id: {UserId}", id);
-                return Ok(employee); 
+
+                return Ok(employee);
             }
             catch (Exception ex)
             {
@@ -106,47 +88,16 @@ namespace backend.Controllers
         {
             try
             {
-                _logger.LogInformation("updating user information for Id: {UserId}", id);
-                var employee = await _context.Employees.FindAsync(id);
-                if (employee == null)
-                {
-                    _logger.LogWarning("Employee with ID {EmployeeId} not found", id);
-                    return NotFound(new { message = "Employee not found" }); // HTTP 404
-        
-                }
-                if (!string.IsNullOrEmpty(UpdatedUserInfo.Name))
-                {
-                    _logger.LogInformation("Updating name for user Id: {UserId}", id);
-                    employee.Name = UpdatedUserInfo.Name;
-                }
-                if (!string.IsNullOrEmpty(UpdatedUserInfo.Email))
-                {
-                    _logger.LogInformation("Updating email for user Id: {UserId}", id);
-                    employee.Email = UpdatedUserInfo.Email;
-                }
-                if (!string.IsNullOrEmpty(UpdatedUserInfo.Password))
-                {
-                    if (string.IsNullOrEmpty(UpdatedUserInfo.NewPassword))
-                    {
-                        _logger.LogWarning("New password not provided for user Id: {UserId}", id);
-                        return BadRequest(new { message = "New password must be provided" }); // HTTP 400
-                    }
-                    _logger.LogInformation("Updating password for user Id: {UserId}", id);
-                    var IsMatch = BCrypt.Net.BCrypt.Verify(UpdatedUserInfo.Password, employee.Password);
-                    if (IsMatch == false)
-                    {
-                        _logger.LogWarning("Password mismatch for user Id: {UserId}", id);
-                        return BadRequest(new { message = "Current password is incorrect" }); // HTTP 400
-                    }
-                    
-                        _logger.LogInformation("Password verified for user Id: {UserId}", id);
-                        employee.Password = BCrypt.Net.BCrypt.HashPassword(UpdatedUserInfo.NewPassword);
-                    
-                    
-                }
-                await _context.SaveChangesAsync();
-                _logger.LogInformation("Updated user informtation for Id: {UserId}", id);
-                return NoContent(); // HTTP 204
+                var employee = await _userService.UpdateUserInformation(id, UpdatedUserInfo);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
             catch (Exception ex)
             {
