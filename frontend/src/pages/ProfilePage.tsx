@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { getUserInformation, updateUserInformation } from "../api/users";
 import "../css/ProfilePage.css";
-
+import { DashboardBanner } from "../../components/Dashboard/Dashboard-banner";
+import {Sidebar} from "../../components/Dashboard/Sidebar";
+import { useNavigate } from "react-router-dom";
 export default function ProfilePage() {
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
@@ -13,10 +15,14 @@ export default function ProfilePage() {
 	const [passwordError, setPasswordError] = useState<string | null>(null);
 	const [IsEditing, setEditButton] = useState(false);
 	const [IsEditingPassword, setIsEditingPassword] = useState(false);
+	const [sidebarOpen, setSidebarOpen] = useState(false);
+  	const [activeItem, setActiveItem] = useState("profile");
 
 	useEffect(() => {
 		loadUserData();
 	}, []);
+
+	const navigate = useNavigate();
 
 	const loadUserData = async () => {
 		try {
@@ -109,15 +115,18 @@ export default function ProfilePage() {
 	};
 
 	const bannerDisplay = () => {
-		return (<div className="banner-container">
-					<img
-						className="profilePicture"
-						src="/ProfilePicture.png"
-						alt="profile picture"
-					/>
-					<p className="username-display"> {name} </p>
-					<p className="coins-display"> Coins: {coins}</p>
-				</div>
+		return (
+		<div className="banner-container">
+			<div className="banner-left">
+				<img
+					className="profilePicture"
+					src="/ProfilePicture.png"
+					alt="profile picture"
+				/>
+				<p className="username-display"> {name} </p>
+			</div>
+			<p className="coins-display"> Coins: {coins}</p>
+		</div>
 
 		)
 	};
@@ -267,20 +276,29 @@ export default function ProfilePage() {
 		return <div className="loading">Loading...</div>;
 	}
 	return (
-		<div className="profile-page">
-			<div className="main-container">
-				<div className="topbar">
-					<a href="/dashboard"> Dashboard</a>
-					<a href="/events"> Events</a>
-					<a href="/booking"> Booking</a>
-					<a href="/logout"> LogOut</a>
-				</div>
-				{bannerDisplay()}
-				{personalInfoDisplay()}
-				{passwordInfoDisplay()}
+		<div className="dashboard-layout">
+			<Sidebar
+			sidebarOpen={sidebarOpen}
+			setSidebarOpen={setSidebarOpen}
+			activeItem={activeItem}
+			setActiveItem={setActiveItem}
+			navigate={navigate}
+			/>
+
+		
+			<div className={`main-content-area ${sidebarOpen ? "shift" : ""}`}>
+				<DashboardBanner userName={name}/>
+
+				<div className="profile-page">
+					
+						{bannerDisplay()}
+						{personalInfoDisplay()}
+						{passwordInfoDisplay()}						
+					
+
 
 				</div>
 			</div>
-		
+		</div>
 	);
 }
