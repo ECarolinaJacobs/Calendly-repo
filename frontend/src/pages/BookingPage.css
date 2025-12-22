@@ -7,15 +7,17 @@
     position: relative;
     display: flex;
 
-    width: 800px;
-    height: 200px;
+    max-width: 800px;
+    max-height: 200px;
+    display: flex;
+    gap: 20px;
     background-color: rgb(255, 255, 255);
     border-radius: 20px;
     box-shadow: 2px 3px rgb(255, 245, 245);
 }
 
 .room-image {
-    width: 300px;
+    width: 34%;
     height: auto;
     border-radius: 20px;
     mask-image: linear-gradient(90deg, rgb(221, 235, 235) 90%, transparent);
@@ -41,12 +43,14 @@
 }
 
 .book-button {
-    position: absolute;
+    /* position: absolute;
     left: 597px;
-    top: 144px;
+    top: 144px; */
     
     display: flex;
     align-items: center;
+    margin-left: 280px;
+    align-self: flex-end;
 
     background-color: rgb(70, 137, 208);
     color: white;
@@ -60,10 +64,8 @@
 .room-list {
     display: flex;
     flex-direction: column;
+    padding-left: 540px;
     gap: 23px;
-
-    position: absolute;
-    right: 100px;
 }
 
 .filter-box {
