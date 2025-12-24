@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import '../../src/pages/BookingPage.css';
+import '../../src/css/BookingPage.css';
 import BookRoom from '../../src/api/book-room';
 import type { Room, BookingModalProp } from './bookingTypes';
 
