@@ -19,7 +19,10 @@ export function Sidebar({ sidebarOpen, setSidebarOpen, activeItem, setActiveItem
             <ul className="sidebar-menu">
                 <li
                     className={`sidebar-item ${activeItem === "dashboard" ? "active" : ""}`}
-                    onClick={() => setActiveItem("dashboard")}
+                    onClick={() => {
+                        setActiveItem("dashboard");
+                        navigate("/dashboard");
+                    }}
                 >
                     <span className="icon">
                         <IoHomeOutline />
