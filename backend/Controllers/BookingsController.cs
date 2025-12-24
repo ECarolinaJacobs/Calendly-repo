@@ -1,10 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Cors;
+using System.Security.Claims;
 
 using TodoApi.Models;
 using TodoApi.Context;
+using TodoApi.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System.Net;
 namespace TodoApi.Controllers;
 
 [Route("api/[controller]")]
@@ -20,10 +26,28 @@ public class BookingsController : ControllerBase
         _roomBookingService = roomBookingService;
     }
 
+    [Authorize]
     [HttpPost("start")]
     public async Task<ActionResult<RoomBooking>> BookRoom(RoomBooking newBooking)
     {
-        var createdBooking = await _roomBookingService.CreateBookingAsync(newBooking);
-        return Ok(createdBooking);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+        newBooking.EmployeeId = long.Parse(userId);
+        try
+        {
+            var createdBooking = await _roomBookingService.CreateBookingAsync(newBooking);
+            return Ok(createdBooking);
+        }
+        catch (RoomAlreadyBookedException ex)
+        {
+            return Conflict(ex.Message);
+        }
+        catch (ResourceDoesNotExistException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 }

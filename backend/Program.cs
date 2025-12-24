@@ -78,18 +78,21 @@ context.Employees.Add(new Employee
 context.Employees.Add(new Employee { Id = 1, Name = "Alice", Email = "test", Password = "test" });
 context.Employees.Add(new Employee { Id = 3, Name = "Bob", Email = "bob@bob.com", Password = BCrypt.Net.BCrypt.HashPassword("test"), IsAdmin = false, Coins = 0 });
 
-// Adding Rooms
-context.Rooms.Add(new Room { Id = 1, Name = "Meeting room 1", Floor = "Floor 1", Capacity = 12, IsBooked = false });
-context.Rooms.Add(new Room { Id = 2, Name = "Meeting room 2", Floor = "Floor 1", Capacity = 9, IsBooked = false });
-context.Rooms.Add(new Room { Id = 3, Name = "Meeting room 3", Floor = "Floor 1", Capacity = 6, IsBooked = false });
-context.Rooms.Add(new Room { Id = 4, Name = "Conference room A", Floor = "Floor 2", Capacity = 20, IsBooked = false });
-context.Rooms.Add(new Room { Id = 5, Name = "Conference room B", Floor = "Floor 2", Capacity = 18, IsBooked = false });
-context.Rooms.Add(new Room { Id = 6, Name = "Training room 1", Floor = "Floor 3", Capacity = 25, IsBooked = false });
-context.Rooms.Add(new Room { Id = 7, Name = "Training room 2", Floor = "Floor 3", Capacity = 22, IsBooked = false });
-context.Rooms.Add(new Room { Id = 8, Name = "Huddle room 1", Floor = "Floor 3", Capacity = 4, IsBooked = false });
-context.Rooms.Add(new Room { Id = 9, Name = "Huddle room 2", Floor = "Floor 2", Capacity = 4, IsBooked = false });
-context.Rooms.Add(new Room { Id = 10, Name = "Executive meeting room", Floor = "Floor 1", Capacity = 14, IsBooked = false });
-context.SaveChanges();
+    context.Rooms.Add(new Room { Id = 1, Name = "Meeting room 1", Floor = "Floor 1", Location = "West Building", Description = "Includes smartboard" });
+    context.Rooms.Add(new Room { Id = 2, Name = "Meeting room 2", Floor = "Floor 1", Location = "South Building", Description = "Whiteboard and conference phone" });
+    context.Rooms.Add(new Room { Id = 3, Name = "Meeting room 3", Floor = "Floor 1", Location = "North Building", Description = "Natural light and seating for 6" });
+    context.Rooms.Add(new Room { Id = 4, Name = "Conference room A", Floor = "Floor 2", Location = "North Building", Description = "Projector and large table" });
+    context.Rooms.Add(new Room { Id = 5, Name = "Conference room B", Floor = "Floor 2", Location = "West Building", Description = "Video conferencing ready" });
+    context.Rooms.Add(new Room { Id = 6, Name = "Training room 1", Floor = "Floor 3", Location = "East Building", Description = "Multiple desks and monitors" });
+    context.Rooms.Add(new Room { Id = 7, Name = "Training room 2", Floor = "Floor 3", Location = "South Building", Description = "Workshop-ready with whiteboard" });
+    context.Rooms.Add(new Room { Id = 8, Name = "Huddle room 1", Floor = "Floor 3", Location = "West Building", Description = "Compact space with screen" });
+    context.Rooms.Add(new Room { Id = 9, Name = "Huddle room 2", Floor = "Floor 2", Location = "North Building", Description = "Quick meeting setup" });
+    context.Rooms.Add(new Room { Id = 10, Name = "Executive meeting room", Floor = "Floor 1", Location = "East Building", Description = "Includes smartboard and projector" });
+
+    context.RoomBookings.Add(new RoomBooking {Id = 1, RoomId = 1, EmployeeId = 1, StartTime = "2025-12-30T09:00:00.000Z", EndTime = "2025-12-12T17:00:00.000Z"});
+    context.RoomBookings.Add(new RoomBooking {Id = 2, RoomId = 2, EmployeeId = 1, StartTime = "2025-12-30T09:00:00.000Z", EndTime = "2025-12-12T17:00:00.000Z"});
+
+    context.SaveChanges();
 }
 
 // Configure the HTTP request pipeline.

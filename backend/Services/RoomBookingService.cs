@@ -1,6 +1,8 @@
-using TodoApi.Services;
+using System.Globalization;
+using TodoApi.Models;
+using TodoApi.Context;
 
-namespace TodoApi.Context;
+namespace TodoApi.Services;
 
 public class RoomBookingService
 {
@@ -17,11 +19,15 @@ public class RoomBookingService
     {
         if (!_context.Employees.Any(e => e.Id == newBooking.EmployeeId))
         {
-            throw new Exception("Invalid employee ID");
+            throw new ResourceDoesNotExistException("User");
         }
         if (!_context.Rooms.Any(r => r.Id == newBooking.RoomId))
         {
-            throw new Exception("Invalid Room ID");
+            throw new ResourceDoesNotExistException("Room");
+        }
+        if (!CheckRoomAvailability(newBooking))
+        {
+            throw new RoomAlreadyBookedException();
         }
 
         _context.RoomBookings.Add(newBooking);
@@ -33,9 +39,25 @@ public class RoomBookingService
         return newBooking;
     }
 
-    // Keep the synchronous method for backward compatibility
-    public RoomBooking CreateBooking(RoomBooking newBooking)
+    public bool CheckRoomAvailability(RoomBooking newBooking)
     {
-        return CreateBookingAsync(newBooking).GetAwaiter().GetResult();
+        DateTime startNewBooking = DateTime.ParseExact(
+            newBooking.StartTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+        DateTime endNewBooking = DateTime.ParseExact(
+            newBooking.EndTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+
+        foreach (RoomBooking booking in _context.RoomBookings)
+        {
+            if (booking.RoomId == newBooking.RoomId)
+            {
+                DateTime startExistingBooking = DateTime.ParseExact(
+                    booking.StartTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+                DateTime endExistingBooking = DateTime.ParseExact(
+                    booking.EndTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+
+                if (startNewBooking < endExistingBooking && endNewBooking > startExistingBooking) return false;
+            }
+        }
+        return true;
     }
 }

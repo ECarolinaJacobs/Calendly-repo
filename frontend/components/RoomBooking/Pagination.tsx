@@ -1,3 +1,4 @@
+// Maak reusable
 const Pagination = ({totalRooms, roomsPerPage, currentPage, setCurrentPage} : any) => {
     let pages = [];
 

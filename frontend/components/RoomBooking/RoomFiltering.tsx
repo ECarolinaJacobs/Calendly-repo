@@ -1,40 +1,79 @@
 import { useState } from "react";
 import FilterRooms from "../../src/api/filter-rooms";
 import ResetFiltersButton from "./ResetFiltersButton.tsx";
+import DateFilter from "./DateFilter.tsx";
+import FloorFilter from "./FloorFilter.tsx";
+import type { RoomFilteringProp, Room } from "./bookingTypes.ts";
 
-const RoomFiltering = ({setRooms} : any) => {
+// Modularize filters in own components
+
+const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso, setErrorMessage} : RoomFilteringProp) => {
     const [selectedFloor, setSelectedFloor] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
 
-    let floors = ["Floor 1", "Floor 2", "Floor 3"];
+    const [selectedStarttime, setSelectedStarttime] = useState("");
+    const [selectedEndtime, setSelectedEndtime] = useState("");
+    
+    const resetFilters = () => {
+        setSelectedFloor("");
+        setSelectedDate("");
+        setSelectedStarttime("");
+        setSelectedEndtime("");
+
+        const rooms : Room[] = [];
+        setRooms(rooms);
+
+        setErrorMessage("Please set all filters")
+    }
+
+    const handleClick = async () => {
+        if (!selectedFloor || !selectedDate || !selectedStarttime || !selectedEndtime) {
+            return;
+        }
+
+        let newStartIso = undefined;
+        let newEndIso = undefined;
+        if (selectedStarttime){
+            newStartIso = new Date(`${selectedDate}T${selectedStarttime}:00Z`).toISOString()
+            setStartIso(newStartIso);
+        }
+        if (selectedEndtime){
+            newEndIso = new Date(`${selectedDate}T${selectedEndtime}:00Z`).toISOString()
+            setEndIso(newEndIso);
+        }
+
+        try {
+            const result = await FilterRooms(selectedFloor, newStartIso, newEndIso);
+            setRooms(result);
+            setErrorMessage("");
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
 
     return (
         <div className="filter-box">
             <div className="filters">
-                <select className="floor-select" value={selectedFloor} onChange={(e : any) => setSelectedFloor(e.target.value)}>
-                    <option value="">Select floor</option>
-                    {floors.map((floor : any) => (
-                        <option>{floor}</option>
-                    ))}
-                </select>
-                <input type="date"
-                    className="date-select"
-                    value={selectedDate}
-                    min="2025-01-01"
-                    max="2026-01-01" 
-                    onChange={(e : any) => setSelectedDate(e.target.value)}/>
+                <FloorFilter
+                value={selectedFloor}
+                onChange={setSelectedFloor}/>
+
+                <DateFilter
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate}
+                selectedStarttime={selectedStarttime}
+                setSelectedStarttime={setSelectedStarttime}
+                selectedEndtime={selectedEndtime}
+                setSelectedEndtime={setSelectedEndtime}/>
 
                 <div className="confirm-filter-wrapper">
                     <ResetFiltersButton className="reset-filters-button"
-                    setRooms={setRooms}
-                    setSelectedFloor={setSelectedFloor}
-                    setSelectedDate={setSelectedDate}/>
+                    onReset={resetFilters}/>
+
                     <button className="filter-button"
-                    onClick={async () => 
-                    {
-                        const filteredRooms = await FilterRooms(selectedFloor);
-                        setRooms(filteredRooms);
-                    }}>Filter</button>
+                    onClick={() => handleClick()}
+                    >View Rooms</button>
                 </div>
             </div>
         </div>

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using TodoApi.DTOs;
 using TodoApi.Models;
 
@@ -20,9 +21,57 @@ public class RoomService
 
         foreach (var room in rooms)
         {
-            if (room.Floor == roomFilter.Floor) filteredRooms.Add(room);
+            if (!CheckRoomAlreadyBooked(room, roomFilter))
+            {
+                filteredRooms.Add(room);
+            }
+        }
+
+        if (roomFilter.Floor != null)
+        {
+            filteredRooms = filteredRooms
+            .Where(r => r.Floor == roomFilter.Floor)
+            .ToList();
         }
 
         return filteredRooms;
     }
+
+    public bool CheckRoomAlreadyBooked(Room room, RoomFilterDTO roomFilter)
+    {
+        var bookings = _context.RoomBookings.ToList();
+
+        if (roomFilter.StartTime != null && roomFilter.EndTime != null)
+        {
+            DateTime startFilter = DateTime.ParseExact(
+                roomFilter.StartTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+            DateTime endFilter = DateTime.ParseExact(
+                roomFilter.EndTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+
+            foreach (var booking in bookings)
+            {
+                if (booking.RoomId == room.Id)
+                {
+                    DateTime startTime = DateTime.ParseExact(
+                        booking.StartTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+                    DateTime endTime = DateTime.ParseExact(
+                        booking.EndTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
+
+                    if (startFilter < endTime && endFilter > startTime) return true;
+                }
+            }
+            return false;
+        }
+        return false;
+    }
+
+    // public Room FindRoomById(long id)
+    // {
+    //     var rooms = _context.Rooms.ToList();
+    //     foreach (var room in rooms)
+    //     {
+    //         if (room.Id == id) return room;
+    //     }
+    //     return null;
+    // }
 }

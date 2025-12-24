@@ -1,62 +1,38 @@
-import "../../src/css/BookingPage.css";
-import { useState } from "react";
-import BookRoom from "../../src/api/book-room";
+import '../../src/css/BookingPage.css';
+import { useState } from 'react';
+import BookingModal from '../RoomBooking/BookingModal';
+import type { RoomProp } from './bookingTypes';
 
-type Room = {
-	id: number;
-	name: string;
-	floor: string;
-	capacity: number;
-	availability: string;
-};
+const RoomCard = ({room, startIso, endIso} : RoomProp) => {
+    const [openModal, setOpenModal] = useState(false);
 
-type RoomProp = {
-	room: Room;
-};
-
-const RoomCard = ({ room }: RoomProp) => {
-	const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
-
-	const handleRoomClick = (room: Room) => {
-		setSelectedRoom(room);
-		console.log("Selected room:", room);
-
-		const currentDate = new Date().toISOString();
-
-		BookRoom({
-			RoomId: room.id,
-			EmployeeId: 1,
-			BookingDate: currentDate,
-			StartTime: "09:00:00",
-			EndTime: "12:00:00",
-		});
-	};
-
-	return (
-		<div className="card-wrapper">
-			<div className="room-view">
-				<div className="room-image">
-					<img src="public/room.jpg" alt="room picture" />
-				</div>
-				<div className="room-title">
-					{room.name}
-					<div className="room-location">
-						<p>Placeholder location 📍</p>
-					</div>
-					<div className="room-info">
-						<p>Placeholder info</p>
-					</div>
-					<div className="timeslot">9:00-12:00</div>
-					<button
-						className="book-button"
-						onClick={() => handleRoomClick(room)}
-					>
-						Book this room
-					</button>
-				</div>
-			</div>
-		</div>
-	);
-};
+    return (
+        <div className='card-wrapper'>
+            <div className="room-view">
+                <div className='room-image'>
+                    <img src="/room.jpg" alt="room picture" />
+                </div>
+                <div className='room-title'>
+                    {room.name}
+                    <div className='room-location'>
+                        <p>📍{room.location}</p>
+                    </div>
+                    <div className='room-info'>
+                        <p>{room.description}</p>
+                    </div>
+                    <button className='book-button' onClick={() => setOpenModal(true)}>
+                        Book this room
+                    </button>
+                </div>
+            </div>
+            { openModal &&
+            <BookingModal
+            setOpenModal={setOpenModal}
+            room={room}
+            startIso={startIso}
+            endIso={endIso}/>}
+        </div>
+    )
+}
 
 export default RoomCard;
