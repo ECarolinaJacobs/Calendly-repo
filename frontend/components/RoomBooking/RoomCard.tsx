@@ -10,7 +10,7 @@ const RoomCard = ({room, startIso, endIso} : RoomProp) => {
         <div className='card-wrapper'>
             <div className="room-view">
                 <div className='room-image'>
-                    <img src="public/room.jpg" alt="room picture" />
+                    <img src="/room.jpg" alt="room picture" />
                 </div>
                 <div className='room-title'>
                     {room.name}

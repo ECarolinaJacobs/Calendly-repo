@@ -23,7 +23,7 @@ const DateFilter = ({selectedDate, setSelectedDate, selectedStarttime, setSelect
     }
 
     return (
-        <div>
+        <div className="date-filters">
             <input type="date"
                 className="date-select"
                 value={selectedDate}
