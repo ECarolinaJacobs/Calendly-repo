@@ -1,17 +1,3 @@
-/*used for when the display is cropped*/
-@media (max-width: 768px) {
-  /*changes from 2 inputs next to eachother to 1*/
-  .info-form,
-  .password-form {
-    grid-template-columns: 1fr;
-  }
-  .banner-container {
-    flex-direction: column;
-    align-items: left;
-    text-align: left;
-  }
-}
-
 /*error styling*/
 .loading,
 .error {
@@ -150,4 +136,40 @@
   border-radius: 20px;
   color: white;
   padding: 8px 18px;
+}
+
+/*used for when the display is cropped*/
+@media (max-width: 380px) {
+  .banner-container {
+    flex-direction: column;
+    align-items: right;
+    text-align: right;
+  }
+  .banner-left {
+    flex-direction: column;
+    align-items: right;
+    text-align: right;
+  }
+  /*changes from 2 inputs next to eachother to 1*/
+  .info-form,
+  .password-form {
+    font-size: 10px;
+    grid-template-columns: 1fr;
+  }
+
+  .personal-info-text-container p,
+  .password-info-text-container p {
+    font-size: 16px;
+  }
+
+  .instructions-password {
+    font-size: 12px;
+  }
+  .edit-button,
+  .save-changes-button,
+  .change-password-button,
+  .save-password-button {
+    font-size: 10px;
+    padding: 4px 10px;
+  }
 }

@@ -1,17 +1,16 @@
-
 .dashboard-redirect-container {
-  font-family: 'Roboto Mono';
+  font-family: "Roboto Mono";
   display: flex;
   color: #3a405b;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: rgba(234,239,245);
+  background-color: rgba(234, 239, 245);
   font-size: 30px;
   font-weight: 400;
   min-height: 100vh;
 }
-.not-found-title{
+.not-found-title {
   font-size: 250px;
   font-weight: 700;
 }
@@ -23,8 +22,20 @@
   padding: 6px 20px;
 }
 
-.dashboard-redirect-container img{
+.dashboard-redirect-container img {
   background-color: black;
   width: 20px;
   height: 17px;
+}
+
+@media (max-width: 380px) {
+  .dashboard-redirect-container {
+    font-size: 30px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .not-found-title {
+    font-size: 130px;
+  }
 }

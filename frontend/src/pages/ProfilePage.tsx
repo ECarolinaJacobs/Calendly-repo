@@ -210,8 +210,10 @@ export default function ProfilePage() {
         <div className="password-info-text-container">
           <p> Security</p>
         </div>
-        <p>Input the current password to change to new password</p>
-
+        <div className="instructions-password">
+          <p>Input the current password to change to new password</p>
+        </div>
+        
         <form
           className="password-form"
           onSubmit={(e) => {
