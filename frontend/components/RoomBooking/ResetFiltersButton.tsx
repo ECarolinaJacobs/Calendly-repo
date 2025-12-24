@@ -1,5 +1,3 @@
-// Use one parameter/usestate for filtering
-
 const ResetFiltersButton = ({onReset} : any) => {
 
     return (

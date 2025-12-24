@@ -1,21 +1,7 @@
 import { useEffect, useState } from "react";
 import '../../src/pages/BookingPage.css';
 import BookRoom from '../../src/api/book-room';
-
-type Room = {
-    id: number,
-    name: string,
-    floor: string,
-    location: string,
-    description: string
-}
-
-type BookingModalProp = {
-    setOpenModal: (open: boolean) => void,
-    room: Room
-    startIso: string,
-    endIso: string
-}
+import type { Room, BookingModalProp } from './bookingTypes';
 
 const BookingModal = ({ setOpenModal, room, startIso, endIso } : BookingModalProp) => {
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);

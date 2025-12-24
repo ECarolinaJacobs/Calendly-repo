@@ -1,20 +1,7 @@
 import '../../src/pages/BookingPage.css';
 import { useState } from 'react';
 import BookingModal from '../RoomBooking/BookingModal';
-
-type Room = {
-    id: number,
-    name: string,
-    floor: string,
-    location: string,
-    description: string
-}
-
-type RoomProp = {
-    room: Room
-    startIso: string,
-    endIso: string
-}
+import type { RoomProp } from './bookingTypes';
 
 const RoomCard = ({room, startIso, endIso} : RoomProp) => {
     const [openModal, setOpenModal] = useState(false);

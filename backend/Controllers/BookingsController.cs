@@ -38,7 +38,7 @@ public class BookingsController : ControllerBase
         try
         {
             var createdBooking = _roomBookingService.CreateBooking(newBooking);
-            return CreatedAtAction("Room booked", createdBooking);
+            return Ok(createdBooking);
         }
         catch (RoomAlreadyBookedException ex)
         {
