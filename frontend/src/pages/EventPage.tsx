@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import type { Event } from "../../components/EventDrawer/types";
-import { DrawerOverlay } from "../../components/EventDrawer/DrawerOverlay";
-import { DrawerContent } from "../../components/EventDrawer/DrawerContent";
+import type { Event } from "../../components/Events/EventDrawer/types";
+import { DrawerOverlay } from "../../components/Events/EventDrawer/DrawerOverlay";
+import { DrawerContent } from "../../components/Events/EventDrawer/DrawerContent";
 
 export default function EventDrawer() {
   const { event } = useParams();

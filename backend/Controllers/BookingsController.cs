@@ -5,6 +5,7 @@ using System.Security.Claims;
 
 using TodoApi.Models;
 using TodoApi.Context;
+using TodoApi.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -37,7 +38,7 @@ public class BookingsController : ControllerBase
         newBooking.EmployeeId = long.Parse(userId);
         try
         {
-            var createdBooking = _roomBookingService.CreateBooking(newBooking);
+            var createdBooking = await _roomBookingService.CreateBookingAsync(newBooking);
             return Ok(createdBooking);
         }
         catch (RoomAlreadyBookedException ex)

@@ -4,55 +4,68 @@ using TodoApi.Context;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using TodoApi;
+using TodoApi.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("CorsPolicy", builder =>
-    {
+// Configure CORS
+builder.Services.AddCors(options => {
+    options.AddPolicy("CorsPolicy", builder => {
         builder.WithOrigins("http://localhost:5173")
-               .AllowAnyMethod()
-               .AllowAnyHeader()
-               .AllowCredentials();
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
     });
 });
 
-builder.Services.AddControllers();
-builder.Services.AddOpenApi();
 
+// Add Controllers and API Explorer for Swagger
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Configure In-Memory Databases
 builder.Services.AddDbContext<ProjectContext>(opt =>
     opt.UseInMemoryDatabase("ProjectDB"));
-
-builder.Services.AddScoped<RoomBookingService>();
-builder.Services.AddScoped<RoomService>();
 
 builder.Services.AddDbContext<EventContext>(opt =>
     opt.UseInMemoryDatabase("EventDB"));
 
+// Add Application Services
+builder.Services.AddScoped<RoomBookingService>();
+builder.Services.AddScoped<RoomService>();
+builder.Services.AddScoped<TodoApi.Services.PointsService>();
+builder.Services.AddScoped<TodoApi.Services.EventService>();
+builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<OfficeAttendanceService>();
+builder.Services.AddScoped<UserService>();
+
+// Configure JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
+    .AddJwtBearer(options => {
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                ValidAudience = builder.Configuration["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? string.Empty))
         };
     });
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<ProjectContext>();
-    //adding admin
-    context.Employees.Add(new Employee
+
+// Database Seeding
+using(var scope = app.Services.CreateScope())
+    {
+        var context = scope.ServiceProvider.GetRequiredService<ProjectContext>();
+
+// Adding Employees (including Admin and Bob)
+context.Employees.Add(new Employee
     {
         Id = 2,
         Name = "Admin",
@@ -62,8 +75,8 @@ using (var scope = app.Services.CreateScope())
         Coins = 0
     });
 
-    context.Employees.Add(new Employee { Id = 1, Name = "Alice", Email = "test", Password = "test" });
-    context.Employees.Add(new Employee { Id = 3, Name="Bob", Email="bob@bob.com", Password=BCrypt.Net.BCrypt.HashPassword("test"), IsAdmin=false, Coins=0});
+context.Employees.Add(new Employee { Id = 1, Name = "Alice", Email = "test", Password = "test" });
+context.Employees.Add(new Employee { Id = 3, Name = "Bob", Email = "bob@bob.com", Password = BCrypt.Net.BCrypt.HashPassword("test"), IsAdmin = false, Coins = 0 });
 
     context.Rooms.Add(new Room { Id = 1, Name = "Meeting room 1", Floor = "Floor 1", Location = "West Building", Description = "Includes smartboard" });
     context.Rooms.Add(new Room { Id = 2, Name = "Meeting room 2", Floor = "Floor 1", Location = "South Building", Description = "Whiteboard and conference phone" });
@@ -82,15 +95,13 @@ using (var scope = app.Services.CreateScope())
     context.SaveChanges();
 }
 
+// Configure the HTTP request pipeline.
 app.UseCors("CorsPolicy");
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.UseSwaggerUi(options =>
-    {
-        options.DocumentPath = "/openapi/v1.json";
-    });
+if (app.Environment.IsDevelopment()) {
+    // Use the standard Swagger configuration
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

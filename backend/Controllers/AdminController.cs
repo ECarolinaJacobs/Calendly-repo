@@ -1,44 +1,43 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TodoApi.Models;
-using TodoApi.Context;
+using TodoApi.Services;
 using TodoApi.DTOs;
 
+/* controller summary:
+- handles all HTTP requests from the frontend related to admin operations, consists of 5 endpoints
+- essentially the middleman between the frontend and the database
+
+uses context for database access and uses employee model for database table 
+returns employeeDTO, AdminStatsDTO 
+called by: admin.tsx (frontend api service)
+*/
+
 namespace TodoApi.Controllers;
-//controller for admin operations
+
 [Route("api/[controller]")]
 [ApiController]
 
 public class AdminController : ControllerBase
 {
-    private readonly ProjectContext _context;
+    //dependency injection : injects context and logger into admin controller when called upon
+    private readonly AdminService _adminService;
     private readonly ILogger<AdminController> _logger;
-    //dependency injection
-    public AdminController(ProjectContext context, ILogger<AdminController> logger)
+    public AdminController(AdminService adminService, ILogger<AdminController> logger)
     {
-        _context = context;
+        _adminService = adminService;
         _logger = logger;
     }
-    //gets all employees in the system and returns a list of employees
+
+    /// <summary>
+    /// Gets all employees in system
+    /// frontend calls -> method execution -> queries db -> converts to dto -> returns json -> frontend displays
+    /// <summary>
     [HttpGet("employees")]
     public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetAllEmployees()
     {
         try
         {
-            _logger.LogInformation("Admin requesting all employees");
-            //asynchornous data fetching
-            var employees = await _context.Employees
-                .Select(e => new EmployeeDto
-                {
-                    Id = e.Id,
-                    Name = e.Name,
-                    Email = e.Email,
-                    IsAdmin = e.IsAdmin,
-                    Coins = e.Coins
-                })
-                .ToListAsync();
-            _logger.LogInformation("Retrieved {Count} employees", employees.Count);
-            return Ok(employees); //HTTP status code 200
+            var employees = await _adminService.GetAllEmployees();
+            return Ok(employees);
         }
         catch (Exception ex)
         {
@@ -47,49 +46,47 @@ public class AdminController : ControllerBase
             return StatusCode(500, new { message = "Internal server error" });
         }
     }
-    //delete an employee by ID, param name = "id" == the employee id to delete, returns status succes or fail
+
+    /// <summary>
+    /// Deletes an employee by Id
+    /// frontend confirms delete -> calls this endpoint -> db removes employee -> returns success -> frontend reloads data
+    /// <summary>
     [HttpDelete("employees/{id}")]
-    public async Task<IActionResult> DeleteEmployee(int id)
+    public async Task<IActionResult> DeleteEmployee(long id)
     {
         try
         {
-            _logger.LogInformation("Attempting to delete employee with ID: {EmployeeId}, id");
-            //asynchronous operation
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee == null)
+            var success = await _adminService.DeleteEmployee(id);
+            if (!success)
             {
-                _logger.LogWarning("Employee with ID {EmployeeId} not found", id);
-                return NotFound(new { message = "Employee not found" }); // http statuscode 404
+                return NotFound(new { message = "Employee not found" });
             }
-            //database removal employee
-            _context.Employees.Remove(employee);
-            await _context.SaveChangesAsync();
-            _logger.LogInformation("Successfully deleted employee {EmployeeId}", id);
-            return NoContent(); // http statuscode 204
+            return NoContent();
         }
         catch (Exception ex)
         {
-            // error handling and logging
             _logger.LogError(ex, "Error deleting employee {EmployeeId}", id);
             return StatusCode(500, new { message = "Internal server error" });
         }
     }
-    // updates employees status to admin
+
+    /// <summary>
+    /// searched employees by name or email (case-insensitive)
+    /// user presses enter -> frontend calls this endpoint -> db filters result -> returns matching emps or empty arr
+    /// <summary>
+    /// <param name="id">Employee Id from url</param>
+    /// <param name=""request">Request body with new admin status</param>
     [HttpPut("employees/{id}/admin")]
-    public async Task<IActionResult> UpdateAdminStatus(int id, UpdateAdminRequest request)
+    public async Task<IActionResult> UpdateAdminStatus(long id, UpdateAdminRequest request)
     {
         try
         {
-            _logger.LogInformation("Updating admin status for employee {EmployeeId}", id);
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee == null)
+            var success = await _adminService.UpdateAdminStatus(id, request.IsAdmin);
+            if (!success)
             {
-                return NotFound(new { message = "Employee not found" }); // http statuscode 404
+                return NotFound(new { message = "Employee not found" });
             }
-            employee.IsAdmin = request.IsAdmin;
-            await _context.SaveChangesAsync();
-            _logger.LogInformation("Updated employee {EmployeeId} admin status to {IsAdmin}", id, request.IsAdmin);
-            return NoContent(); //http 204
+            return NoContent();
         }
         catch (Exception ex)
         {
@@ -98,35 +95,24 @@ public class AdminController : ControllerBase
         }
     }
     public record UpdateAdminRequest(bool IsAdmin);
-    // filter / search function for employees by name or email
+
+
+
+    /// <summary> 
+    /// Used input search term to filter and returns list of employees who satisfy the requirement
+    /// <summary>
+    /// <param name="searchTerm"> Search term to filter by </param>
+    /// <returns>Filtered list of employees </returns> 
     [HttpGet("employees/search")]
-    public async Task<ActionResult<IEnumerable<EmployeeDto>>> SearchEmployees([FromQuery] string searchTerm)
+    public async Task<ActionResult<List<EmployeeDto>>> SearchEmployees([FromQuery] string searchTerm)
     {
-        /// <summary> 
-        /// Used input search term to filter and returns list of employees who satisfy the requirement
-        /// <summary>
-        /// <param name="searchTerm"> Search term to filter by </param>
-        /// <returns>Filtered list of employees </returns> 
         try
         {
-            _logger.LogInformation("Searching employees containing: {SearchTerm}", searchTerm);
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
                 return BadRequest(new { message = "Search term is required" });
             }
-            var employees = await _context.Employees
-                .Where(e => e.Name.ToLower().Contains(searchTerm.ToLower()) ||
-                    e.Email.ToLower().Contains(searchTerm.ToLower()))
-                .Select(e => new EmployeeDto
-                {
-                    Id = e.Id,
-                    Name = e.Name,
-                    Email = e.Email,
-                    IsAdmin = e.IsAdmin,
-                    Coins = e.Coins
-                })
-                .ToListAsync();
-            _logger.LogInformation("Found {Count} employees matching '{SearchTerm}'", employees.Count, searchTerm);
+            var employees = await _adminService.SearchEmployees(searchTerm);
             return Ok(employees);
         }
         catch (Exception ex)
@@ -135,6 +121,7 @@ public class AdminController : ControllerBase
             return StatusCode(500, new { message = "internal server error" });
         }
     }
+
     ///<summary>
     /// gets stat overview of employees like the average amount of coins or how many employees there are
     /// </summary>
@@ -144,18 +131,7 @@ public class AdminController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Admin requesting statistics");
-            var employees = await _context.Employees.ToListAsync();
-            var stats = new AdminStatsDto
-            {
-                TotalEmployees = employees.Count,
-                TotalAdmins = employees.Count(e => e.IsAdmin),
-                TotalRegularUsers = employees.Count(e => !e.IsAdmin),
-                TotalCoins = employees.Sum(e => e.Coins),
-                AverageCoinsPerUser = employees.Any() ? employees.Average(e => e.Coins) : 0
-            };
-            _logger.LogInformation("Statistics: {TotalEmployees} total employees, {TotalAdmins} admins",
-                stats.TotalEmployees, stats.TotalAdmins);
+            var stats = await _adminService.GetStatistics();
             return Ok(stats);
         }
         catch (Exception ex)

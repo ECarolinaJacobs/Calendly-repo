@@ -78,15 +78,6 @@ body,
   box-sizing: border-box;
 }
 
-.events-box {
-  width: 100%;
-  height: 100px;
-  padding: 1.5rem;
-  text-align: center;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
 
 .events-box h3 {
   margin: 0 0 0 0;
@@ -250,14 +241,6 @@ body,
 
 
 .left-panel-container {
-  /* .right-panel { */
-  background: rbga(234, 239, 245);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.left-panel-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -268,48 +251,6 @@ body,
   transition: width 0.3s ease;
   overflow: hidden;
 }
-
-/* .right-panel {
-  width: 250px;
-  gap: 1.5rem 1rem;
-} */
-
-
-/* .profile-box {
-  width: 120px;
-  height: 120px;
-  border: 2px solid #333;
-  border-radius: 12px;
-  margin: 0 auto;
-} */
-
-/* .profile-name {
-  margin: 0.75rem 0 2rem;
-  font-size: 1.1rem;
-  text-align: center;
-}
-
-.profile-name h1 {
-  font-size: 1rem;
-  color: black;
-  font-weight: 400;
-} */
-
-/* .notification-box {
-  width: 100%;
-  height: 350px;
-  border: 2px solid #333;
-  border-radius: 8px;
-  padding: 1.5rem;
-  background-color: white;
-}
-
-.notification-box h1 {
-  font-size: 1.1rem;
-  color: black;
-  margin: 0 0 1rem;
-  text-align: center;
-} */
 
 .timetable-hours {
   display: flex;
@@ -508,7 +449,7 @@ body,
 }
 
 .main-content-area.shift {
-  margint-left: 180px
+  margin-left: 180px
 }
 
 .timetable-calendar-dropdown {
@@ -525,6 +466,10 @@ body,
 
 .modal-overlay {
   position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
@@ -566,4 +511,114 @@ body,
 .calendar-day.has-event {
   background-color: #c7d2fe;
   border-radius: 50%;
+}
+
+.attendance-box {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.attendance-box h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.attendance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.attendance-book-button {
+  background: #6366f1;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
+}
+
+.attendance-book-button:hover {
+  background: #5558e3;
+}
+
+.attendance-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.attendance-empty {
+  color: #999;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.attendance-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  border-bottom: 1px solid #eee;
+  transition: background 0.2s ease;
+}
+
+.attendance-item:hover {
+  background: #f9fafb;
+}
+
+.attendance-date {
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.attendance-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.attendance-edit-button {
+  background: #6366f1;
+  border: none;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background 0.2s ease;
+}
+
+.attendance-edit-button:hover {
+  background: #5558e3;
+}
+
+.attendance-delete-button {
+  background: #ef4444;
+  border: none;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background 0.2s ease;
+}
+
+.attendance-delete-button:hover {
+  background: #dc2626;
+}
+
+.events-box {
+  width: 100%;
+  min-height: 200px;
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }

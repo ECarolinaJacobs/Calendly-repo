@@ -2,7 +2,7 @@ import { useState } from "react";
 import RoomCard from "../../components/RoomBooking/RoomCard";
 // import Pagination from "../../components/Pagination";
 import RoomFiltering from "../../components/RoomBooking/RoomFiltering";
-import '../pages/BookingPage.css';
+import "../css/BookingPage.css";
 
 type Room = {
     id: number,
@@ -20,10 +20,10 @@ const BookingPage = () => {
     const [errorMessage, setErrorMessage] = useState("Please set all filters");
     // const [currentPage, setCurrentPage] = useState(1);
 
-    // const roomsPerPage = 8;
-    // const indexOfLastRoom = currentPage * roomsPerPage;
-    // const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
-    // const currentRooms = rooms.slice(indexOfFirstRoom, indexOfLastRoom);
+	// const roomsPerPage = 8;
+	// const indexOfLastRoom = currentPage * roomsPerPage;
+	// const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
+	// const currentRooms = rooms.slice(indexOfFirstRoom, indexOfLastRoom);
 
     return (
         <div>
@@ -63,8 +63,8 @@ const BookingPage = () => {
                     setCurrentPage={setCurrentPage}
                 />
             </div> */}
-        </div>
-    )
-}
+		</div>
+	);
+};
 
 export default BookingPage;

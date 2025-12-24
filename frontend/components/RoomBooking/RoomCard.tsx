@@ -1,4 +1,4 @@
-import '../../src/pages/BookingPage.css';
+import '../../src/css/BookingPage.css';
 import { useState } from 'react';
 import BookingModal from '../RoomBooking/BookingModal';
 import type { RoomProp } from './bookingTypes';

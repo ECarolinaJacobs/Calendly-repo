@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using TodoApi.Models;
 
-namespace TodoApi;
+namespace TodoApi.Models;
 
 public class RoomBooking 
 {
@@ -12,6 +12,7 @@ public class RoomBooking
 
     [JsonIgnore]
     public Room? Room { get; set; }
+    [JsonIgnore]
     public Employee? Employee { get; set; }
 
     public string StartTime { get; set; }

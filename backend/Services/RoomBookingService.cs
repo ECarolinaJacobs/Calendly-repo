@@ -1,18 +1,21 @@
 using System.Globalization;
 using TodoApi.Models;
+using TodoApi.Context;
 
-namespace TodoApi.Context;
+namespace TodoApi.Services;
 
 public class RoomBookingService
 {
     private readonly ProjectContext _context;
+    private readonly PointsService _pointsService;
 
-    public RoomBookingService(ProjectContext context)
+    public RoomBookingService(ProjectContext context, PointsService pointsService)
     {
         _context = context;
+        _pointsService = pointsService;
     }
     
-    public RoomBooking CreateBooking(RoomBooking newBooking)
+    public async Task<RoomBooking> CreateBookingAsync(RoomBooking newBooking)
     {
         if (!_context.Employees.Any(e => e.Id == newBooking.EmployeeId))
         {
@@ -28,7 +31,10 @@ public class RoomBookingService
         }
 
         _context.RoomBookings.Add(newBooking);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
+
+        // Award points for room booking
+        await _pointsService.AwardRoomBookingPointsAsync(newBooking.EmployeeId);
 
         return newBooking;
     }

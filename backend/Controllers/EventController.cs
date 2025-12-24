@@ -1,92 +1,108 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
-using TodoApi.Context;
+using TodoApi.Services;
+using TodoApi.DTOs;
 
-namespace TodoApi.Controllers;
-
-[Route("api/[controller]")]
-[ApiController]
-public class EventController : ControllerBase
+namespace TodoApi.Controllers
 {
-    private readonly EventContext _context;
-
-    public record EventCreateRequest(
-        string Title,
-        string Description,
-        string? Image,
-        DateTime? StartDate,
-        DateTime? EndDate,
-        ICollection<Attendee>? Attendees
-    );
-
-    public EventController(EventContext context)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class EventController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly EventService _eventService;
 
-    [HttpPost]
-    public async Task<ActionResult<Event>> Post(EventCreateRequest request)
-    {
-        if (string.IsNullOrWhiteSpace(request.Title) ||
-            string.IsNullOrWhiteSpace(request.Description))
+        public EventController(EventService eventService)
         {
-            return BadRequest("Title and Description required.");
+            _eventService = eventService;
         }
 
-        Event newEvent = new()
+        [HttpPost]
+        public async Task<ActionResult<Event>> Post(EventCreateRequest request)
         {
-            Title = request.Title,
-            Description = request.Description,
-            Image = request.Image,
-            StartDate = request.StartDate,
-            EndDate = request.EndDate,
-            Attendees = (ICollection<Attendee>?)request.Attendees
-        };
+            if (string.IsNullOrWhiteSpace(request.Title) ||
+                string.IsNullOrWhiteSpace(request.Description))
+            {
+                return BadRequest("Title and Description required.");
+            }
 
-        _context.Events.Add(newEvent);
-        await _context.SaveChangesAsync();
+            var newEvent = await _eventService.CreateEventAsync(request);
 
-        return CreatedAtAction(
-            nameof(Get),
-            new { id = newEvent.Id },
-            newEvent);
-    }
-
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Event>> GetById(int id)
-    {
-        var eventItem = await _context.Events.Include(x => x.Attendees).FirstOrDefaultAsync(e => e.Id == id);
-
-        if (eventItem == null)
-        {
-            return NotFound($"Event with ID {id} not found.");
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = newEvent.Id },
+                newEvent);
         }
 
-        return eventItem;
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(int id)
-    {
-        Event? eventToDelete = await _context.Events
-            .FirstOrDefaultAsync(e => e.Id == id);
-
-        if (eventToDelete == null)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<EventDto>> GetById(long id)
         {
-            return NotFound($"Event with ID {id} not found.");
+            var eventDto = await _eventService.GetEventByIdAsync(id);
+
+            if (eventDto == null)
+            {
+                return NotFound($"Event with ID {id} not found.");
+            }
+
+            return eventDto;
         }
 
-        _context.Events.Remove(eventToDelete);
-        await _context.SaveChangesAsync();
+        [HttpPut("{id}")]
+        public async Task<ActionResult<EventDto>> Update(long id, EventCreateRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Title) ||
+                string.IsNullOrWhiteSpace(request.Description))
+            {
+                return BadRequest("Title and Description required.");
+            }
 
-        return NoContent();
-    }
+            var updatedEvent = await _eventService.UpdateEventAsync(id, request);
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Event>>> Get() // FIX: The return type for multiple items should be IEnumerable<Event>
-    {
-        var events = await _context.Events.Include(e => e.Attendees).ToListAsync();
-        return Ok(events);
+            if (updatedEvent == null)
+                return NotFound($"Event with ID {id} not found.");
+
+            return Ok(updatedEvent);
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(long id)
+        {
+            var result = await _eventService.DeleteEventAsync(id);
+
+            if (!result)
+            {
+                return NotFound($"Event with ID {id} not found.");
+            }
+
+            return NoContent();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<EventDto>>> Get()
+        {
+            var eventDtos = await _eventService.GetAllEventsAsync();
+            return Ok(eventDtos);
+        }
+
+        [HttpPost("{eventId}/join")]
+        public async Task<ActionResult<AttendeeDto>> JoinEvent(long eventId, JoinEventRequest request)
+        {
+            var (attendeeDto, error) = await _eventService.JoinEventAsync(eventId, request);
+
+            if (error != null)
+            {
+                if (error.Contains("not found"))
+                    return NotFound(error);
+                if (error.Contains("Invalid"))
+                    return BadRequest(error);
+                if (error.Contains("already attending"))
+                    return Conflict(error);
+            }
+
+            return CreatedAtAction(
+                nameof(JoinEvent),
+                new { eventId = eventId, attendeeId = attendeeDto!.Id },
+                attendeeDto);
+        }
     }
 }

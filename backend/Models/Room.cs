@@ -8,5 +8,5 @@ public class Room
     public string Location { get; set; }
     public string Description { get; set; }
 
-    public List<RoomBooking> RoomBookings { get; set; }
+    public List<RoomBooking> RoomBookings { get; set; } = new List<RoomBooking>();
 }
