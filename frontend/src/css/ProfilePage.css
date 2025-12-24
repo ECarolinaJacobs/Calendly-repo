@@ -162,9 +162,11 @@
     font-size: 16px;
   }
 
-  .instructions-password {
+  .instructions-password,
+  .error-message-container {
     font-size: 12px;
   }
+  
   .edit-button,
   .save-changes-button,
   .change-password-button,
