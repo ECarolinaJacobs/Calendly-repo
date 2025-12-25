@@ -1,4 +1,5 @@
 import type { Attendee } from "../../components/Events/EventDrawer/types";
+import type { Review } from "./Review";
 
 export interface Event {
 	id: number;
@@ -8,6 +9,7 @@ export interface Event {
 	startDate?: string;
 	endDate?: string;
 	attendees?: Attendee[];
+	reviews?: Review[];
 }
 
 export interface CreateEventRequest {

@@ -15,7 +15,6 @@ namespace TodoApi.Controllers
         {
             _eventService = eventService;
         }
-
         [HttpPost]
         public async Task<ActionResult<Event>> Post(EventCreateRequest request)
         {

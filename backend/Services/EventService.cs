@@ -38,7 +38,11 @@ namespace TodoApi.Services
 
         public async Task<EventDto?> UpdateEventAsync(long id, EventCreateRequest request)
         {
-            var ev = await _context.Events.FindAsync(id);
+            var ev = await _context.Events
+                .Include(e => e.Attendees)
+                .Include(e => e.Reviews)
+                .FirstOrDefaultAsync(e => e.Id == id);
+
             if (ev == null) return null;
 
             ev.Title = request.Title;
@@ -61,6 +65,16 @@ namespace TodoApi.Services
                     a.Name,
                     a.Avatar,
                     a.EmployeeId
+                )).ToList(),
+                ev.Reviews?.Select(r => new ReviewDto(
+                    r.Id,
+                    r.Content,
+                    r.Rating,
+                    r.CreatedAt,
+                    r.EventId,
+                    r.EmployeeId,
+                    r.EmployeeName,
+                    r.EmployeeEmail
                 )).ToList()
             );
         }
@@ -70,6 +84,7 @@ namespace TodoApi.Services
         {
             var eventItem = await _context.Events
                 .Include(x => x.Attendees)
+                .Include(x => x.Reviews)
                 .FirstOrDefaultAsync(e => e.Id == id);
 
             if (eventItem == null)
@@ -89,6 +104,16 @@ namespace TodoApi.Services
                     a.Name,
                     a.Avatar,
                     a.EmployeeId
+                )).ToList(),
+                eventItem.Reviews?.Select(r => new ReviewDto(
+                    r.Id,
+                    r.Content,
+                    r.Rating,
+                    r.CreatedAt,
+                    r.EventId,
+                    r.EmployeeId,
+                    r.EmployeeName,
+                    r.EmployeeEmail
                 )).ToList()
             );
         }
@@ -111,6 +136,7 @@ namespace TodoApi.Services
         {
             var events = await _context.Events
                 .Include(e => e.Attendees)
+                .Include(e => e.Reviews)
                 .ToListAsync();
 
             return events.Select(e => new EventDto(
@@ -125,6 +151,16 @@ namespace TodoApi.Services
                     a.Name,
                     a.Avatar,
                     a.EmployeeId
+                )).ToList(),
+                e.Reviews?.Select(r => new ReviewDto(
+                    r.Id,
+                    r.Content,
+                    r.Rating,
+                    r.CreatedAt,
+                    r.EventId,
+                    r.EmployeeId,
+                    r.EmployeeName,
+                    r.EmployeeEmail
                 )).ToList()
             ));
         }

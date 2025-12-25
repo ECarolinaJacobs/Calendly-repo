@@ -9,4 +9,5 @@ public class Event
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
     public ICollection<Attendee> Attendees { get; set; } = new List<Attendee>();
+    public ICollection<Review>? Reviews { get; set; }
 }

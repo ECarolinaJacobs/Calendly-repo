@@ -12,6 +12,8 @@ public class EventContext : DbContext
 
     public DbSet<Event> Events { get; set; } = null!;
     public DbSet<Attendee> Attendees { get; set; } = null!;
+    public DbSet<Review> Reviews { get; set; } = null!;
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -21,5 +23,11 @@ public class EventContext : DbContext
             .HasOne(a => a.Event)
             .WithMany(e => e.Attendees)
             .HasForeignKey(a => a.EventId);
+
+        modelBuilder.Entity<Review>()
+            .HasOne(r => r.Event)
+            .WithMany(e => e.Reviews)
+            .HasForeignKey(r => r.EventId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
