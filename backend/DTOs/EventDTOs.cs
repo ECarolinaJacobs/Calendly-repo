@@ -28,6 +28,7 @@ namespace TodoApi.DTOs
         string? Image,
         DateTime? StartDate,
         DateTime? EndDate,
-        ICollection<AttendeeDto>? Attendees
+        ICollection<AttendeeDto>? Attendees,
+        ICollection<ReviewDto>? Reviews
     );
 }

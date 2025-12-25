@@ -6,10 +6,13 @@ import {
 	getStatistics,
 } from "../api/admin";
 import { getEvents, deleteEvent, updateEvent } from "../api/eventService";
+import { getAllReviews, deleteReview } from "../api/Services/review-service";
 import "../css/AdminPage.css";
 import type { AdminStats } from "../api/admin";
+import type { Review } from "../models/Review";
 import type { Event, CreateEventRequest } from "../models/Event";
 import { AdminCreateEvent } from "../../components/Events/form-creation";
+import { div } from "framer-motion/client";
 
 interface Employee {
 	id: number;
@@ -22,6 +25,7 @@ interface Employee {
 export default function AdminPage() {
 	const [employees, setEmployees] = useState<Employee[]>([]);
 	const [events, setEvents] = useState<Event[]>([]);
+	const [reviews, setReviews] = useState<Review[]>([]);
 	const [stats, setStats] = useState<AdminStats | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
@@ -44,14 +48,16 @@ export default function AdminPage() {
 		try {
 			setLoading(true);
 			setError(null);
-			const [employeesData, statsData, eventsData] = await Promise.all([
+			const [employeesData, statsData, eventsData, reviewsData] = await Promise.all([
 				getAllEmployees(),
 				getStatistics(),
 				getEvents(),
+				getAllReviews(),
 			]);
 			setEmployees(employeesData || []);
 			setStats(statsData);
 			setEvents(eventsData || []);
+			setReviews(reviewsData || []);
 		} catch (err) {
 			setError("Failed to load data");
 			console.error(err);
@@ -121,6 +127,26 @@ export default function AdminPage() {
 		}
 	};
 
+	const handleDeleteReview = async (id: number, employeeName: string) => {
+		if (
+			!window.confirm(`Are you sure you want to delete the review by ${employeeName}?`)
+		) {
+			return;
+		}
+		try {
+			const success = await deleteReview(id);
+			if (success) {
+				loadData();
+				alert("Review deleted successfully");
+			} else {
+				alert("Failed to delete review");
+			}
+		} catch (err) {
+			console.error(err);
+			alert("Error deleting reviews");
+		}
+	};
+
 	const handleEditEvent = (event: Event) => {
 		setEditingEvent(event);
 		setEditForm({
@@ -163,6 +189,17 @@ export default function AdminPage() {
 	const formatDate = (date: string | Date | undefined) => {
 		if (!date) return "N/A";
 		return new Date(date).toLocaleDateString();
+	};
+	const formatDateTime = (date: string | Date | undefined) => {
+		if (!date) return "N/A";
+		return new Date(date).toLocaleString();
+	};
+	const getEventTitle = (eventId: number) => {
+		const event = events.find(e => e.id === eventId);
+		return event?.title || `Event #${eventId}`;
+	};
+	const renderStars = (rating: number) => {
+		return "★".repeat(rating) + "☆".repeat(5 - rating);
 	};
 
 	if (loading && !stats) {
@@ -209,178 +246,325 @@ export default function AdminPage() {
 			)}
 
 			<AdminCreateEvent />
-
-			{/* Events Management Section */}
-			<div className="events-section">
-				<h2>Events Management ({events.length})</h2>
-
-				{editingEvent && (
-					<div className="edit-event-modal">
-						<div className="modal-content">
-							<h3>Edit Event</h3>
-							<form
-								onSubmit={handleUpdateEvent}
-								className="edit-event-form"
-							>
-								<div className="form-group">
-									<label htmlFor="edit-title">Title:</label>
-									<input
-										type="text"
-										id="edit-title"
-										value={editForm.title}
-										onChange={(e) =>
-											setEditForm({
-												...editForm,
-												title: e.target.value,
-											})
-										}
-										required
-									/>
-								</div>
-								<div className="form-group">
-									<label htmlFor="edit-description">
-										Description:
-									</label>
-									<textarea
-										id="edit-description"
-										value={editForm.description}
-										onChange={(e) =>
-											setEditForm({
-												...editForm,
-												description: e.target.value,
-											})
-										}
-										required
-									/>
-								</div>
-								<div className="form-group">
-									<label htmlFor="edit-image">
-										Image URL:
-									</label>
-									<input
-										type="text"
-										id="edit-image"
-										value={editForm.image}
-										onChange={(e) =>
-											setEditForm({
-												...editForm,
-												image: e.target.value,
-											})
-										}
-									/>
-								</div>
-								<div className="form-group">
-									<label htmlFor="edit-start-date">
-										Start Date:
-									</label>
-									<input
-										type="datetime-local"
-										id="edit-start-date"
-										value={
-											editForm.startDate
-												? new Date(editForm.startDate)
-														.toISOString()
-														.slice(0, 16)
-												: ""
-										}
-										onChange={(e) =>
-											setEditForm({
-												...editForm,
-												startDate: e.target.value
-													? new Date(e.target.value)
-													: undefined,
-											})
-										}
-									/>
-								</div>
-								<div className="form-group">
-									<label htmlFor="edit-end-date">
-										End Date:
-									</label>
-									<input
-										type="datetime-local"
-										id="edit-end-date"
-										value={
-											editForm.endDate
-												? new Date(editForm.endDate)
-														.toISOString()
-														.slice(0, 16)
-												: ""
-										}
-										onChange={(e) =>
-											setEditForm({
-												...editForm,
-												endDate: e.target.value
-													? new Date(e.target.value)
-													: undefined,
-											})
-										}
-									/>
-								</div>
-								<div className="form-actions">
-									<button type="submit" className="save-btn">
-										Save Changes
-									</button>
-									<button
-										type="button"
-										onClick={handleCancelEdit}
-										className="cancel-btn"
-									>
-										Cancel
-									</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				)}
-
-				<table className="events-table" aria-label="Events list">
+			{/*reviews section*/}
+			<div className="reviews-section">
+				<h2>Reviews management ({reviews.length})</h2>
+				<table className="review-table" aria-label="Reviews list">
 					<thead>
 						<tr>
 							<th scope="col">ID</th>
-							<th scope="col">Title</th>
-							<th scope="col">Description</th>
-							<th scope="col">Start Date</th>
-							<th scope="col">End Date</th>
-							<th scope="col">Attendees</th>
+							<th scope="col">Event</th>
+							<th scope="col">Employee</th>
+							<th scope="col">Rating</th>
+							<th scope="col">Content</th>
+							<th scope="col">Created At</th>
 							<th scope="col">Actions</th>
 						</tr>
 					</thead>
 					<tbody>
-						{events.length === 0 ? (
+						{reviews.length === 0 ? (
 							<tr>
 								<td colSpan={7} style={{ textAlign: "center" }}>
-									No events found
+									No reviews found
 								</td>
 							</tr>
 						) : (
-							events.map((event) => (
-								<tr key={event.id}>
-									<td>{event.id}</td>
-									<td>{event.title}</td>
-									<td>{event.description}</td>
-									<td>{formatDate(event.startDate)}</td>
-									<td>{formatDate(event.endDate)}</td>
-									<td>{event.attendees?.length || 0}</td>
+							reviews.map((review) => (
+								<tr key={review.id}>
+									<td>{review.id}</td>
+									<td>{getEventTitle(review.eventId)}</td>
+									<td>
+										{review.employeeName}
+										<br />
+										<small style={{ color: "#666" }}>
+											{review.employeeEmail}
+										</small>
+									</td>
+									<td>
+										<span style={{ color: "#FFD700", fontSize: "1.2rem" }}>
+											{renderStars(review.rating)}
+										</span>
+										<br />
+										<small>{review.rating}/5</small>
+									</td>
+									<td style={{ maxWidth: "300px" }}>
+										{review.content}
+									</td>
+									<td>{formatDateTime(review.createdAt)}</td>
 									<td>
 										<button
 											onClick={() =>
-												handleEditEvent(event)
-											}
-											className="edit-btn"
-											aria-label={`Edit event ${event.title}`}
-										>
-											Edit
-										</button>
-										<button
-											onClick={() =>
-												handleDeleteEvent(
-													event.id,
-													event.title,
+												handleDeleteReview(
+													review.id,
+													review.employeeName,
 												)
 											}
 											className="delete-btn"
-											aria-label={`Delete event ${event.title}`}
+											aria-label={`Delete review by ${review.employeeName}`}
+										>
+											Delete
+										</button>
+									</td>
+								</tr>
+							))
+						)}
+					</tbody>
+				</table>
+				{/* Events Management Section */}
+				<div className="events-section">
+					<h2>Events Management ({events.length})</h2>
+
+					{editingEvent && (
+						<div className="edit-event-modal">
+							<div className="modal-content">
+								<h3>Edit Event</h3>
+								<form
+									onSubmit={handleUpdateEvent}
+									className="edit-event-form"
+								>
+									<div className="form-group">
+										<label htmlFor="edit-title">Title:</label>
+										<input
+											type="text"
+											id="edit-title"
+											value={editForm.title}
+											onChange={(e) =>
+												setEditForm({
+													...editForm,
+													title: e.target.value,
+												})
+											}
+											required
+										/>
+									</div>
+									<div className="form-group">
+										<label htmlFor="edit-description">
+											Description:
+										</label>
+										<textarea
+											id="edit-description"
+											value={editForm.description}
+											onChange={(e) =>
+												setEditForm({
+													...editForm,
+													description: e.target.value,
+												})
+											}
+											required
+										/>
+									</div>
+									<div className="form-group">
+										<label htmlFor="edit-image">
+											Image URL:
+										</label>
+										<input
+											type="text"
+											id="edit-image"
+											value={editForm.image}
+											onChange={(e) =>
+												setEditForm({
+													...editForm,
+													image: e.target.value,
+												})
+											}
+										/>
+									</div>
+									<div className="form-group">
+										<label htmlFor="edit-start-date">
+											Start Date:
+										</label>
+										<input
+											type="datetime-local"
+											id="edit-start-date"
+											value={
+												editForm.startDate
+													? new Date(editForm.startDate)
+														.toISOString()
+														.slice(0, 16)
+													: ""
+											}
+											onChange={(e) =>
+												setEditForm({
+													...editForm,
+													startDate: e.target.value
+														? new Date(e.target.value)
+														: undefined,
+												})
+											}
+										/>
+									</div>
+									<div className="form-group">
+										<label htmlFor="edit-end-date">
+											End Date:
+										</label>
+										<input
+											type="datetime-local"
+											id="edit-end-date"
+											value={
+												editForm.endDate
+													? new Date(editForm.endDate)
+														.toISOString()
+														.slice(0, 16)
+													: ""
+											}
+											onChange={(e) =>
+												setEditForm({
+													...editForm,
+													endDate: e.target.value
+														? new Date(e.target.value)
+														: undefined,
+												})
+											}
+										/>
+									</div>
+									<div className="form-actions">
+										<button type="submit" className="save-btn">
+											Save Changes
+										</button>
+										<button
+											type="button"
+											onClick={handleCancelEdit}
+											className="cancel-btn"
+										>
+											Cancel
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					)}
+
+					<table className="events-table" aria-label="Events list">
+						<thead>
+							<tr>
+								<th scope="col">ID</th>
+								<th scope="col">Title</th>
+								<th scope="col">Description</th>
+								<th scope="col">Start Date</th>
+								<th scope="col">End Date</th>
+								<th scope="col">Attendees</th>
+								<th scope="col">Reviews</th>
+								<th scope="col">Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{events.length === 0 ? (
+								<tr>
+									<td colSpan={8} style={{ textAlign: "center" }}>
+										No events found
+									</td>
+								</tr>
+							) : (
+								events.map((event) => (
+									<tr key={event.id}>
+										<td>{event.id}</td>
+										<td>{event.title}</td>
+										<td>{event.description}</td>
+										<td>{formatDate(event.startDate)}</td>
+										<td>{formatDate(event.endDate)}</td>
+										<td>{event.attendees?.length || 0}</td>
+										<td>{event.reviews?.length || 0}</td>
+										<td>
+											<button
+												onClick={() =>
+													handleEditEvent(event)
+												}
+												className="edit-btn"
+												aria-label={`Edit event ${event.title}`}
+											>
+												Edit
+											</button>
+											<button
+												onClick={() =>
+													handleDeleteEvent(
+														event.id,
+														event.title,
+													)
+												}
+												className="delete-btn"
+												aria-label={`Delete event ${event.title}`}
+											>
+												Delete
+											</button>
+										</td>
+									</tr>
+								))
+							)}
+						</tbody>
+					</table>
+				</div>
+
+				<div
+					className="search-container"
+					role="search"
+					aria-label="Search employees"
+				>
+					<input
+						type="text"
+						placeholder="Search employee by name or email"
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+						onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+						className="search-input"
+						aria-label="Search input for employee name or email"
+					/>
+					<button
+						onClick={handleSearch}
+						className="search-btn"
+						aria-label="Search for employees"
+					>
+						Search
+					</button>
+					{searchTerm && (
+						<button
+							onClick={handleClearSearch}
+							className="clear-btn"
+							aria-label="Clear search and show all employees"
+						>
+							Clear
+						</button>
+					)}
+				</div>
+
+				<h2>Employees ({employees.length})</h2>
+				<table className="employee-table" aria-label="Employee list">
+					<thead>
+						<tr>
+							<th scope="col">ID</th>
+							<th scope="col">Name</th>
+							<th scope="col">Email</th>
+							<th scope="col">Admin</th>
+							<th scope="col">Coins</th>
+							<th scope="col">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{employees.length === 0 ? (
+							<tr>
+								<td colSpan={6} style={{ textAlign: "center" }}>
+									{searchTerm
+										? "No employees found"
+										: "No employees"}
+								</td>
+							</tr>
+						) : (
+							employees.map((employee) => (
+								<tr key={employee.id}>
+									<td>{employee.id}</td>
+									<td>{employee.name}</td>
+									<td>{employee.email}</td>
+									<td>{employee.isAdmin ? "Yes" : "No"}</td>
+									<td>{employee.coins}</td>
+									<td>
+										<button
+											onClick={() =>
+												handleDelete(
+													employee.id,
+													employee.name,
+												)
+											}
+											className="delete-btn"
+											aria-label={`Delete employee ${employee.name}`}
 										>
 											Delete
 										</button>
@@ -391,87 +575,6 @@ export default function AdminPage() {
 					</tbody>
 				</table>
 			</div>
-
-			<div
-				className="search-container"
-				role="search"
-				aria-label="Search employees"
-			>
-				<input
-					type="text"
-					placeholder="Search employee by name or email"
-					value={searchTerm}
-					onChange={(e) => setSearchTerm(e.target.value)}
-					onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-					className="search-input"
-					aria-label="Search input for employee name or email"
-				/>
-				<button
-					onClick={handleSearch}
-					className="search-btn"
-					aria-label="Search for employees"
-				>
-					Search
-				</button>
-				{searchTerm && (
-					<button
-						onClick={handleClearSearch}
-						className="clear-btn"
-						aria-label="Clear search and show all employees"
-					>
-						Clear
-					</button>
-				)}
-			</div>
-
-			<h2>Employees ({employees.length})</h2>
-			<table className="employee-table" aria-label="Employee list">
-				<thead>
-					<tr>
-						<th scope="col">ID</th>
-						<th scope="col">Name</th>
-						<th scope="col">Email</th>
-						<th scope="col">Admin</th>
-						<th scope="col">Coins</th>
-						<th scope="col">Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					{employees.length === 0 ? (
-						<tr>
-							<td colSpan={6} style={{ textAlign: "center" }}>
-								{searchTerm
-									? "No employees found"
-									: "No employees"}
-							</td>
-						</tr>
-					) : (
-						employees.map((employee) => (
-							<tr key={employee.id}>
-								<td>{employee.id}</td>
-								<td>{employee.name}</td>
-								<td>{employee.email}</td>
-								<td>{employee.isAdmin ? "Yes" : "No"}</td>
-								<td>{employee.coins}</td>
-								<td>
-									<button
-										onClick={() =>
-											handleDelete(
-												employee.id,
-												employee.name,
-											)
-										}
-										className="delete-btn"
-										aria-label={`Delete employee ${employee.name}`}
-									>
-										Delete
-									</button>
-								</td>
-							</tr>
-						))
-					)}
-				</tbody>
-			</table>
 		</div>
 	);
 }

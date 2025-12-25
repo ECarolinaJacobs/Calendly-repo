@@ -40,6 +40,7 @@ builder.Services.AddScoped<TodoApi.Services.EventService>();
 builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<OfficeAttendanceService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<ReviewService>();
 
 // Configure JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
