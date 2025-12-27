@@ -14,6 +14,7 @@ import { OfficeAttendance } from "../../components/Dashboard/Office-attendance";
 import { MonthCalendar } from "../../components/Dashboard/Month-calendar";
 import { AttendanceModal } from "../../components/Dashboard/AttendanceModal";
 import { AddEventModal } from "../../components/Dashboard/AddEventsModal";
+import { EventsPanel } from "../../components/Dashboard/EventsPanel";
 
 /*helper function*/
 function isSameDay(d1: Date, d2: Date) {
@@ -44,8 +45,25 @@ export default function DashboardPage() {
   const [newAttendanceDate, setNewAttendanceDate] = useState("");
   const [editingAttendance, setEditingAttendance] = useState<Attendance | null>(null);
 
+  const [showEventsPanel, setShowEventsPanel] = useState(false);
+  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
+
+
   useEffect(() => {
     loadAttendances();
+  }, []);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch("http://localhost:5167/api/event");
+        const data = await response.json();
+        setUpcomingEvents(data);
+      } catch (error) {
+        console.error("Failed to load events:", error);
+      }
+    };
+    fetchEvents();
   }, []);
 
   const loadAttendances = async () => {
@@ -175,9 +193,18 @@ export default function DashboardPage() {
         setActiveItem={setActiveItem}
         navigate={navigate}
       />
-      {/*main content */}
       <div className={`main-content-area ${sidebarOpen ? "shift" : ""}`}>
         <DashboardBanner userName={userName} />
+        {/*events panel*/}
+        <div className="events-panel-toggle">
+          <button 
+            className="attendance-book-button"
+            onClick={() => setShowEventsPanel(true)}
+          >
+            View upcoming events
+            </button>
+        </div>
+        {/*main content */}
         <div className="dashboard-grid">
           <div className="main-content">
             <Timetable
@@ -248,6 +275,11 @@ export default function DashboardPage() {
             />
           </>
         )}
+        <EventsPanel
+          isOpen={showEventsPanel}
+          onClose={() => setShowEventsPanel(false)}
+          events={upcomingEvents}
+        />
       </div >
     </div >
   );
