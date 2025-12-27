@@ -1,4 +1,4 @@
-import type { Event } from "../../components/EventDrawer/types";
+import type { Event } from "../../components/Events/EventDrawer/types";
 import type { Attendance } from "../api/OfficeAttendance";
 
 export interface SidebarProps {

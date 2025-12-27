@@ -7,10 +7,12 @@ import BookingPage from "../src/pages/BookingPage.tsx";
 import "./App.css"
 import ProtectedRoutes from "./ProtectedFileUtil/ProtectedPages.tsx";
 import DashboardPage from "./pages/DashboardPage";
-import ProfilePage from  "./pages/ProfilePage";
+import ProfilePage from "./pages/ProfilePage";
 import NotFound from "./pages/NotFound";
-import AdminPage from "./pages/AdminPage";
 import MyBookingsPage from "./pages/MyBookingsPage";
+import AdminPage from "./pages/AdminPage.tsx";
+import AdminRoute from "./ProtectedFileUtil/AdminRoute.tsx";
+
 
 
 function App() {
@@ -22,10 +24,12 @@ function App() {
 
       <Route element={<ProtectedRoutes />}>
         <Route path="/events/:event" element={<EventPage />} />
-        <Route path="/dashboard" element={<DashboardPage/>} />
+        <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/booking" element={<BookingPage />} />
-        <Route path="/admin" element={<AdminPage />} /> //FIXME: admin can be accesed through url by logged in normal user, assignee: Elena
         <Route path="/profile" element={<ProfilePage />} />
+      </Route>
+      {/*Admin route*/}
+      <Route element={<AdminRoute />}>
         <Route path="/admin" element={<AdminPage />} />
       </Route>
       <Route path="/my-bookings" element={<MyBookingsPage />} />

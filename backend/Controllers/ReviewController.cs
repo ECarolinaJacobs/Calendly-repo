@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TodoApi.Services;
 using TodoApi.DTOs;
 using TodoApi.Models;
+using Microsoft.AspNetCore.Authorization;
 /*controller summary:
 - handles all http requests from the frontend related to review operations
 -public endpoints: GET reviews for an event
@@ -26,6 +27,7 @@ namespace TodoApi.Controllers
         /// creates a new review for an event (only users can make one)
         /// </summary>
         [HttpPost("event/{eventId}")]
+        [Authorize]
         public async Task<ActionResult<ReviewDto>> CreateReview(long eventId, CreateReviewRequest request)
         {
             try
@@ -80,6 +82,7 @@ namespace TodoApi.Controllers
         /// gets all reviews in the system (admin only)
         /// </summary>
         [HttpGet("all")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<ReviewDto>>> GetAllReviews()
         {
             try
@@ -99,6 +102,7 @@ namespace TodoApi.Controllers
         /// deletes a review (admin only)
         /// </summary>
         [HttpDelete("{reviewId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteReview(long reviewId)
         {
             try
