@@ -10,8 +10,10 @@ using TodoApi.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure CORS
-builder.Services.AddCors(options => {
-    options.AddPolicy("CorsPolicy", builder => {
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
         builder.WithOrigins("http://localhost:5173")
             .AllowAnyMethod()
             .AllowAnyHeader()
@@ -44,16 +46,17 @@ builder.Services.AddScoped<ReviewService>();
 
 // Configure JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options => {
+    .AddJwtBearer(options =>
+    {
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = builder.Configuration["Jwt:Issuer"],
-                ValidAudience = builder.Configuration["Jwt:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? string.Empty))
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? string.Empty))
         };
     });
 
@@ -61,12 +64,13 @@ var app = builder.Build();
 
 
 // Database Seeding
-using(var scope = app.Services.CreateScope())
-    {
-        var context = scope.ServiceProvider.GetRequiredService<ProjectContext>();
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ProjectContext>();
+    var eventContext = scope.ServiceProvider.GetRequiredService<EventContext>();
 
-// Adding Employees (including Admin and Bob)
-context.Employees.Add(new Employee
+    // add admin and employees
+    context.Employees.Add(new Employee
     {
         Id = 2,
         Name = "Admin",
@@ -76,8 +80,8 @@ context.Employees.Add(new Employee
         Coins = 0
     });
 
-context.Employees.Add(new Employee { Id = 1, Name = "Alice", Email = "test", Password = "test" });
-context.Employees.Add(new Employee { Id = 3, Name = "Bob", Email = "bob@bob.com", Password = BCrypt.Net.BCrypt.HashPassword("test"), IsAdmin = false, Coins = 0 });
+    context.Employees.Add(new Employee { Id = 1, Name = "Alice", Email = "test", Password = "test" });
+    context.Employees.Add(new Employee { Id = 3, Name = "Bob", Email = "bob@bob.com", Password = BCrypt.Net.BCrypt.HashPassword("test"), IsAdmin = false, Coins = 0 });
 
     context.Rooms.Add(new Room { Id = 1, Name = "Meeting room 1", Floor = "Floor 1", Location = "West Building", Description = "Includes smartboard" });
     context.Rooms.Add(new Room { Id = 2, Name = "Meeting room 2", Floor = "Floor 1", Location = "South Building", Description = "Whiteboard and conference phone" });
@@ -90,16 +94,63 @@ context.Employees.Add(new Employee { Id = 3, Name = "Bob", Email = "bob@bob.com"
     context.Rooms.Add(new Room { Id = 9, Name = "Huddle room 2", Floor = "Floor 2", Location = "North Building", Description = "Quick meeting setup" });
     context.Rooms.Add(new Room { Id = 10, Name = "Executive meeting room", Floor = "Floor 1", Location = "East Building", Description = "Includes smartboard and projector" });
 
-    context.RoomBookings.Add(new RoomBooking {Id = 1, RoomId = 1, EmployeeId = 1, StartTime = "2025-12-30T09:00:00.000Z", EndTime = "2025-12-12T17:00:00.000Z"});
-    context.RoomBookings.Add(new RoomBooking {Id = 2, RoomId = 2, EmployeeId = 1, StartTime = "2025-12-30T09:00:00.000Z", EndTime = "2025-12-12T17:00:00.000Z"});
+    context.RoomBookings.Add(new RoomBooking { Id = 1, RoomId = 1, EmployeeId = 1, StartTime = "2025-12-30T09:00:00.000Z", EndTime = "2025-12-12T17:00:00.000Z" });
+    context.RoomBookings.Add(new RoomBooking { Id = 2, RoomId = 2, EmployeeId = 1, StartTime = "2025-12-30T09:00:00.000Z", EndTime = "2025-12-12T17:00:00.000Z" });
 
     context.SaveChanges();
+
+    var pastEvent = new Event
+    {
+        Id = 1,
+        Title = "Past Event - Team building",
+        Description = "Fun activities",
+        Image = "",
+        StartDate = DateTime.UtcNow.AddDays(-7),
+        EndDate = DateTime.UtcNow.AddDays(-7).AddHours(2)
+    };
+    eventContext.Events.Add(pastEvent);
+    eventContext.SaveChanges();
+    var bobAttendee = new Attendee
+    {
+        Id = 1,
+        Name = "Bob",
+        Avatar = null,
+        EmployeeId = 3,
+        EventId = 1
+    };
+    eventContext.Attendees.Add(bobAttendee);
+    eventContext.SaveChanges();
+    Console.WriteLine("Database seeses with test past event");
+
+    var futureEvent = new Event
+    {
+        Id = 2,
+        Title = "Future Event - Team building",
+        Description = "Fun activities",
+        Image = "",
+        StartDate = DateTime.UtcNow.AddDays(+7),
+        EndDate = DateTime.UtcNow.AddDays(+7).AddHours(2)
+    };
+    eventContext.Events.Add(futureEvent);
+    eventContext.SaveChanges();
+    var bobAttendeeFuture = new Attendee
+    {
+        Id = 2,
+        Name = "Bob",
+        Avatar = null,
+        EmployeeId = 3,
+        EventId = 2
+    };
+    eventContext.Attendees.Add(bobAttendeeFuture);
+    eventContext.SaveChanges();
+    Console.WriteLine("Database seeses with test future event");
 }
 
 // Configure the HTTP request pipeline.
 app.UseCors("CorsPolicy");
 
-if (app.Environment.IsDevelopment()) {
+if (app.Environment.IsDevelopment())
+{
     // Use the standard Swagger configuration
     app.UseSwagger();
     app.UseSwaggerUI();

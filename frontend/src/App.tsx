@@ -12,8 +12,7 @@ import NotFound from "./pages/NotFound";
 import MyBookingsPage from "./pages/MyBookingsPage";
 import AdminPage from "./pages/AdminPage.tsx";
 import AdminRoute from "./ProtectedFileUtil/AdminRoute.tsx";
-
-
+import MyEventsPage from "./pages/MyEventsPage";
 
 function App() {
   return (
@@ -27,6 +26,7 @@ function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/booking" element={<BookingPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/my-events" element={<MyEventsPage />} />
       </Route>
       {/*Admin route*/}
       <Route element={<AdminRoute />}>
