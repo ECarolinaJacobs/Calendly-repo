@@ -21,8 +21,6 @@ export interface BookingModalProp {
 
 export interface RoomFilteringProp {
     setRooms: any,
-    startIso: string,
-    endIso: string,
     setStartIso: any,
     setEndIso: any,
     setErrorMessage: any
@@ -31,4 +29,15 @@ export interface RoomFilteringProp {
 export interface floorFilterProp {
     value: string,
     onChange: React.Dispatch<React.SetStateAction<string>>
+}
+
+export interface DateTimeFilter {
+  selectedDate: string;
+  selectedStarttime: string;
+  selectedEndtime: string;
+};
+
+export interface DateTimeValueChanger {
+    value: DateTimeFilter,
+    onChange: React.Dispatch<React.SetStateAction<DateTimeFilter>>
 }

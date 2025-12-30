@@ -3,22 +3,21 @@ import FilterRooms from "../../src/api/filter-rooms";
 import ResetFiltersButton from "./ResetFiltersButton.tsx";
 import DateFilter from "./DateFilter.tsx";
 import FloorFilter from "./FloorFilter.tsx";
-import type { RoomFilteringProp, Room } from "./bookingTypes.ts";
+import type { RoomFilteringProp, Room, DateTimeFilter } from "./bookingTypes.ts";
 
 // Modularize filters in own components
 
-const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso, setErrorMessage} : RoomFilteringProp) => {
+const RoomFiltering = ({setRooms, setStartIso, setEndIso, setErrorMessage} : RoomFilteringProp) => {
     const [selectedFloor, setSelectedFloor] = useState("");
-    const [selectedDate, setSelectedDate] = useState("");
-
-    const [selectedStarttime, setSelectedStarttime] = useState("");
-    const [selectedEndtime, setSelectedEndtime] = useState("");
+    const [dateTimeFilters, setDateTimeFilters] = useState<DateTimeFilter>({ selectedDate: "", selectedStarttime: "", selectedEndtime: "" });
     
     const resetFilters = () => {
         setSelectedFloor("");
-        setSelectedDate("");
-        setSelectedStarttime("");
-        setSelectedEndtime("");
+        setDateTimeFilters({
+            selectedDate: "",
+            selectedStarttime: "",
+            selectedEndtime: ""
+        });
 
         const rooms : Room[] = [];
         setRooms(rooms);
@@ -27,6 +26,8 @@ const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso, setE
     }
 
     const handleClick = async () => {
+        const { selectedDate, selectedStarttime, selectedEndtime } = dateTimeFilters;
+
         if (!selectedFloor || !selectedDate || !selectedStarttime || !selectedEndtime) {
             return;
         }
@@ -60,12 +61,8 @@ const RoomFiltering = ({setRooms, startIso, endIso, setStartIso, setEndIso, setE
                 onChange={setSelectedFloor}/>
 
                 <DateFilter
-                selectedDate={selectedDate}
-                setSelectedDate={setSelectedDate}
-                selectedStarttime={selectedStarttime}
-                setSelectedStarttime={setSelectedStarttime}
-                selectedEndtime={selectedEndtime}
-                setSelectedEndtime={setSelectedEndtime}/>
+                value={dateTimeFilters}
+                onChange={setDateTimeFilters}/>
 
                 <div className="confirm-filter-wrapper">
                     <ResetFiltersButton className="reset-filters-button"
