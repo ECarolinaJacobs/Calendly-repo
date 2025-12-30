@@ -716,15 +716,12 @@ body,
   border: 1px solid #e0e0e0;
   border-radius: 12px;
   overflow: hidden;
-  cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .event-card:hover {
-  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-color: #6366f1;
 }
 
 .event-card-image {
@@ -781,4 +778,44 @@ body,
     width: 100%;
     right: -100%;
   }
+}
+
+.event-card-actions {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.event-card-button {
+  width: 100%;
+  padding: 0.75rem;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.event-card-button:hover {
+  background: #5558e3;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.event-card-button.attending {
+  background: #10b981;
+  cursor: default;
+}
+
+.event-card-button.attending:hover {
+  background: #10b981;
+  transform: none;
+  box-shadow: none;
+}
+
+.event-card-button:active {
+  transform: translateY(0);
 }

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import type { Event } from "../Events/EventDrawer/types";
@@ -11,6 +10,7 @@ interface EventsPanelProps {
 
 export function EventsPanel({ isOpen, onClose, events }: EventsPanelProps) {
   const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
   const upcomingEvents = events.filter(event => {
     if (!event.startDate) return false;
     return new Date(event.startDate) > new Date();
@@ -19,10 +19,51 @@ export function EventsPanel({ isOpen, onClose, events }: EventsPanelProps) {
     return new Date(a.startDate!).getTime() - new Date(b.startDate!).getTime();
   });
 
-  const handleEventClick = (eventTitle: string) => {
-    navigate(`/events/${eventTitle}`);
-    onClose();
+  // const handleEventClick = (eventTitle: string) => {
+  //   navigate(`/events/${eventTitle}`);
+  //   onClose();
+  // };
+
+  const handleAttendEvent = async (eventTitle: string, e: React.MouseEvent) => {
+    e.stopPropagation(); //prevents the event card click when clicking the attend button
+    try {
+      const eventResponse = await fetch(`http://localhost:5167/api/event`);
+      const allEvents = await eventResponse.json();
+      const targetEvent = allEvents.find((ev: any) => ev.title === eventTitle);
+      if (!targetEvent) {
+        alert("Event not found");
+        return;
+      }
+      const response = await fetch(`http://localhost:5167/api/event/${targetEvent.id}/join`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          employeeId: Number(userId),
+          avatar: null,
+        })
+      });
+      if (response.ok) {
+        alert("Successfully joined the event!");
+        window.location.reload();
+      } else {
+        const error = await response.json();
+        alert(error.message || "Failed to join event");
+      }
+    } catch (err) {
+      console.error("Error joining event:", err);
+      alert("Failed to join event");
+    }
   };
+
+  const isAttending = (event: Event) => {
+    if (!event.attendees || !userId) return false;
+    return event.attendees.some((att: any) => att.employeeId === Number(userId));
+  };
+
+
   return (
     <>
       {isOpen && (
@@ -47,7 +88,7 @@ export function EventsPanel({ isOpen, onClose, events }: EventsPanelProps) {
                 <div
                   key={index}
                   className="event-card"
-                  onClick={() => handleEventClick(event.title)}
+                  // onClick={() => handleEventClick(event.title)}
                 >
                   {event.image && (
                     <img
@@ -79,6 +120,24 @@ export function EventsPanel({ isOpen, onClose, events }: EventsPanelProps) {
                         👥 {event.attendees.length} attending
                       </div>
                     )}
+                    {/* attend button */}
+                    <div className="event-card-actions">
+                      {isAttending(event) ? (
+                        <button
+                          className="event-card-button attending"
+                          disabled
+                        >
+                          ✓ Attending
+                        </button>
+                      ) : (
+                        <button
+                          className="event-card-button"
+                          onClick={(e) => event.title && handleAttendEvent(event.title, e)}
+                        >
+                          Join event
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -86,7 +145,6 @@ export function EventsPanel({ isOpen, onClose, events }: EventsPanelProps) {
           )}
         </div>
       </div>
-
     </>
   );
 }

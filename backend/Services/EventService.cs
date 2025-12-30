@@ -209,5 +209,19 @@ namespace TodoApi.Services
 
             return (attendeeDto, null);
         }
+
+        //elena unjoins attendee from event
+        public async Task<bool> RemoveAttendeeAsync(long eventId, long attendeeId)
+        {
+            var attendee = await _context.Attendees
+                .FirstOrDefaultAsync(a => a.Id == attendeeId && a.EventId == eventId);
+            if (attendee == null)
+            {
+                return false;
+            }
+            _context.Attendees.Remove(attendee);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

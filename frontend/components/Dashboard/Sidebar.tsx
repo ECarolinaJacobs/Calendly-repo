@@ -55,13 +55,13 @@ export function Sidebar({ sidebarOpen, setSidebarOpen, activeItem, setActiveItem
                     className={`sidebar-item ${activeItem === "events" ? "active" : ""}`}
                     onClick={() => {
                         setActiveItem("events");
-                        navigate("/events/:event");
+                        navigate("/my-events");
                     }}
                 >
                     <span className="icon">
                         <IoCalendarClearOutline />
                     </span>
-                    {sidebarOpen && <span className="label">Events</span>}
+                    {sidebarOpen && <span className="label">My Events</span>}
                 </li>
                 <li
                     className={`sidebar-item ${activeItem === "profile" ? "active" : ""}`}

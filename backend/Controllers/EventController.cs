@@ -103,5 +103,17 @@ namespace TodoApi.Controllers
                 new { eventId = eventId, attendeeId = attendeeDto!.Id },
                 attendeeDto);
         }
+
+        //elena unjoin attendance from upcoming events
+        [HttpDelete("{eventId}/attendee/{attendeeId}")]
+        public async Task<ActionResult> RemoveAttendee(long eventId, long attendeeId)
+        {
+            var result = await _eventService.RemoveAttendeeAsync(eventId, attendeeId);
+            if (!result)
+            {
+                return NotFound($"Attendee with ID {attendeeId} not found for event {eventId}");
+            }
+            return NoContent();
+        }
     }
 }

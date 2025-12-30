@@ -85,7 +85,7 @@ public class AuthController : ControllerBase
                 new Claim(ClaimTypes.NameIdentifier, employee.Id.ToString()),
                 new Claim(ClaimTypes.Name, employee.Name),
                 new Claim(ClaimTypes.Email, employee.Email),
-                new Claim("isAdmin", employee.IsAdmin.ToString())
+                new Claim(ClaimTypes.Role, employee.IsAdmin ? "Admin" : "User")
             }),
             Expires = DateTime.UtcNow.AddHours(1),
             Issuer = _configuration["Jwt:Issuer"],
