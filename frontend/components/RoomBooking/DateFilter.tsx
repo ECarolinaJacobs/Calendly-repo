@@ -1,22 +1,28 @@
 import { startTimes } from "../../src/constants/booking";
+import type { DateTimeFilter, DateTimeValueChanger } from "./bookingTypes";
 
-const DateFilter = ({selectedDate, setSelectedDate, selectedStarttime, setSelectedStarttime, selectedEndtime, setSelectedEndtime} : any) => {
-
+const DateFilter = ({ value, onChange} : DateTimeValueChanger) => {
     const handleDateSelect = (targetValue : any) => {
         const dateInput = targetValue;
         const minDate = new Date().toISOString().split("T")[0]
 
         if (dateInput >= minDate) {
-            setSelectedDate(dateInput);
+            onChange((prev: DateTimeFilter) => ({
+                ...prev,
+                selectedDate: dateInput
+            }))
         }
         else {
-            setSelectedDate(minDate);
+            onChange((prev: DateTimeFilter) => ({
+                ...prev,
+                selectedDate: minDate
+            }))
         }
     }
 
     const EndTimeLimiter = () => {
         let startTimesCopy = Array.from(startTimes);
-        const startTimeIndex = startTimesCopy.indexOf(selectedStarttime);
+        const startTimeIndex = startTimesCopy.indexOf(value.selectedStarttime);
         startTimesCopy.shift();
         let endTimes = startTimesCopy;
         return endTimes.splice(startTimeIndex);
@@ -26,15 +32,18 @@ const DateFilter = ({selectedDate, setSelectedDate, selectedStarttime, setSelect
         <div className="date-filters">
             <input type="date"
                 className="date-select"
-                value={selectedDate}
+                value={value.selectedDate}
                 min= {new Date().toISOString().split("T")[0]}
-                max="2026-01-01" 
+                max="2027-01-01" 
                 onChange={(e : any) => {handleDateSelect(e.target.value)}}/>
 
             <select
                 className="starttime-select"
-                value={selectedStarttime}
-                onChange={(e : any) => setSelectedStarttime(e.target.value)}>
+                value={value.selectedStarttime}
+                onChange={(e : any) => onChange((prev: DateTimeFilter) => ({
+                    ...prev,
+                    selectedStarttime: e.target.value
+                }))}>
                 <option>Select start time</option>
                 {startTimes.map((time) => (
                     <option key={time} value={time}>{time}</option>
@@ -43,8 +52,11 @@ const DateFilter = ({selectedDate, setSelectedDate, selectedStarttime, setSelect
 
             <select
                 className="endtime-select"
-                value={selectedEndtime}
-                onChange={(e : any) => setSelectedEndtime(e.target.value)}>
+                value={value.selectedEndtime}
+                onChange={(e : any) => onChange((prev: DateTimeFilter) => ({
+                    ...prev,
+                    selectedEndtime: e.target.value
+                }))}>
                 <option value="">Select end time</option>
                 {EndTimeLimiter().map((time) => (
                     <option key={time} value={time}>{time}</option>

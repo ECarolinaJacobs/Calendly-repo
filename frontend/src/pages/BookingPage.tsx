@@ -30,9 +30,7 @@ const BookingPage = () => {
             <div>
                 <RoomFiltering
                 setRooms={setRooms}
-                startIso={startIso}
                 setStartIso={setStartIso}
-                endIso={endIso}
                 setEndIso={setEndIso}
                 setErrorMessage={setErrorMessage}/>
             </div>
