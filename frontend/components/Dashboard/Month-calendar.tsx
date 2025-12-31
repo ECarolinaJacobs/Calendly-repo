@@ -1,4 +1,7 @@
 import type { MonthCalendarProps } from "../../src/types/dashboard.types";
+/** 
+ * calendar of the month, highlighting current date and all other days that have events or todos planned
+ */
 
 export function MonthCalendar({ fullCal, daysOfWeek, today, events, hasEventsOnDate }: MonthCalendarProps) {
     return (

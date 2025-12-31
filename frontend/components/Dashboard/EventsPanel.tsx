@@ -2,6 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import type { Event } from "../Events/EventDrawer/types";
 
+/** 
+ * Side panel displaying upcoming events with join functionality
+ * filters events to show only future dates, sorted by date
+ */
+
 interface EventsPanelProps {
   isOpen: boolean;
   onClose: () => void;
@@ -88,7 +93,7 @@ export function EventsPanel({ isOpen, onClose, events }: EventsPanelProps) {
                 <div
                   key={index}
                   className="event-card"
-                  // onClick={() => handleEventClick(event.title)}
+                // onClick={() => handleEventClick(event.title)}
                 >
                   {event.image && (
                     <img

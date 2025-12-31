@@ -1,4 +1,7 @@
 import type { TimetableProps } from "../../src/types/dashboard.types";
+/** 
+ * timetable of the day per hour, allows you to change the date and add items to the timetable
+ */
 
 export function Timetable({ dayName, selectedDate, setSelectedDate, isTimetableCalendarOpen, setIsTimetableCalendarOpen, setShowAddEventModal,
     dropdownCal, today, daysOfWeek, isSameDay, hours, events, handleEventClick

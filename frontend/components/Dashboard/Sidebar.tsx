@@ -7,8 +7,11 @@ import {
     IoPersonOutline,
     IoBookmarksOutline,
 } from "react-icons/io5";
-import type {SidebarProps} from "../../src/types/dashboard.types";
+import type { SidebarProps } from "../../src/types/dashboard.types";
 
+/** 
+ * navigation sidebar with collapsible menu, highlights active page and provides navigation to other pages
+*/
 
 export function Sidebar({ sidebarOpen, setSidebarOpen, activeItem, setActiveItem, navigate }: SidebarProps) {
     return (

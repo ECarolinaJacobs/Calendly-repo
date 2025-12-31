@@ -1,6 +1,8 @@
+//elena
 using Microsoft.AspNetCore.Mvc;
 using TodoApi.Services;
 using TodoApi.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 /* controller summary:
 - handles all HTTP requests from the frontend related to admin operations, consists of 5 endpoints
@@ -15,6 +17,7 @@ namespace TodoApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Roles = "Admin")]
 
 public class AdminController : ControllerBase
 {
@@ -118,7 +121,7 @@ public class AdminController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error searching employees");
-            return StatusCode(500, new { message = "internal server error" });
+            return StatusCode(500, new { message = "Internal server error" });
         }
     }
 

@@ -1,8 +1,15 @@
 //elena
+///<summary>
+/// service layer for managing event reviews
+/// handles review creation, retrieval and deletion
+/// validates if employee exists, event exists, no duplicate reviews per employee for the same event, rating 1-5
+/// </summary>
+
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Context;
 using TodoApi.Models;
 using TodoApi.DTOs;
+using Microsoft.IdentityModel.Logging;
 
 namespace TodoApi.Services
 {
@@ -10,10 +17,12 @@ namespace TodoApi.Services
     {
         private readonly EventContext _context;
         private readonly ProjectContext _projectContext;
-        public ReviewService(EventContext context, ProjectContext projectContext)
+        private readonly ILogger<ReviewService> _logger;
+        public ReviewService(EventContext context, ProjectContext projectContext, ILogger<ReviewService> logger)
         {
             _context = context;
             _projectContext = projectContext;
+            _logger = logger;
         }
 
         /// <summary>
@@ -21,14 +30,18 @@ namespace TodoApi.Services
         /// </summary>
         public async Task<(ReviewDto?, string?)> CreateReviewAsync(long eventId, CreateReviewRequest request)
         {
+            _logger.LogInformation("Employee {EmployeeId} creating review for event {EventId}", request.EmployeeId, eventId);
+
             var eventItem = await _context.Events.FindAsync(eventId);
             if (eventItem == null)
             {
+                _logger.LogWarning("Event {EventId} not found for review", eventId);
                 return (null, $"Event with ID {eventId} not found.");
             }
             var employee = await _projectContext.Employees.FindAsync(request.EmployeeId);
             if (employee == null)
             {
+                _logger.LogWarning("Invalid employee ID {EmployeeId} for review", request.EmployeeId);
                 return (null, "Invalid employee ID.");
             }
             if (request.Rating < 1 || request.Rating > 5)
@@ -54,6 +67,10 @@ namespace TodoApi.Services
             };
             _context.Reviews.Add(review);
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Employee {EmployeeId} successfully created review {ReviewId} for event {EventId}",
+            request.EmployeeId, review.Id, eventId);
+
             var reviewDto = new ReviewDto(
                 review.Id,
                 review.Content,
@@ -110,13 +127,16 @@ namespace TodoApi.Services
         /// </summary>
         public async Task<bool> DeleteReviewAsync(long reviewId)
         {
+            _logger.LogInformation("Deleting review {ReviewId}", reviewId);
             var review = await _context.Reviews.FindAsync(reviewId);
             if (review == null)
             {
+                _logger.LogWarning("Review {ReviewId} not found for deletion", reviewId);
                 return false;
             }
             _context.Reviews.Remove(review);
             await _context.SaveChangesAsync();
+            _logger.LogInformation("Successfully deleted review {ReviewId}", reviewId);
             return true;
         }
     }
