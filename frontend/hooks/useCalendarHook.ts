@@ -1,4 +1,7 @@
 import { useState } from "react";
+/**
+ * hook for managing calendar state and navigation 
+ */
 
 export function useCalendar(initialDate = new Date()) {
     const [date, setDate] = useState(initialDate);

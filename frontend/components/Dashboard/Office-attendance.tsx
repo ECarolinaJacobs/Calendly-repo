@@ -1,5 +1,7 @@
 import type { OfficeAttendanceProps } from "../../src/types/dashboard.types";
-
+/** 
+ * allows user to book office attendance date and shows all of the dates user has booked
+ */
 
 export function OfficeAttendance({ attendances, setShowAttendanceModal, openEditModal, handleDeleteAttendance }: OfficeAttendanceProps) {
   return (

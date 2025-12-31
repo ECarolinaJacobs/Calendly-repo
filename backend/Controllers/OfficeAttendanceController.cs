@@ -1,3 +1,4 @@
+//elena
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TodoApi.DTOs;
@@ -97,12 +98,16 @@ public class OfficeAttendanceController : ControllerBase
         try
         {
             var employeeId = GetCurrentEmployeeId();
-            var (success, errorMessage, IsOwner) = await _attendanceService.UpdateAttendance(id, employeeId, request.Date);
+            var (success, errorMessage, isOwner) = await _attendanceService.UpdateAttendance(id, employeeId, request.Date);
             if (!success)
             {
                 if (errorMessage == "Attendance booking not found")
                 {
                     return NotFound(new { message = errorMessage });
+                }
+                if (!isOwner)
+                {
+                    return StatusCode(403, new {message = "You can only modify your own attendance bookings"});
                 }
                 if (errorMessage == "Forbidden")
                 {
@@ -133,16 +138,16 @@ public class OfficeAttendanceController : ControllerBase
         try
         {
             var employeeId = GetCurrentEmployeeId();
-            var (success, errorMessage, IsOwner) = await _attendanceService.DeleteAttendance(id, employeeId);
+            var (success, errorMessage, isOwner) = await _attendanceService.DeleteAttendance(id, employeeId);
             if (!success)
             {
                 if (errorMessage == "Attendance booking not found")
                 {
                     return NotFound(new { message = errorMessage });
                 }
-                if (errorMessage == "Forbidden")
+                if (!isOwner)
                 {
-                    return Forbid();
+                    return StatusCode(403, new {message = "You can only delete your own attendance booking"});
                 }
             }
             return NoContent();

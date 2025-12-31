@@ -1,3 +1,8 @@
+//elena
+///<summary>
+/// service for managing employee office attendance bookings
+/// rules: no past dates, no double booking per employee per day, users can only modify their own booking
+/// </summary>
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
 using TodoApi.Context;
@@ -15,6 +20,11 @@ public class OfficeAttendanceService
         _logger = logger;
     }
 
+    ///<summary>
+    /// retrieves all attendance bookings for a specific employee
+    /// </summary>
+    /// <param name="employeeId"> id of the employee</param>
+    /// <returns> list of attendance bookings ordered by date </returns>
     public async Task<List<OfficeAttendanceDto>> GetMyAttendance(long employeeId)
     {
         _logger.LogInformation("Fetching attendance for employee {EmployeeId}", employeeId);
@@ -33,6 +43,12 @@ public class OfficeAttendanceService
         return attendances;
     }
 
+    /// <summary>
+    /// creates a new attendance booking for an employee
+    /// </summary>
+    /// <param name="employeeId"/param>
+    /// <paramref name="date"/> date to book attendance </param>
+    /// <returns> success status, error message if failed and created dto if successful</returns> 
     public async Task<(bool Success, string? ErrorMessage, OfficeAttendanceDto? Result)> CreateAttendance(long employeeId, DateTime date)
     {
         _logger.LogInformation("Employee {EmployeeId} booking attendance for {Date}", employeeId, date.Date);
@@ -72,6 +88,13 @@ public class OfficeAttendanceService
         return (true, null, dto);
     }
 
+    /// <summary>
+    /// updates an existing attendance booking 
+    /// </summary>
+    /// <param name="id"> attendance booking id </param>
+    /// <param name="employeeId"> employee id </param>
+    /// <param name="newDate"> new date for the booking </param>
+    /// <returns>success status, error message if fail and ownership check flag </returns
     public async Task<(bool Success, string? ErrorMessage, bool IsOwner)> UpdateAttendance(long id, long employeeId, DateTime? newDate)
     {
         _logger.LogInformation("Employee {EmployeeId} updating attendance {AttendanceId}", employeeId, id);
@@ -111,6 +134,12 @@ public class OfficeAttendanceService
         return (true, null, true); //http succes no body 204
     }
 
+    /// <summary>
+    /// deletes an attendance booking for the owner
+    /// </summary>
+    /// <param name="id"> attendance booking id </param>
+    /// <param name="employeeId"> id of employee making request </param>
+    /// <returns> success status, error message if fail, ownership check flag </returns>
     public async Task<(bool Success, string? ErrorMessage, bool IsOwner)> DeleteAttendance(long id, long employeeId)
     {
         _logger.LogInformation("Employee {EmployeeId} deleting attendance {AttendanceId}", employeeId, id);

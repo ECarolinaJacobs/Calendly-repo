@@ -1,3 +1,7 @@
+//elena
+/// <summary>
+/// service layer for admin operations: retrieve, delete, update status, search and stats calculations of employees
+/// </summary>
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Context;
 using TodoApi.DTOs;
@@ -14,6 +18,10 @@ public class AdminService
         _logger = logger;
     }
 
+    ///<summary>
+    /// retrieves all employees from the db
+    /// </summary>
+    /// <returns> List of employee DTOs </returns> 
     public async Task<List<EmployeeDto>> GetAllEmployees()
     {
         _logger.LogInformation("Fetching all employees");
@@ -31,6 +39,11 @@ public class AdminService
         return employees;
     }
 
+    ///<summary>
+    /// deletes an employee by Id
+    /// </summary>
+    /// <param name="id"> employee id to delete </param>
+    /// <returns> true if deletes successfully, false if not found </returns> 
     public async Task<bool> DeleteEmployee(long id)
     {
         _logger.LogInformation("Attempting to delete employee: {EmployeeId}", id);
@@ -46,6 +59,12 @@ public class AdminService
         return true;
     }
 
+    /// <summary>
+    /// updates the admin status of an employee
+    /// </summary>
+    /// <param name="id"> employee id </param>
+    /// <param name="isAdmin"> new admin status </param>
+    /// <returns> true if updated successfully, false if employee not found</returns>
     public async Task<bool> UpdateAdminStatus(long id, bool isAdmin)
     {
         _logger.LogInformation("Updating admin status for employee {EmployeeId}", id);
@@ -61,6 +80,11 @@ public class AdminService
         return true;
     }
 
+
+    /// <summary>
+    /// searches employees by name or email
+    /// <paramref name="searchTerm"> search term to filter employees by </param>
+    /// <returns> list of matching employee dtos</returns> 
     public async Task<List<EmployeeDto>> SearchEmployees(string searchTerm)
     {
         _logger.LogInformation("Searching employees containing: {SearchTerm}", searchTerm);
@@ -80,21 +104,25 @@ public class AdminService
         return employees;
     }
 
+    /// <summary>
+    /// calculates stats in database instead of loading all of the employees into memory for faster execution
+    /// </summary>
+    /// <returns>statistics dto with employee stats </returns>
     public async Task<AdminStatsDto> GetStatistics()
     {
         _logger.LogInformation("Calculating statistics");
-        var employees = await _context.Employees.ToListAsync();
         var stats = new AdminStatsDto
         {
-            TotalEmployees = employees.Count,
-            TotalAdmins = employees.Count(e => e.IsAdmin),
-            TotalRegularUsers = employees.Count(e => !e.IsAdmin),
-            TotalCoins = employees.Sum(e => e.Coins),
-            AverageCoinsPerUser = employees.Any() ? employees.Average(e => e.Coins) : 0
+            TotalEmployees = await _context.Employees.CountAsync(),
+            TotalAdmins = await _context.Employees.CountAsync(e => e.IsAdmin),
+            TotalRegularUsers = await _context.Employees.CountAsync(e => !e.IsAdmin),
+            TotalCoins = await _context.Employees.SumAsync(e => e.Coins),
+            AverageCoinsPerUser = await _context.Employees.AnyAsync()
+                ? await _context.Employees.AverageAsync(e => e.Coins)
+                : 0
         };
         _logger.LogInformation("Statistics: {TotalEmployees} total employees, {TotalAdmins} admins",
             stats.TotalEmployees, stats.TotalAdmins);
         return stats;
     }
 }
-

@@ -1,11 +1,11 @@
 namespace TodoApi.DTOs;
-
+//elena
 /// <summary> 
 /// defines the structure of employee data sent to the frontend 
 /// DTO  (data transfer object) is a safe version of the employee model because the password 
 /// no longer gets directly sent to the frontend
 /// 
-/// dtos are object containers and are usually mutable (hence: init;)
+/// dtos are object containers and are usually immutable (hence: init;)
 /// 
 /// relationship: 
 /// - source: employee model (database structure)
