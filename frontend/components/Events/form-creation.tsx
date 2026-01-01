@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CustomDatePicker } from "../utils/custom-date-picker";
-import { createEvent } from "../../src/api/eventService";
+import { EventService } from "../../src/api/Services/eventService";
 import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
 
@@ -16,7 +16,7 @@ export const AdminCreateEvent: React.FC = () => {
 	const handleCreateEvent = async (e: React.FormEvent) => {
 		e.preventDefault();
 		try {
-			await createEvent({
+			await EventService.createEvent({
 				Title: eventForm.title,
 				Description: eventForm.description,
 				Image: eventForm.image,

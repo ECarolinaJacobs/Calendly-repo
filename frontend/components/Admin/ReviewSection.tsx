@@ -1,7 +1,7 @@
 import { deleteReview } from '../../src/api/Services/review-service';
 import { useDeleteConfirmation } from '../../hooks/useDeleteConfirmationHook';
 import type { Review } from '../../src/models/Review';
-import type { Event } from '../../src/models/Event';
+import type { Event } from '../Events/EventDrawer/types';
 import { formatDateTime, renderStars } from '../utils/formatters';
 
 interface ReviewsSectionProps {

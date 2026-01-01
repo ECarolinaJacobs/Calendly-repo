@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { getAllEmployees, getStatistics, type AdminStats } from '../src/api/admin';
-import { getEvents } from '../src/api/eventService';
+import { EventService } from '../src/api/Services/eventService';
 import { getAllReviews } from '../src/api/Services/review-service';
-import type { Event } from '../src/models/Event';
+import type { Event } from '../components/Events/EventDrawer/types';
 import type { Review } from '../src/models/Review';
 
 export interface Employee {
@@ -37,7 +37,7 @@ export function useAdminData() {
             const [employeesData, statsData, eventsData, reviewsData] = await Promise.all([
                 getAllEmployees(),
                 getStatistics(),
-                getEvents(),
+                EventService.getEvents(),
                 getAllReviews(),
             ]);
             setEmployees(employeesData || []);

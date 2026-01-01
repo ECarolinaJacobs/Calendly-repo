@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { deleteEvent, updateEvent } from "../../src/api/eventService";
+import { EventService } from "../../src/api/Services/eventService";
 import { useDeleteConfirmation } from "../../hooks/useDeleteConfirmationHook";
 import { formatDate } from "../utils/formatters";
-import toast from "react-hot-toast";
-import type { Event } from "../../src/models/Event";
+import type { Event } from "../Events/EventDrawer/types";
 
 interface EventsSectionProps {
     events: Event[];
@@ -37,7 +36,7 @@ export function EventsSection({ events, onDataChange }: EventsSectionProps) {
     });
 
     const { handleDelete } = useDeleteConfirmation(
-        deleteEvent,
+        EventService.deleteEvent,
         onDataChange,
         "Event"
     );
@@ -80,7 +79,7 @@ export function EventsSection({ events, onDataChange }: EventsSectionProps) {
     const handleUpdateEvent = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!editingEvent) return;
-        await updateEvent(editingEvent.id, {
+        await EventService.updateEvent(editingEvent.id, {
             Title: editForm.title,           // Capitalize for API
             Description: editForm.description,
             Image: editForm.image,
