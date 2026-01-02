@@ -1,15 +1,15 @@
 //elena
 import { Outlet, Navigate } from "react-router-dom";
 
+/**
+ * protected route component that only allows admins
+ * @returns outlet for nested routed if authorized, otherwise login page
+ */
 const AdminRoute = () => {
     const token = localStorage.getItem("token");
     const isAdmin = localStorage.getItem("isAdmin") === "true";
-    const isAuthenticated = token !== null;
-    if (!isAuthenticated) {
-        return <Navigate to="/login" />;
-    }
-    if (!isAdmin) {
-        return <Navigate to="/login" />;
+    if (!token || !isAdmin) {
+        return <Navigate to="/login" replace />;
     }
     return <Outlet />;
 }

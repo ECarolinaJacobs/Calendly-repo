@@ -18,4 +18,25 @@ apiClient.interceptors.request.use(config => {
     return Promise.reject(error);
 });
 
+//response interceptor for handling errors globally without side effects (elena)
+apiClient.interceptors.response.use(
+    response => {
+        return response;
+    },
+    error => {
+        if (error.response) {
+            console.error('API Error:', {
+                status: error.response.status,
+                data: error.response.data,
+                url: error.config?.url
+            });
+        } else if (error.request) {
+            console.error('Network Error:', error.message);
+        } else {
+            console.error('Error:', error.message);
+        }
+        return Promise.reject(error);
+    }
+);
+
 export default apiClient;

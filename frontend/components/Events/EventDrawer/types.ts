@@ -1,15 +1,31 @@
+import type { Review } from "../../../src/models/Review";
+
+
 export interface Attendee {
+  id: number;
+  employeeId: number;
+  eventId: number
   name: string;
-  avatar: string;
+  avatar?: string;
 }
 
 export interface Event {
+  id: number;
   title: string;
   description: string;
   image?: string;
   startDate?: string;
   endDate?: string;
   attendees?: Attendee[];
+  reviews?: Review[];
+}
+
+export interface CreateEventRequest {
+	Title: string;
+	Description: string;
+	Image?: string;
+	StartDate?: string;
+	EndDate?: string;
 }
 
 export interface DrawerHeaderProps {

@@ -1,4 +1,7 @@
 //elena
+/**
+ * review model representing user feedback for an event
+ */
 export interface Review {
     id: number;
     content: string;
