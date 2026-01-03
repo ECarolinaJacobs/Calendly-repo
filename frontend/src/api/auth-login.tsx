@@ -2,7 +2,7 @@ import apiClient from './apiClient';
 
 export interface LoginResponse {
     token: string;
-    userId: number;
+    id: number;
     name: string;
     email: string;
     isAdmin: boolean; // FIXME: temporary, should be changed for security reasons, assignee: Elena

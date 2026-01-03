@@ -28,7 +28,7 @@ const DateFilter = ({selectedDate, setSelectedDate, selectedStarttime, setSelect
                 className="date-select"
                 value={selectedDate}
                 min= {new Date().toISOString().split("T")[0]}
-                max="2026-01-01" 
+                max="2027-01-01" 
                 onChange={(e : any) => {handleDateSelect(e.target.value)}}/>
 
             <select

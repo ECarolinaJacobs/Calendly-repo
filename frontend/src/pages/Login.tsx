@@ -22,7 +22,7 @@ export function LoginCredentials() {
 			const response = await authLogin(email, password);
 			if (response && response.token) {
 				localStorage.setItem("token", response.token);
-				localStorage.setItem("userId", response.userId.toString());
+				localStorage.setItem("userId", response.id.toString());
 				localStorage.setItem("userName", response.name);
 				localStorage.setItem("userEmail", response.email);
 				localStorage.setItem("isAdmin", response.isAdmin.toString());

@@ -35,6 +35,8 @@ builder.Services.AddDbContext<EventContext>(opt =>
     opt.UseInMemoryDatabase("EventDB"));
 
 // Add Application Services
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<PointsService>();
 builder.Services.AddScoped<RoomBookingService>();
 builder.Services.AddScoped<RoomService>();
 builder.Services.AddScoped<TodoApi.Services.PointsService>();
