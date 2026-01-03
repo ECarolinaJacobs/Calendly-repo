@@ -6,5 +6,5 @@ public record LoginResponse
     public long Id { get; init; }
     public string Name { get; init; }
     public string Email { get; init; }
-    public bool IsAdmin { get; init; }
+    // public bool IsAdmin { get; init; }
 }

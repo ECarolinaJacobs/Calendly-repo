@@ -87,7 +87,8 @@ public class AuthService
             Id = employee.Id,
             Name = employee.Name,
             Email = employee.Email,
-            IsAdmin = employee.IsAdmin  // FIXME: temporary isAdmin, for security reasons this should be changed later, assignee: Elena
+            // FIXME: temporary isAdmin, for security reasons this should be changed later, assignee: Elena
+            // IsAdmin = employee.IsAdmin
         };
     }
 }
