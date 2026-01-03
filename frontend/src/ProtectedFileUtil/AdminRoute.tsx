@@ -1,5 +1,10 @@
 //elena
 import { Outlet, Navigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+
+interface JwtPayload {
+	role: string
+}
 
 /**
  * protected route component that only allows admins
@@ -7,8 +12,12 @@ import { Outlet, Navigate } from "react-router-dom";
  */
 const AdminRoute = () => {
     const token = localStorage.getItem("token");
-    const isAdmin = localStorage.getItem("isAdmin") === "true";
-    if (!token || !isAdmin) {
+    if (!token) {
+        return <Navigate to="/login" replace />;
+    }
+    const decodedJwt = jwtDecode<JwtPayload>(token);
+    const isAdmin = decodedJwt.role === "Admin";
+    if (!isAdmin) {
         return <Navigate to="/login" replace />;
     }
     return <Outlet />;
