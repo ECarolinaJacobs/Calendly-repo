@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import authLogin from "../api/auth-login";
 import "../css/Login.css";
+import { jwtDecode } from "jwt-decode";
+
+interface JwtPayload {
+	role: string
+}
 
 export function LoginCredentials() {
 	const [email, setEmail] = useState("");
@@ -22,20 +27,25 @@ export function LoginCredentials() {
 			const response = await authLogin(email, password);
 			if (response && response.token) {
 				localStorage.setItem("token", response.token);
-				localStorage.setItem("userId", response.userId.toString());
+				localStorage.setItem("userId", response.id.toString());
 				localStorage.setItem("userName", response.name);
 				localStorage.setItem("userEmail", response.email);
-				localStorage.setItem("isAdmin", response.isAdmin.toString());
+				// localStorage.setItem("isAdmin", response.isAdmin.toString());
+
+				const decodedJwt = jwtDecode<JwtPayload>(response.token);
+				const isAdmin = decodedJwt.role === "Admin";
+
+				console.log("Login successful! isAdmin:", isAdmin);
+				//redirect based on admin status
+				if (isAdmin === true) {
+					console.log("Redirecting to admin page...");
+					navigate("/admin");
+				} else {
+					console.log("Redirecting to dashboard...");
+					navigate("/dashboard");
+				}
 			}
-			console.log("Login successful! isAdmin:", response.isAdmin);
-			//redirect based on admin status
-			if (response.isAdmin === true) {
-				console.log("Redirecting to admin page...");
-				navigate("/admin");
-			} else {
-				console.log("Redirecting to dashboard...");
-				navigate("/dashboard");
-			}
+
 		} catch (err) {
 			setError("Invalid email or password.");
 			console.error(err);
