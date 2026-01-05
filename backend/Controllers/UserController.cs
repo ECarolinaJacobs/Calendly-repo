@@ -7,6 +7,9 @@ using TodoApi.Context;
 using TodoApi.Services;
 using TodoApi.DTOs;
 
+/// <summary>
+/// Controller for the users:  bookings, points, retrieving and uploading user information
+/// </summary>
 namespace backend.Controllers
 {
     [ApiController]
@@ -27,6 +30,9 @@ namespace backend.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Retrieves bookings for the user 
+        /// </summary>
         [HttpGet("bookings")]
         public async Task<IActionResult> GetUserBookings()
         {
@@ -45,7 +51,9 @@ namespace backend.Controllers
 
             return Ok(bookings);
         }
-
+        /// <summary>
+        /// Retrieves the current points for the user 
+        /// </summary>
         [HttpGet("points")]
         public async Task<IActionResult> GetUserPoints()
         {
@@ -59,6 +67,9 @@ namespace backend.Controllers
             return Ok(new { points = points });
         }
 
+        /// <summary>
+        /// Retrieves the user information of the user 
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDTO>> GetUserInformation(long id)
         {
@@ -83,6 +94,9 @@ namespace backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Updated the user information of the user 
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<ActionResult<UserDTO>> UpdateUserInformation(long id, UpdateUserDTO UpdatedUserInfo)
         {
@@ -102,7 +116,7 @@ namespace backend.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating user information for Id: {UserId}", id);
-                return StatusCode(500, new { message = "Internal server error" }); // HTTP 500
+                return StatusCode(500, new { message = "Internal server error" });
             }
         }
 

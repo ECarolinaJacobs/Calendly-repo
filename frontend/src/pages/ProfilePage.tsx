@@ -3,7 +3,11 @@ import { getUserInformation, updateUserInformation } from "../api/users";
 import "../css/ProfilePage.css";
 import { DashboardBanner } from "../../components/Dashboard/Dashboard-banner";
 import { Sidebar } from "../../components/Dashboard/Sidebar";
+import { ProfileBanner } from "../../components/Profile/BannerDisplay";
+import PersonalInfo from "../../components/Profile/PersonalInfoDisplay";
+import PasswordInfoDisplay from "../../components/Profile/PasswordInfoDisplay";
 import { useNavigate } from "react-router-dom";
+
 export default function ProfilePage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -23,7 +27,7 @@ export default function ProfilePage() {
   }, []);
 
   const navigate = useNavigate();
-
+  //Retrieves the user data and saves it in hooks
   const loadUserData = async () => {
     try {
       setLoading(true);
@@ -32,14 +36,18 @@ export default function ProfilePage() {
       console.log("loading user data");
       const userId = Number(localStorage.getItem("userId"));
       console.log("userId being used:", userId);
+
+      //Checks if the user with retrieved user id exists
       if (!userId || isNaN(userId) || userId < 1) {
         setError("User ID not found, please log in.");
         setLoading(false);
         return;
       }
+      //retrieves user id  the API
       const userProfile = await getUserInformation(userId);
       console.log("Retrieved user profile:", userProfile);
 
+      //Set user data
       setName(userProfile.name);
       setEmail(userProfile.email);
       setCoins(userProfile.coins);
@@ -52,27 +60,31 @@ export default function ProfilePage() {
     }
   };
 
+  //Saves the name and email changes the user has made
   const saveUserChanges = async () => {
     try {
       setLoading(true);
       setError(null);
 
+      //Checks if the user with retrieved user id exists
       const userId = Number(localStorage.getItem("userId"));
       if (!userId) {
         setError("User ID not found, please log in.");
         setLoading(false);
         return;
       }
+      //Updates the name and email of the user
       await updateUserInformation(userId, {
         name,
         email,
       });
-
+      //Updates password if there is an input value
       if (password.trim() !== "") {
         await updateUserInformation(userId, {
           password,
         });
       }
+      //Reload the userdata so that is in sync with the backend
       await loadUserData();
       setIsEditingPassword(false);
     } catch (err) {
@@ -89,13 +101,14 @@ export default function ProfilePage() {
       setPasswordError(null);
       setPassword("");
       setNewPassword("");
-
+      //Checks if the user with retrieved user id exists
       const userId = Number(localStorage.getItem("userId"));
       if (!userId) {
         setPasswordError("User ID not found, please log in.");
         setLoading(false);
         return;
       }
+      //Updates the current password and new password
       await updateUserInformation(userId, {
         password,
         newPassword,
@@ -104,6 +117,7 @@ export default function ProfilePage() {
       setPassword("");
       setNewPassword("");
       setIsEditingPassword(false);
+      //Reload the userdata so that is in sync with the backend
       await loadUserData();
     } catch (err) {
       setPasswordError("Failed to save changes");
@@ -113,164 +127,12 @@ export default function ProfilePage() {
     }
   };
 
-  const bannerDisplay = () => {
-    return (
-      <div className="banner-container">
-        <div className="banner-left">
-          <img
-            className="profilePicture"
-            src="/ProfilePicture.png"
-            alt="profile picture"
-          />
-          <p className="username-display"> {name} </p>
-        </div>
-        <p className="coins-display"> Coins: {coins}</p>
-      </div>
-    );
-  };
-  const personalInfoDisplay = () => {
-    return (
-      <div className="info-section">
-        <div className="edit-button-container">
-          {!IsEditing && (
-            <button
-              className="edit-button"
-              onClick={() => {
-                setEditButton(true);
-              }}
-            >
-              edit
-            </button>
-          )}
-        </div>
-
-        <div className="personal-info-text-container">
-          <p> Personal Information</p>
-        </div>
-
-        <form
-          className="info-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <div className="form-group">
-            <label htmlFor="firstname-form"> Name</label>
-            <input
-              type="text"
-              className="firstname-form"
-              value={name}
-              readOnly={!IsEditing}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email-form"> Email</label>
-            <input
-              type="text"
-              className="email-form"
-              placeholder="Email"
-              value={email}
-              readOnly={!IsEditing}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-        </form>
-        <div className="save-changes-button-container">
-          {IsEditing && (
-            <button
-              className="save-changes-button"
-              onClick={() => {
-                setEditButton(false), saveUserChanges();
-              }}
-            >
-              Save changes
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  const passwordInfoDisplay = () => {
-    return (
-      <div className="password-change-section">
-        <div className="change-password-button-container">
-          {!IsEditingPassword && (
-            <button
-              className="change-password-button"
-              onClick={() => {
-                setIsEditingPassword(true);
-              }}
-            >
-              change password
-            </button>
-          )}
-        </div>
-        <div className="password-info-text-container">
-          <p> Security</p>
-        </div>
-        <div className="instructions-password">
-          <p>Input the current password to change to new password</p>
-        </div>
-        
-        <form
-          className="password-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <div className="form-group">
-            <label htmlFor="current-password-form"> Current Password</label>
-            <input
-              type="password"
-              className="current-password-form"
-              placeholder="Current Password"
-              value={password}
-              readOnly={!IsEditingPassword}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="new-password-form"> New Password</label>
-            <input
-              type="password"
-              className="new-password-form"
-              placeholder="New Password"
-              value={newPassword}
-              readOnly={!IsEditingPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </div>
-          {passwordError && (
-            <div className="error-message-container">
-              {" "}
-              <p>Password does not match current password, please try again.</p>
-            </div>
-          )}
-        </form>
-
-        <div className="save-password-button-container">
-          {IsEditingPassword && (
-            <button
-              className="save-password-button"
-              onClick={() => {
-                setIsEditingPassword(false), saveUserPasswordChanges();
-              }}
-            >
-              save new password
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  };
-
   if (loading) {
     return <div className="loading">Loading...</div>;
   }
   return (
     <div className="dashboard-layout">
+      {/*Navigation of the sidebar that is used to navigate between different pages*/}
       <Sidebar
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
@@ -278,13 +140,43 @@ export default function ProfilePage() {
         setActiveItem={setActiveItem}
         navigate={navigate}
       />
-
+      {/*Main content area displays the whole profile page content */}
       <div className={`main-content-area ${sidebarOpen ? "shift" : ""}`}>
+        {/*Displays the name of the user*/}
         <DashboardBanner userName={name} />
+        {/*profile page area displays the profile page content */}
         <div className="profile-page">
-          {bannerDisplay()}
-          {personalInfoDisplay()}
-          {passwordInfoDisplay()}
+          {/*Displays name and coins of the user in a banner*/}
+          <ProfileBanner name={name} coins={coins} />
+          {/*Displays editing name and email of the user*/}
+          <PersonalInfo
+            name={name}
+            email={email}
+            IsEditing={IsEditing}
+            onNameChange={setName}
+            onEmailChange={setEmail}
+            onEditClick={() => setEditButton(true)} // Enables editing name and email of the user
+            onSaveClick={() => {
+              setEditButton(false); //Disables editing
+              saveUserChanges(); //Saves name and email of the user*/}
+            }}
+          />
+          {/*Displays editing the password of the user*/}
+          <PasswordInfoDisplay
+            password={password}
+            newPassword={newPassword}
+            passwordError={passwordError}
+            IsEditingPassword={IsEditingPassword}
+            onPasswordChange={setPassword}
+            onNewPasswordChange={setNewPassword}
+            onEditClick={() => {
+              setIsEditingPassword(true); //Enables editing password of the user
+            }}
+            onSaveClick={() => {
+              setIsEditingPassword(false); //Disables editing password of the user
+              saveUserPasswordChanges(); //Saves password of the user
+            }}
+          />
         </div>
       </div>
     </div>
