@@ -3,6 +3,7 @@ import '../../src/css/BookingPage.css';
 import BookRoom from '../../src/api/book-room';
 import type { Room, BookingModalProp } from './bookingTypes';
 
+// Modal shown when the "book room" button is pressed
 const BookingModal = ({ setOpenModal, room, startIso, endIso } : BookingModalProp) => {
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
     const [success, setSuccess] = useState(false);
@@ -12,6 +13,7 @@ const BookingModal = ({ setOpenModal, room, startIso, endIso } : BookingModalPro
         setSelectedRoom(room);
         console.log("Selected room:", room);
 
+        // Calls API to book room (if room is not already booked)
         try {
             const result = await BookRoom({
             RoomId: room.id,
@@ -27,6 +29,7 @@ const BookingModal = ({ setOpenModal, room, startIso, endIso } : BookingModalPro
         }
     }
 
+    // Shows error message and closes by itself
     useEffect(() => {
         if (success || errorMessage === "Room is already booked") {
             {setTimeout(() => {

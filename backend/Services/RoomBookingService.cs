@@ -41,6 +41,7 @@ public class RoomBookingService
 
     public bool CheckRoomAvailability(RoomBooking newBooking)
     {
+        // Fetch times for new booking
         DateTime startNewBooking = DateTime.ParseExact(
             newBooking.StartTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
         DateTime endNewBooking = DateTime.ParseExact(
@@ -50,11 +51,13 @@ public class RoomBookingService
         {
             if (booking.RoomId == newBooking.RoomId)
             {
+                // Fetch times for existing booking
                 DateTime startExistingBooking = DateTime.ParseExact(
                     booking.StartTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
                 DateTime endExistingBooking = DateTime.ParseExact(
                     booking.EndTime, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
 
+                // Check if existing and new booking times overlap
                 if (startNewBooking < endExistingBooking && endNewBooking > startExistingBooking) return false;
             }
         }

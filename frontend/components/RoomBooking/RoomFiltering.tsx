@@ -25,6 +25,7 @@ const RoomFiltering = ({setRooms, setStartIso, setEndIso, setErrorMessage} : Roo
         setErrorMessage("Please set all filters")
     }
 
+    // When button is pressed, convert times to proper format, then displays filtered rooms
     const handleClick = async () => {
         const { selectedDate, selectedStarttime, selectedEndtime } = dateTimeFilters;
 

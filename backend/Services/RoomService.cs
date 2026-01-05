@@ -21,12 +21,14 @@ public class RoomService
 
         foreach (var room in rooms)
         {
+            // Add room to list if not already booked
             if (!CheckRoomAlreadyBooked(room, roomFilter))
             {
                 filteredRooms.Add(room);
             }
         }
 
+        // Filter through list to keep only relevant floor
         if (roomFilter.Floor != null)
         {
             filteredRooms = filteredRooms
