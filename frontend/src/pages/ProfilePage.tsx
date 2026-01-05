@@ -3,7 +3,11 @@ import { getUserInformation, updateUserInformation } from "../api/users";
 import "../css/ProfilePage.css";
 import { DashboardBanner } from "../../components/Dashboard/Dashboard-banner";
 import { Sidebar } from "../../components/Dashboard/Sidebar";
+import { ProfileBanner } from "../../components/Profile/BannerDisplay";
+import PersonalInfo from "../../components/Profile/PersonalInfoDisplay";
+import PasswordInfoDisplay from "../../components/Profile/PasswordInfoDisplay";
 import { useNavigate } from "react-router-dom";
+
 export default function ProfilePage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -113,159 +117,6 @@ export default function ProfilePage() {
     }
   };
 
-  const bannerDisplay = () => {
-    return (
-      <div className="banner-container">
-        <div className="banner-left">
-          <img
-            className="profilePicture"
-            src="/ProfilePicture.png"
-            alt="profile picture"
-          />
-          <p className="username-display"> {name} </p>
-        </div>
-        <p className="coins-display"> Coins: {coins}</p>
-      </div>
-    );
-  };
-  const personalInfoDisplay = () => {
-    return (
-      <div className="info-section">
-        <div className="edit-button-container">
-          {!IsEditing && (
-            <button
-              className="edit-button"
-              onClick={() => {
-                setEditButton(true);
-              }}
-            >
-              edit
-            </button>
-          )}
-        </div>
-
-        <div className="personal-info-text-container">
-          <p> Personal Information</p>
-        </div>
-
-        <form
-          className="info-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <div className="form-group">
-            <label htmlFor="firstname-form"> Name</label>
-            <input
-              type="text"
-              className="firstname-form"
-              value={name}
-              readOnly={!IsEditing}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email-form"> Email</label>
-            <input
-              type="text"
-              className="email-form"
-              placeholder="Email"
-              value={email}
-              readOnly={!IsEditing}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-        </form>
-        <div className="save-changes-button-container">
-          {IsEditing && (
-            <button
-              className="save-changes-button"
-              onClick={() => {
-                setEditButton(false), saveUserChanges();
-              }}
-            >
-              Save changes
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  const passwordInfoDisplay = () => {
-    return (
-      <div className="password-change-section">
-        <div className="change-password-button-container">
-          {!IsEditingPassword && (
-            <button
-              className="change-password-button"
-              onClick={() => {
-                setIsEditingPassword(true);
-              }}
-            >
-              change password
-            </button>
-          )}
-        </div>
-        <div className="password-info-text-container">
-          <p> Security</p>
-        </div>
-        <div className="instructions-password">
-          <p>Input the current password to change to new password</p>
-        </div>
-        
-        <form
-          className="password-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <div className="form-group">
-            <label htmlFor="current-password-form"> Current Password</label>
-            <input
-              type="password"
-              className="current-password-form"
-              placeholder="Current Password"
-              value={password}
-              readOnly={!IsEditingPassword}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="new-password-form"> New Password</label>
-            <input
-              type="password"
-              className="new-password-form"
-              placeholder="New Password"
-              value={newPassword}
-              readOnly={!IsEditingPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </div>
-          {passwordError && (
-            <div className="error-message-container">
-              {" "}
-              <p>Password does not match current password, please try again.</p>
-            </div>
-          )}
-        </form>
-
-        <div className="save-password-button-container">
-          {IsEditingPassword && (
-            <button
-              className="save-password-button"
-              onClick={() => {
-                setIsEditingPassword(false), saveUserPasswordChanges();
-              }}
-            >
-              save new password
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  };
-
   if (loading) {
     return <div className="loading">Loading...</div>;
   }
@@ -282,9 +133,34 @@ export default function ProfilePage() {
       <div className={`main-content-area ${sidebarOpen ? "shift" : ""}`}>
         <DashboardBanner userName={name} />
         <div className="profile-page">
-          {bannerDisplay()}
-          {personalInfoDisplay()}
-          {passwordInfoDisplay()}
+          <ProfileBanner name={name} coins={coins} />
+          <PersonalInfo
+            name={name}
+            email={email}
+            IsEditing={IsEditing}
+            onNameChange={setName}
+            onEmailChange={setEmail}
+            onEditClick={() => setEditButton(true)}
+            onSaveClick={() => {
+              setEditButton(false);
+              saveUserChanges();
+            }}
+          />
+          <PasswordInfoDisplay
+            password={password}
+            newPassword={newPassword}
+            passwordError={passwordError}
+            IsEditingPassword={IsEditingPassword}
+            onPasswordChange={setPassword}
+            onNewPasswordChange={setNewPassword}
+            onEditClick={() => {
+              setIsEditingPassword(true);
+            }}
+            onSaveClick={() => {
+              setIsEditingPassword(false);
+              saveUserPasswordChanges();
+            }}
+          />
         </div>
       </div>
     </div>
