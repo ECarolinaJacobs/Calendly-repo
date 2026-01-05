@@ -27,7 +27,7 @@ export default function ProfilePage() {
   }, []);
 
   const navigate = useNavigate();
-
+  //Retrieves the user data and saves it in hooks
   const loadUserData = async () => {
     try {
       setLoading(true);
@@ -36,14 +36,18 @@ export default function ProfilePage() {
       console.log("loading user data");
       const userId = Number(localStorage.getItem("userId"));
       console.log("userId being used:", userId);
+
+      //Checks if the user with retrieved user id exists
       if (!userId || isNaN(userId) || userId < 1) {
         setError("User ID not found, please log in.");
         setLoading(false);
         return;
       }
+      //retrieves user id  the API
       const userProfile = await getUserInformation(userId);
       console.log("Retrieved user profile:", userProfile);
 
+      //Set user data
       setName(userProfile.name);
       setEmail(userProfile.email);
       setCoins(userProfile.coins);
@@ -56,27 +60,31 @@ export default function ProfilePage() {
     }
   };
 
+  //Saves the name and email changes the user has made
   const saveUserChanges = async () => {
     try {
       setLoading(true);
       setError(null);
 
+      //Checks if the user with retrieved user id exists
       const userId = Number(localStorage.getItem("userId"));
       if (!userId) {
         setError("User ID not found, please log in.");
         setLoading(false);
         return;
       }
+      //Updates the name and email of the user
       await updateUserInformation(userId, {
         name,
         email,
       });
-
+      //Updates password if there is an input value
       if (password.trim() !== "") {
         await updateUserInformation(userId, {
           password,
         });
       }
+      //Reload the userdata so that is in sync with the backend
       await loadUserData();
       setIsEditingPassword(false);
     } catch (err) {
@@ -93,13 +101,14 @@ export default function ProfilePage() {
       setPasswordError(null);
       setPassword("");
       setNewPassword("");
-
+      //Checks if the user with retrieved user id exists
       const userId = Number(localStorage.getItem("userId"));
       if (!userId) {
         setPasswordError("User ID not found, please log in.");
         setLoading(false);
         return;
       }
+      //Updates the current password and new password
       await updateUserInformation(userId, {
         password,
         newPassword,
@@ -108,6 +117,7 @@ export default function ProfilePage() {
       setPassword("");
       setNewPassword("");
       setIsEditingPassword(false);
+      //Reload the userdata so that is in sync with the backend
       await loadUserData();
     } catch (err) {
       setPasswordError("Failed to save changes");
@@ -122,6 +132,7 @@ export default function ProfilePage() {
   }
   return (
     <div className="dashboard-layout">
+      {/*Navigation of the sidebar that is used to navigate between different pages*/}
       <Sidebar
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
@@ -129,23 +140,28 @@ export default function ProfilePage() {
         setActiveItem={setActiveItem}
         navigate={navigate}
       />
-
+      {/*Main content area displays the whole profile page content */}
       <div className={`main-content-area ${sidebarOpen ? "shift" : ""}`}>
+        {/*Displays the name of the user*/}
         <DashboardBanner userName={name} />
+        {/*profile page area displays the profile page content */}
         <div className="profile-page">
+          {/*Displays name and coins of the user in a banner*/}
           <ProfileBanner name={name} coins={coins} />
+          {/*Displays editing name and email of the user*/}
           <PersonalInfo
             name={name}
             email={email}
             IsEditing={IsEditing}
             onNameChange={setName}
             onEmailChange={setEmail}
-            onEditClick={() => setEditButton(true)}
+            onEditClick={() => setEditButton(true)} // Enables editing name and email of the user
             onSaveClick={() => {
-              setEditButton(false);
-              saveUserChanges();
+              setEditButton(false); //Disables editing
+              saveUserChanges(); //Saves name and email of the user*/}
             }}
           />
+          {/*Displays editing the password of the user*/}
           <PasswordInfoDisplay
             password={password}
             newPassword={newPassword}
@@ -154,11 +170,11 @@ export default function ProfilePage() {
             onPasswordChange={setPassword}
             onNewPasswordChange={setNewPassword}
             onEditClick={() => {
-              setIsEditingPassword(true);
+              setIsEditingPassword(true); //Enables editing password of the user
             }}
             onSaveClick={() => {
-              setIsEditingPassword(false);
-              saveUserPasswordChanges();
+              setIsEditingPassword(false); //Disables editing password of the user
+              saveUserPasswordChanges(); //Saves password of the user
             }}
           />
         </div>

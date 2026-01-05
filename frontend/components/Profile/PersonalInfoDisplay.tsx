@@ -1,3 +1,4 @@
+/* properties that are required for the personalInfo component */
 interface PersonalInfoProps {
   name: string;
   email: string;
@@ -8,6 +9,7 @@ interface PersonalInfoProps {
   onSaveClick: () => void;
 }
 
+/* Displays the users info that lets the user view and change their username and email */
 export default function PersonalInfo({
   name,
   email,
@@ -20,6 +22,7 @@ export default function PersonalInfo({
   return (
     <div className="info-section">
       <div className="edit-button-container">
+        {/* Edit button that only shows when the user is not editing*/}
         {!IsEditing && (
           <button className="edit-button" onClick={onEditClick}>
             edit
@@ -30,13 +33,14 @@ export default function PersonalInfo({
       <div className="personal-info-text-container">
         <p> Personal Information</p>
       </div>
-
+      {/* Form that lets the user change their name and email*/}
       <form
         className="info-form"
         onSubmit={(e) => {
           e.preventDefault();
         }}
       >
+        {/* First name input*/}
         <div className="form-group">
           <label htmlFor="firstname-form"> Name</label>
           <input
@@ -47,6 +51,7 @@ export default function PersonalInfo({
             onChange={(e) => onNameChange(e.target.value)}
           />
         </div>
+        {/* email input*/}
         <div className="form-group">
           <label htmlFor="email-form"> Email</label>
           <input
@@ -59,6 +64,7 @@ export default function PersonalInfo({
           />
         </div>
       </form>
+      {/* Button that saves changes and disables editing*/}
       <div className="save-changes-button-container">
         {IsEditing && (
           <button

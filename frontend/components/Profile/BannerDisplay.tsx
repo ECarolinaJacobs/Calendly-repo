@@ -1,7 +1,12 @@
+/* properties that are required for the banner component */
+
 interface ProfileBannerProps {
   name: string;
   coins: number;
 }
+
+/* Displays the top of the banner that shows the username and current coins the user has*/
+
 export function ProfileBanner({ name, coins }: ProfileBannerProps) {
   return (
     <div className="banner-container">
