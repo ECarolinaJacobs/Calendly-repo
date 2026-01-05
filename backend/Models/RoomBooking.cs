@@ -10,6 +10,7 @@ public class RoomBooking
     public long RoomId { get; set; }
     public long EmployeeId { get; set; }
 
+    // Use JsonIgnore on nav properties to avoid circular referencing
     [JsonIgnore]
     public Room? Room { get; set; }
     [JsonIgnore]

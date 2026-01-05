@@ -12,6 +12,8 @@ const DateFilter = ({ value, onChange} : DateTimeValueChanger) => {
                 selectedDate: dateInput
             }))
         }
+        // if selected date is below the minimum, automatically
+        // sets it to minimum
         else {
             onChange((prev: DateTimeFilter) => ({
                 ...prev,
@@ -20,6 +22,7 @@ const DateFilter = ({ value, onChange} : DateTimeValueChanger) => {
         }
     }
 
+    // Sets end time dropdown to atleast 1 hour after start time
     const EndTimeLimiter = () => {
         let startTimesCopy = Array.from(startTimes);
         const startTimeIndex = startTimesCopy.indexOf(value.selectedStarttime);
